@@ -1,0 +1,20 @@
+/*
+*{
+	margin:0;
+	padding:0;
+}*/ 
+
+
+
+
+
+table.detail{
+	background-color:#F5F5F5;
+	filter:progid:DXImageTransform.Microsoft.Shadow (Color=#333333,Direction=150,strength=0)
+} 
+
+table.detailHead {
+	background-color:#9BD1FA;
+	filter: Alpha( style=1,opacity=100,finishOpacity=50,startX=0,finishX=100,startY=0,finishY=100); 
+}
+

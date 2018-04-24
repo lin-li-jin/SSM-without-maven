@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
+<!-- 
+ Create By    : lzc
+ Description  : 交易管理
+ Modify Date  : 2014-08-05
+  -->
+<xwork>
+	<package name="trade_mng" extends="default">
+		<action name="accountNumberPageInit" method="pageInit"
+			class="com.talent.forex.modules.trade_mng.AccountNumberAction">
+			<result name="student" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeMng/accountNumber/studentNumberPage.jsp
+				</param>
+			</result>
+			<result name="admin" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeMng/accountNumber/adminNumberPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"/>
+		</action>
+	
+		<action name="tradeRecordTwo" method="tradeRecordTwo"
+			class="com.talent.forex.modules.trade_mng.AccountFlowAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeMng/accountFlow/adminFlowPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+	
+		<action name="tradeRecordOne" method="tradeRecordOne"
+			class="com.talent.forex.modules.trade_mng.AccountFlowAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeMng/accountFlow/adminFlowPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<!-- ajax Through the first group query second group-->
+		<action name="getGroupTwos" method="getGroupTwos"
+			class="com.talent.forex.modules.trade_mng.AccountFlowAction">
+			<interceptor-ref name="paramsLoginStack"/>
+		</action>
+		
+		<!-- ajax Through the second group query students -->
+		<action name="getStudents" method="getStudents"
+			class="com.talent.forex.modules.trade_mng.AccountFlowAction">
+			<interceptor-ref name="paramsLoginStack"/>
+		</action>
+		
+		<!-- ajax Through the first group query students -->
+		<action name="getStudentsByGroupOne" method="getStudentsByGroupOne"
+			class="com.talent.forex.modules.trade_mng.AccountFlowAction">
+			<interceptor-ref name="paramsLoginStack"/>
+		</action>
+		
+		<action name="getTradeListByUserNum" method="getTradeListByUserNum"
+			class="com.talent.forex.modules.trade_mng.AccountFlowAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeMng/accountFlow/studentTradeList.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="totalTradeDetail" method="totalTradeDetail"
+			class="com.talent.forex.modules.trade_mng.AccountFlowAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/doneTradeDetail.jsp
+				</param>
+			</result>
+			
+			<result name="OMActive" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/activeOMtradeDetail.jsp
+				</param>
+			</result>
+			
+			<result name="STActive" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/activeSTtradeDetail.jsp
+				</param>
+			</result>
+			
+			<result name="AskDone" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/doneAskTradeDetail.jsp
+				</param>
+			</result>
+			
+			<result name="Spot" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/SpotTradeDetail.jsp
+				</param>
+			</result>
+			
+			<result name="Forward" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/ForwardTradeDetail.jsp
+				</param>
+			</result>
+			
+			<result name="Swap" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/swapTradeDetail.jsp
+				</param>
+			</result>
+			
+			<result name="_forward" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/forwardDetail.jsp
+				</param>
+			</result>
+			
+			<result name="option" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/optionDetail.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="accountFlowPageInit" method="pageInit"
+			class="com.talent.forex.modules.trade_mng.AccountFlowAction">
+			<result name="student" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeMng/accountFlow/studentFlowPage.jsp
+				</param>
+			</result>
+			<result name="admin" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeMng/accountFlow/adminFlowPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="accountFlowTradeRecordSearch" method="tradeRecordSearch"
+			class="com.talent.forex.modules.trade_mng.AccountFlowAction">
+			<result name="student" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeMng/accountFlow/studentFlowPage.jsp
+				</param>
+			</result>
+			<result name="admin" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeMng/accountFlow/adminFlowPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="accountBalancePageInit" method="pageInit"
+			class="com.talent.forex.modules.trade_mng.AccountBalanceAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeMng/accountBalance/studentBalancePage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="accountNumberCurrentSearch" method="currentRankSearch"
+			class="com.talent.forex.modules.trade_mng.AccountNumberAction">
+			<result name="student" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeMng/accountNumber/studentNumberPage.jsp
+				</param>
+			</result>
+			<result name="admin" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeMng/accountNumber/adminNumberPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"/>
+		</action>
+		
+		
+		<!-- ajax Through the first group number query second group -->
+		<action name="getGroupTwoList" method="getGroupTwoList"
+			class="com.talent.forex.modules.trade_mng.AccountNumberAction">
+			<interceptor-ref name="paramsLoginStack"/>
+		</action>
+		
+		<!-- ajax Through the second group query students -->
+		<action name="getStudentList" method="getStudentList"
+			class="com.talent.forex.modules.trade_mng.AccountNumberAction">
+			<interceptor-ref name="paramsLoginStack"/>
+		</action>
+		
+		<!-- ajax Through the first group query students -->
+		<action name="getStudentListByGroupOne" method="getStudentListByGroupOne"
+			class="com.talent.forex.modules.trade_mng.AccountNumberAction">
+			<interceptor-ref name="paramsLoginStack"/>
+		</action>
+		<action name="accountSynthesizePageInit" method="synthesizePageInit"
+			class="com.talent.forex.modules.trade_mng.AccountNumberAction">
+			<result name="student" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeMng/accountNumber/studentSynthesizePage.jsp
+				</param>
+			</result>
+			<result name="admin" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeMng/accountNumber/adminSynthesizePage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="accountNumberSynthesizeSearch" method="synthesizeRankSearch"
+			class="com.talent.forex.modules.trade_mng.AccountNumberAction">
+			<result name="student" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeMng/accountNumber/studentSynthesizePage.jsp
+				</param>
+			</result>
+			<result name="admin" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeMng/accountNumber/adminSynthesizePage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="accountStatementPageInit" method="accountStatementPageInit"
+			class="com.talent.forex.modules.trade_mng.AccountStatementAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeMng/accountStatement/accountStatementPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="stuaccountStatementPageInit" method="stuaccountStatementPageInit"
+			class="com.talent.forex.modules.trade_mng.AccountStatementAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeMng/accountStatement/studentaccountStatementPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="accoutStatementQuery" method="accoutStatementQuery"
+			class="com.talent.forex.modules.trade_mng.AccountStatementAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeMng/accountStatement/accountStatementPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+	</package>
+</xwork>

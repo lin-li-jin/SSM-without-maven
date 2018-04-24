@@ -1,0 +1,41 @@
+package com.hh;
+import java.util.Scanner;
+
+public class JavaTest {
+	
+	///////
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		int x,y,l,k,j,t,n;
+		Scanner sc=new Scanner(System.in);
+		int a=sc.nextInt();
+		int b=sc.nextInt();
+		if(a<b && b<(10^6)){
+			for(;a<=b;a++){
+				for(j=1;j<10;j++){
+					if(a>10&&a<100){
+						if(j*j==a){
+							x=a/10;
+							y=a%10;
+							for(n=1;n<10;n++){
+								if(n*n==x){
+								for(t=1;t<10;t++){
+									if(t*t==y){
+										System.out.println(a);
+									}
+								}
+							
+								}
+							}
+					
+						}
+					}
+				}
+			}
+		}
+		
+	}
+
+	//////////
+		
+}

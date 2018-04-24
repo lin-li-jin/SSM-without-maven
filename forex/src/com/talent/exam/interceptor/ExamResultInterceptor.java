@@ -1,0 +1,70 @@
+package com.talent.exam.interceptor;
+
+
+import com.opensymphony.webwork.ServletActionContext;
+import com.opensymphony.webwork.interceptor.ServletResponseAware;
+import com.opensymphony.xwork.ActionInvocation;
+import com.opensymphony.xwork.interceptor.Interceptor;
+import com.talent.exam.constant.ResultConst;
+import com.talent.exam.modules.admin_mng.model.ExamResult;
+
+import net.sf.json.JSONArray;
+import org.apache.log4j.Logger;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+/**
+ * 知识点维护拦截器针对于错误进行统一的处理
+ * Created by 吴樟 on www.haixiangzhene.xyz
+ * 2017/9/11.
+ */
+public class ExamResultInterceptor implements Interceptor{
+
+    private static Logger logger=Logger.getLogger(ExamResultInterceptor.class);
+
+
+    @Override
+    public void destroy() {
+
+    }
+
+    @Override
+    public void init() {
+
+    }
+
+    /**
+     * 返回格式:
+     * -1 : 结果为空
+     */
+
+    @Override
+    public String intercept(ActionInvocation actionInvocation) {
+        String result=null;
+        HttpServletResponse httpServletResponse=ServletActionContext.getResponse();
+        httpServletResponse.setContentType(ResultConst.JSON);
+        PrintWriter writer= null;
+        try {
+            writer = httpServletResponse.getWriter();
+            result=actionInvocation.invoke();
+            return result;
+        }catch (Exception e){
+            //判断错误类型
+            ExamResult examResult=new ExamResult();
+            examResult.setCode(ResultConst.FAIL);
+            examResult.setError(e.getMessage());
+            JSONArray jsonArray=JSONArray.fromObject(examResult);
+            String resultMessage=jsonArray.toString();
+            writer.write(resultMessage);
+            writer.flush();
+        }finally {
+            if (null!=writer)
+                writer.close();
+        }
+        return null;
+    }
+
+
+}

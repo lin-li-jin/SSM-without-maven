@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
+<!-- 
+ Amendment No.: FOEXAS009
+ Create By    : lzc
+ Description  : 知识点维护
+ Modify Date  : 2014-07-21
+  -->
+<xwork>
+	<package name="teach_subject_mng" extends="default">
+		<action name="distributePaper" method="distributePaper"
+				class="com.talent.exam.modules.teach_mng.controller.ExamAction">
+
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+			<interceptor-ref name="examRssultStack"></interceptor-ref>
+		</action>
+		<action name="queryDistributedPaper" method="queryDistributedPaper"
+				class="com.talent.exam.modules.teach_mng.controller.ExamAction">
+
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+			<interceptor-ref name="examRssultStack"></interceptor-ref>
+		</action>
+	</package>
+</xwork>

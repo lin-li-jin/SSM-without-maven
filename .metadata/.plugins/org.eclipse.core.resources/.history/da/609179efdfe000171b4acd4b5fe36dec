@@ -1,0 +1,61 @@
+package com.hh;
+import java.util.Scanner;
+
+public class JavaTest {
+	
+	///////
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+	Scanner sc  =new Scanner(System.in);
+	  int num=sc.nextInt();
+	  int count= 0;
+	  int arr[] = new int [9];
+	  String s[] = new String[9];
+	  for(int a=1;a<=9;a++){
+		
+		  for(int b=1;b<=9;b++){
+		
+			  for(int c=1;c<=9;c++){
+			
+				  for(int d=1;d<=9;d++){
+					 
+					  for(int e=1;e<=9;e++){
+					
+						  for(int f=1;f<=9;f++){
+							
+							  for(int g=1;g<=9;g++){
+							
+								  for(int k=1;k<=9;k++){
+									
+									  for(int j=1;j<=9;j++){
+										
+										
+										 
+										  
+									
+									  }
+								  }
+							  }
+						  }
+					  }
+				  }
+			  }
+		  }
+	  }
+	}
+   
+	public static boolean check (int a[]){
+		for(int i=0;i<a.length;){
+			
+		}
+		return true;
+	}
+public static boolean checknum (int b[]){
+		
+		return true;
+	}
+
+	//////////
+		
+}

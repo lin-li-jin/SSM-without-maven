@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context docBase="E:\Users\Administrator\Workspaces\MyEclipse 10\forex\WebRoot" path="/forex" reloadable="false">
+	
+		<Resource
+       name="jdbc/forex" 
+       type="javax.sql.DataSource" 
+       password="root" 
+       driverClassName="com.mysql.jdbc.Driver" 
+       maxIdle="5" 
+       maxWait="100" 
+       username="root"
+       url="jdbc:mysql://127.0.0.1:3306/forex?characterEncoding=UTF-8"
+       maxActive="5" 
+       removeAbandoned="false" 
+       removeAbandonedTimeout="60" 
+       logAbandoned="true"/>
+ 
+</Context>
+

@@ -1,0 +1,25 @@
+package com.hh;
+import java.util.Scanner;
+
+public class JavaTest {
+	
+	///////
+	public static int main(String[] args) {
+		// TODO Auto-generated method stub
+       Scanner NC=new Scanner(System.in);
+       int N=NC.nextInt();
+       int sum=NC.nextInt();
+       if(N>2&&N<100){
+    	   System.out.print(N);
+       }else{
+    	   System.out.print("");
+       }
+       for(N=1;N<1000;N++){
+    	   sum=sum+N;
+       }
+       System.out.print(sum);
+        return sum;
+	}
+	//////////
+		
+}

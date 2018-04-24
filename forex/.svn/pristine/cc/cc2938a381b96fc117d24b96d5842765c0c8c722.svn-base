@@ -1,0 +1,134 @@
+package com.talent.exam.dao;
+
+import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.LockMode;
+import org.hibernate.Query;
+import org.hibernate.criterion.Example;
+
+import com.talent.exam.domain.ExamAccType;
+
+
+public class ExamAccTypeDAO extends BaseHibernateDAO {
+	private static final Log log = LogFactory.getLog(ExamAccTypeDAO.class);
+	// property constants
+	public static final String ACC_TYPE = "accType";
+
+	public void save(ExamAccType transientInstance) {
+		log.debug("saving ExamAccType instance");
+		try {
+			getSession().save(transientInstance);
+			log.debug("save successful");
+		} catch (RuntimeException re) {
+			log.error("save failed", re);
+			throw re;
+		}
+	}
+
+	public void delete(ExamAccType persistentInstance) {
+		log.debug("deleting ExamAccType instance");
+		try {
+			getSession().delete(persistentInstance);
+			log.debug("delete successful");
+		} catch (RuntimeException re) {
+			log.error("delete failed", re);
+			throw re;
+		}
+	}
+
+	public ExamAccType findById(java.lang.String id) {
+		log.debug("getting ExamAccType instance with id: " + id);
+		try {
+			ExamAccType instance = (ExamAccType) getSession().get(
+					"com.talent.exam.dao.ExamAccType", id);
+			return instance;
+		} catch (RuntimeException re) {
+			log.error("get failed", re);
+			throw re;
+		}
+	}
+
+	public List findByExample(ExamAccType instance) {
+		log.debug("finding ExamAccType instance by example");
+		try {
+			List results = getSession()
+					.createCriteria("com.talent.exam.dao.ExamAccType")
+					.add(Example.create(instance)).list();
+			log.debug("find by example successful, result size: "
+					+ results.size());
+			return results;
+		} catch (RuntimeException re) {
+			log.error("find by example failed", re);
+			throw re;
+		}
+	}
+
+	public List findByProperty(String propertyName, Object value) {
+		log.debug("finding ExamAccType instance with property: " + propertyName
+				+ ", value: " + value);
+		try {
+			String queryString = "from ExamAccType as model where model."
+					+ propertyName + "= ?";
+			Query queryObject = getSession().createQuery(queryString);
+			queryObject.setParameter(0, value);
+			return queryObject.list();
+		} catch (RuntimeException re) {
+			log.error("find by property name failed", re);
+			throw re;
+		}
+	}
+
+	public List findByAccType(Object accType) {
+		return findByProperty(ACC_TYPE, accType);
+	}
+
+	public List findAll() {
+		log.debug("finding all ExamAccType instances");
+		try {
+			String queryString = "from ExamAccType";
+			Query queryObject = getSession().createQuery(queryString);
+			return queryObject.list();
+		} catch (RuntimeException re) {
+			log.error("find all failed", re);
+			throw re;
+		}
+	}
+
+	public ExamAccType merge(ExamAccType detachedInstance) {
+		log.debug("merging ExamAccType instance");
+		try {
+			ExamAccType result = (ExamAccType) getSession().merge(
+					detachedInstance);
+			log.debug("merge successful");
+			return result;
+		} catch (RuntimeException re) {
+			log.error("merge failed", re);
+			throw re;
+		}
+	}
+
+	public void attachDirty(ExamAccType instance) {
+		log.debug("attaching dirty ExamAccType instance");
+		try {
+			getSession().saveOrUpdate(instance);
+			log.debug("attach successful");
+		} catch (RuntimeException re) {
+			log.error("attach failed", re);
+			throw re;
+		}
+	}
+
+	public void attachClean(ExamAccType instance) {
+		log.debug("attaching clean ExamAccType instance");
+		try {
+			getSession().lock(instance, LockMode.NONE);
+			log.debug("attach successful");
+		} catch (RuntimeException re) {
+			log.error("attach failed", re);
+			throw re;
+		}
+	}
+}

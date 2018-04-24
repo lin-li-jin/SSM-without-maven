@@ -1,0 +1,114 @@
+package com.talent.forex.core;
+
+import com.talent.auth.bean.domain.StudentClass;
+import com.talent.auth.bean.domain.TClass;
+import com.talent.auth.bean.domain.TeacherClass;
+import com.talent.auth.bean.domain.Users;
+import com.talent.auth.dao.StuClassDao;
+import com.talent.auth.dao.TClassDao;
+import com.talent.auth.dao.TeachClassDao;
+import com.talent.auth.dao.UsersDao;
+import com.talent.forex.constant.SysParamNameConst;
+import com.talent.hibernate.util.HibernateUtil;
+
+import org.apache.log4j.Logger;
+import org.hibernate.criterion.MatchMode;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
+/**
+ * 1.导入老师、学生、班级信息
+ * Created by 吴樟 on www.haixiangzhene.xyz
+ * 2017/8/16.
+ */
+public class STTDao {
+
+    private Logger logger= Logger.getLogger(this.getClass());
+
+    private TClassDao tClassDao;
+    private UsersDao usersDao;
+    private StuClassDao stuClassDao;
+    private TeachClassDao teachClassDao;
+
+    /**
+     * 数据导入
+     * @param teacher
+     * @param stus
+     * @param tClass
+     */
+    public void dataImport(Users teacher, Collection<Users> stus, TClass tClass){
+        if (teacher==null || stus==null || tClass==null)
+            throw new NullPointerException("dataImport failed!it throw nullpointerException");
+        //验证身份模块
+        if (!isT(teacher))
+            throw new IllegalArgumentException("args[teacher] is not allowed,beacuse it's type must T");
+        Iterator<Users> ite=stus.iterator();
+        while (ite.hasNext()){
+            Users stu=ite.next();
+            if (!isS(stu))
+                throw new IllegalArgumentException("args[student] is not allowed,beacuse it's type must be S");
+        }
+        //验证学生数据是否存在
+
+        //开启数据导入
+        HibernateUtil.beginTransaction();
+        try {
+            usersDao.insertSingle(teacher);
+            usersDao.batchInsert(stus);
+            tClassDao.insertSingle(tClass);
+            TeacherClass teacherClass=new TeacherClass();
+            teacherClass.setClassId(tClass.getClassId());
+            Users teach=usersDao.getBeanByBean(teacher, MatchMode.EXACT);
+            logger.info("teacher--id:"+teach.getId());
+            teacherClass.settId(teach.getId());
+            Iterator it=stus.iterator();
+            ArrayList<StudentClass> list=new ArrayList<StudentClass>();
+            while (it.hasNext()){
+                Users users= (Users) it.next();
+                Users stu=usersDao.getBeanByBean(users,MatchMode.EXACT);
+                logger.info("stu--id:"+stu.getId());
+                StudentClass studentClass=new StudentClass();
+                studentClass.setClassId(tClass.getClassId());
+                studentClass.setsId(stu.getId());
+                teachClassDao.batchInsert(list);
+            }
+            logger.info("导入数据成功");
+            HibernateUtil.commitTransaction();
+        }catch (Exception e){
+            logger.info("导入数据失败!!!");
+            HibernateUtil.rollbackTransaction();
+        }
+    }
+
+    //判断学生身份
+    public boolean isS(Users users){
+        if (users.getUserType().equals( SysParamNameConst.STUDENT))
+            return true;
+        return false;
+    }
+
+    //验证教师身份
+    public boolean isT(Users users){
+        if (users.getUserType().equals(SysParamNameConst.TEACHER))
+            return true;
+        return false;
+    }
+
+    public TClassDao gettClassDao() {
+        return tClassDao;
+    }
+
+    public void settClassDao(TClassDao tClassDao) {
+        this.tClassDao = tClassDao;
+    }
+
+    public UsersDao getUsersDao() {
+        return usersDao;
+    }
+
+    public void setUsersDao(UsersDao usersDao) {
+        this.usersDao = usersDao;
+    }
+}

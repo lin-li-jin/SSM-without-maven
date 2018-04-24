@@ -1,0 +1,52 @@
+<%@ page language="java" import="java.util.*" pageEncoding="gbk"%>
+<%@ page contentType="text/html;charset=gbk" %> 
+<%@ taglib prefix="ww" uri="webwork" %>
+<%
+	String subjectpath=request.getContextPath();
+%>
+<html>
+  <head>
+    <title>分卷功能</title>
+	<script src="<%=subjectpath%>/resources/js/jquery-1.8.3.js" type="text/javascript"></script>
+	<script src="<%=subjectpath%>/resources/js/jquery.validate.js" type="text/javascript"></script>
+	<script src="<%=subjectpath%>/resources/ponycss/jquery_validate.css" type="text/javascript"></script>
+	<script src="<%=subjectpath%>/resources/js/jquery.easyui.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="<%=subjectpath%>/resources/css/easyui.css">
+    
+    <script type="text/javascript">
+        $.ajax({
+            url: '<%=subjectpath%>/distributePaper.action',
+            type: 'get',
+            dataType: 'json',
+            data: {param1: 'value1'},
+        })
+            .done(function() {
+                console.log("success");
+            })
+            .fail(function() {
+                console.log("error");
+            })
+            .always(function() {
+                console.log("complete");
+            });
+		
+	</script>
+
+  </head>
+  <body class="easyui-layout">
+  <div>
+	  <div class="model">
+		  <div style="display: inline">
+			  <label for="c_num">试卷名称 : </label>
+			  <input type="input" name="c_num" id="c_num" style="width: 80px;"> &nbsp;&nbsp;&nbsp;
+		  </div>
+	  </div>
+	  <div class="model">
+		  <div style="display: inline">
+			  <label for="w_num">分配班级 : </label>
+			  <input type="input"  name="w_num" id="w_num" style="width: 80px;"> &nbsp;&nbsp;&nbsp;
+		  </div>
+	  </div>
+  </div>
+  </body>
+</html>

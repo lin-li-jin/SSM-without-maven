@@ -1,0 +1,84 @@
+html,body{font-size:13px;}
+#layout_main
+{
+	width:960px;
+    border-color:#FFCC66;
+    margin:0px auto;
+}
+
+/*
+margin:
+
+用来控制对象的上 右 下 左 4个方向的外边距
+- 如果只设定2个参数  则第一个表示上下边距 ，第二个表示左右边距
+- 如果只设定1个参数  则表示所有的四个方向的边距都是如此
+*/
+
+#layout_top
+{
+	border:1px solid #B9BEC6;	
+	width:956px;  
+	height:300px;	
+}
+#sys1{	
+	float:left;
+	left:0px;
+	top:0px;
+	height:50px;
+	width:470px;
+	margin-top:8px;
+	margin-left:4px;
+}
+#sys2{
+	float:left;
+	left:475px;
+	height:50px;
+	width:470px;
+	margin-top:8px;
+	margin-left:4px;
+}
+
+#listModel
+{
+	border:1px solid #B9BEC6;	
+	height:120px;
+	width:850px;
+	float:left;
+	margin-top:10px;
+	margin-left:4px;
+}
+
+
+#layout_body
+{
+	width:958px;    
+	height:280px;
+	margin-top:5px; 
+}
+#layout_body1
+{
+	border:0px solid #B9BEC6;	
+	height:255px;
+	width:942px;
+	float:left;
+	margin-left:4px;
+}
+
+
+#layout_body2
+{
+	border:1px solid #B9BEC6;
+	height:25px;
+    width:942px;
+	float:left;
+	margin-top:5px;
+	margin-left:4px;
+}
+
+#layout_bottom
+{
+	border:1px solid #B9BEC6;	
+	height:30px;
+	width:942px;
+	margin-top:5px;
+}

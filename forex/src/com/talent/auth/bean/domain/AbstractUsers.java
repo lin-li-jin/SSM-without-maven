@@ -1,0 +1,160 @@
+package com.talent.auth.bean.domain;
+
+import com.talent.exam.domain.ExamStuAnswer;
+
+import java.util.Collection;
+
+/**
+ * AbstractUsers entity provides the base persistence definition of the Users
+ * entity. @author MyEclipse Persistence Tools
+ */
+
+public abstract class AbstractUsers implements java.io.Serializable {
+
+	// Fields
+
+	private Integer id;
+	private String userNum;
+	private String password;
+	private String name;
+	private String groupOne;
+	private String groupTwo;
+	private String post;
+	private String userType;
+	private String status;
+	private Integer loginTime;
+	private Integer falseTime;
+	private Collection<ExamStuAnswer> examStuAnswersById;
+
+	// Constructors
+
+	/** default constructor */
+	public AbstractUsers() {
+	}
+
+	/** minimal constructor */
+	public AbstractUsers(String userNum, String password, String name,
+			String groupOne, String post, String userType, String status) {
+		this.userNum = userNum;
+		this.password = password;
+		this.name = name;
+		this.groupOne = groupOne;
+		this.post = post;
+		this.userType = userType;
+		this.status = status;
+	}
+
+	/** full constructor */
+	public AbstractUsers(String userNum, String password, String name,
+			String groupOne, String groupTwo, String post, String userType,
+			String status, Integer loginTime, Integer falseTime) {
+		this.userNum = userNum;
+		this.password = password;
+		this.name = name;
+		this.groupOne = groupOne;
+		this.groupTwo = groupTwo;
+		this.post = post;
+		this.userType = userType;
+		this.status = status;
+		this.loginTime = loginTime;
+		this.falseTime = falseTime;
+	}
+
+	// Property accessors
+
+	public Integer getId() {
+		return this.id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getUserNum() {
+		return this.userNum;
+	}
+
+	public void setUserNum(String userNum) {
+		this.userNum = userNum;
+	}
+
+	public String getPassword() {
+		return this.password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getGroupOne() {
+		return this.groupOne;
+	}
+
+	public void setGroupOne(String groupOne) {
+		this.groupOne = groupOne;
+	}
+
+	public String getGroupTwo() {
+		return this.groupTwo;
+	}
+
+	public void setGroupTwo(String groupTwo) {
+		this.groupTwo = groupTwo;
+	}
+
+	public String getPost() {
+		return this.post;
+	}
+
+	public void setPost(String post) {
+		this.post = post;
+	}
+
+	public String getUserType() {
+		return this.userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
+
+	public String getStatus() {
+		return this.status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Integer getLoginTime() {
+		return this.loginTime;
+	}
+
+	public void setLoginTime(Integer loginTime) {
+		this.loginTime = loginTime;
+	}
+
+	public Integer getFalseTime() {
+		return this.falseTime;
+	}
+
+	public void setFalseTime(Integer falseTime) {
+		this.falseTime = falseTime;
+	}
+
+	public Collection<ExamStuAnswer> getExamStuAnswersById() {
+		return examStuAnswersById;
+	}
+
+	public void setExamStuAnswersById(Collection<ExamStuAnswer> examStuAnswersById) {
+		this.examStuAnswersById = examStuAnswersById;
+	}
+}

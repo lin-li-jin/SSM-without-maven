@@ -1,0 +1,181 @@
+package com.talent.exam.dao;
+
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.LockMode;
+import org.hibernate.Query;
+import org.hibernate.criterion.Example;
+
+import com.talent.exam.domain.ExamMarketBreakout;
+
+/**
+ * A data access object (DAO) providing persistence and search support for
+ * ExamMarketBreakout entities. Transaction control of the save(), update() and
+ * delete() operations can directly support Spring container-managed
+ * transactions or they can be augmented to handle user-managed Spring
+ * transactions. Each of these methods provides additional information for how
+ * to configure it for the desired type of transaction control.
+ * 
+ * @see com.talent.exam.dao.ExamMarketBreakout
+ * @author MyEclipse Persistence Tools
+ */
+public class ExamMarketBreakoutDAO extends BaseHibernateDAO {
+	private static final Log log = LogFactory
+			.getLog(ExamMarketBreakoutDAO.class);
+	// property constants
+	public static final String ACC_TYPE_NO = "accTypeNo";
+	public static final String DIRECTION = "direction";
+	public static final String ACC = "acc";
+	public static final String STOP_LOSS_AMOUNT1 = "stopLossAmount1";
+	public static final String STOP_LOSS_PRICE1 = "stopLossPrice1";
+	public static final String STOP_LOSS_AMOUNT2 = "stopLossAmount2";
+	public static final String STOP_LOSS_PRICE2 = "stopLossPrice2";
+	public static final String MONITOR_PRICE = "monitorPrice";
+	public static final String GOOD_FROM = "goodFrom";
+	public static final String GOOD_TILL = "goodTill";
+	public static final String STEP = "step";
+
+	public void save(ExamMarketBreakout transientInstance) {
+		log.debug("saving ExamMarketBreakout instance");
+		try {
+			getSession().save(transientInstance);
+			log.debug("save successful");
+		} catch (RuntimeException re) {
+			log.error("save failed", re);
+			throw re;
+		}
+	}
+
+	public void delete(ExamMarketBreakout persistentInstance) {
+		log.debug("deleting ExamMarketBreakout instance");
+		try {
+			getSession().delete(persistentInstance);
+			log.debug("delete successful");
+		} catch (RuntimeException re) {
+			log.error("delete failed", re);
+			throw re;
+		}
+	}
+
+	public ExamMarketBreakout findById(java.lang.Integer id) {
+		log.debug("getting ExamMarketBreakout instance with id: " + id);
+		try {
+			ExamMarketBreakout instance = (ExamMarketBreakout) getSession()
+					.get("com.talent.exam.domain.ExamMarketBreakout", id);
+			return instance;
+		} catch (RuntimeException re) {
+			log.error("get failed", re);
+			throw re;
+		}
+	}
+
+
+
+	public List findByProperty(String propertyName, Object value) {
+		log.debug("finding ExamMarketBreakout instance with property: "
+				+ propertyName + ", value: " + value);
+		try {
+			String queryString = "from ExamMarketBreakout as model where model."
+					+ propertyName + "= ?";
+			Query queryObject = getSession().createQuery(queryString);
+			queryObject.setParameter(0, value);
+			return queryObject.list();
+		} catch (RuntimeException re) {
+			log.error("find by property name failed", re);
+			throw re;
+		}
+	}
+
+	public List findByAccTypeNo(Object accTypeNo) {
+		return findByProperty(ACC_TYPE_NO, accTypeNo);
+	}
+
+	public List findByDirection(Object direction) {
+		return findByProperty(DIRECTION, direction);
+	}
+
+	public List findByAcc(Object acc) {
+		return findByProperty(ACC, acc);
+	}
+
+	public List findByStopLossAmount1(Object stopLossAmount1) {
+		return findByProperty(STOP_LOSS_AMOUNT1, stopLossAmount1);
+	}
+
+	public List findByStopLossPrice1(Object stopLossPrice1) {
+		return findByProperty(STOP_LOSS_PRICE1, stopLossPrice1);
+	}
+
+	public List findByStopLossAmount2(Object stopLossAmount2) {
+		return findByProperty(STOP_LOSS_AMOUNT2, stopLossAmount2);
+	}
+
+	public List findByStopLossPrice2(Object stopLossPrice2) {
+		return findByProperty(STOP_LOSS_PRICE2, stopLossPrice2);
+	}
+
+	public List findByMonitorPrice(Object monitorPrice) {
+		return findByProperty(MONITOR_PRICE, monitorPrice);
+	}
+
+	public List findByGoodFrom(Object goodFrom) {
+		return findByProperty(GOOD_FROM, goodFrom);
+	}
+
+	public List findByGoodTill(Object goodTill) {
+		return findByProperty(GOOD_TILL, goodTill);
+	}
+
+	public List findByStep(Object step) {
+		return findByProperty(STEP, step);
+	}
+
+	public List findAll() {
+		log.debug("finding all ExamMarketBreakout instances");
+		try {
+			String queryString = "from ExamMarketBreakout";
+			Query queryObject = getSession().createQuery(queryString);
+			return queryObject.list();
+		} catch (RuntimeException re) {
+			log.error("find all failed", re);
+			throw re;
+		}
+	}
+
+	public ExamMarketBreakout merge(ExamMarketBreakout detachedInstance) {
+		log.debug("merging ExamMarketBreakout instance");
+		try {
+			ExamMarketBreakout result = (ExamMarketBreakout) getSession()
+					.merge(detachedInstance);
+			log.debug("merge successful");
+			return result;
+		} catch (RuntimeException re) {
+			log.error("merge failed", re);
+			throw re;
+		}
+	}
+
+	public void attachDirty(ExamMarketBreakout instance) {
+		log.debug("attaching dirty ExamMarketBreakout instance");
+		try {
+			getSession().saveOrUpdate(instance);
+			log.debug("attach successful");
+		} catch (RuntimeException re) {
+			log.error("attach failed", re);
+			throw re;
+		}
+	}
+
+	public void attachClean(ExamMarketBreakout instance) {
+		log.debug("attaching clean ExamMarketBreakout instance");
+		try {
+			getSession().lock(instance, LockMode.NONE);
+			log.debug("attach successful");
+		} catch (RuntimeException re) {
+			log.error("attach failed", re);
+			throw re;
+		}
+	}
+}

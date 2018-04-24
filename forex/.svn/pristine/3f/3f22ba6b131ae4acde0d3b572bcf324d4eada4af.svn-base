@@ -1,0 +1,23 @@
+package com.talent.exam.domain;
+
+/**
+ * ExamStopLoss entity. @author MyEclipse Persistence Tools
+ */
+public class ExamStopLoss extends AbstractExamStopLoss implements
+		java.io.Serializable {
+
+	// Constructors
+
+	/** default constructor */
+	public ExamStopLoss() {
+	}
+
+	/** full constructor */
+	public ExamStopLoss(ExamContent examContent, String accTypeNo,
+			String direction, String acc, String accAmount,
+			String monitorPrice, String goodFrom, String goddTill, Integer step) {
+		super(examContent, accTypeNo, direction, acc, accAmount, monitorPrice,
+				goodFrom, goddTill, step);
+	}
+
+}

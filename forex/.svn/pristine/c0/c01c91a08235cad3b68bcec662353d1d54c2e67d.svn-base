@@ -1,0 +1,132 @@
+package com.talent.exam.test;
+
+public class ExamOneClick  {
+
+	private Integer examOneClickNo;
+	private String accTypeNo;
+	private String direction;
+	private String acc;
+	private String accAmount;
+	private Integer step;
+	
+	private ExamContent examContentByExamNo;
+
+	public Integer getExamOneClickNo() {
+		return examOneClickNo;
+	}
+
+	public void setExamOneClickNo(Integer examOneClickNo) {
+		this.examOneClickNo = examOneClickNo;
+	}
+
+	public String getAccTypeNo() {
+		return accTypeNo;
+	}
+
+	public void setAccTypeNo(String accTypeNo) {
+		this.accTypeNo = accTypeNo;
+	}
+
+	public String getDirection() {
+		return direction;
+	}
+
+	public void setDirection(String direction) {
+		this.direction = direction;
+	}
+
+	public String getAcc() {
+		return acc;
+	}
+
+	public void setAcc(String acc) {
+		this.acc = acc;
+	}
+
+	public String getAccAmount() {
+		return accAmount;
+	}
+
+	public void setAccAmount(String accAmount) {
+		this.accAmount = accAmount;
+	}
+
+	public Integer getStep() {
+		return step;
+	}
+
+	public void setStep(Integer step) {
+		this.step = step;
+	}
+	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((acc == null) ? 0 : acc.hashCode());
+		result = prime * result
+				+ ((accAmount == null) ? 0 : accAmount.hashCode());
+		result = prime * result
+				+ ((accTypeNo == null) ? 0 : accTypeNo.hashCode());
+		result = prime * result
+				+ ((direction == null) ? 0 : direction.hashCode());
+		result = prime * result
+				+ ((examOneClickNo == null) ? 0 : examOneClickNo.hashCode());
+		result = prime * result + ((step == null) ? 0 : step.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ExamOneClick other = (ExamOneClick) obj;
+		if (acc == null) {
+			if (other.acc != null)
+				return false;
+		} else if (!acc.equals(other.acc))
+			return false;
+		if (accAmount == null) {
+			if (other.accAmount != null)
+				return false;
+		} else if (!accAmount.equals(other.accAmount))
+			return false;
+		if (accTypeNo == null) {
+			if (other.accTypeNo != null)
+				return false;
+		} else if (!accTypeNo.equals(other.accTypeNo))
+			return false;
+		if (direction == null) {
+			if (other.direction != null)
+				return false;
+		} else if (!direction.equals(other.direction))
+			return false;
+		if (examOneClickNo == null) {
+			if (other.examOneClickNo != null)
+				return false;
+		} else if (!examOneClickNo.equals(other.examOneClickNo))
+			return false;
+		if (step == null) {
+			if (other.step != null)
+				return false;
+		} else if (!step.equals(other.step))
+			return false;
+		return true;
+	}
+
+	public ExamContent getExamContentByExamNo() {
+		return examContentByExamNo;
+	}
+
+	public void setExamContentByExamNo(ExamContent examContentByExamNo) {
+		this.examContentByExamNo = examContentByExamNo;
+	}
+	
+	
+
+}

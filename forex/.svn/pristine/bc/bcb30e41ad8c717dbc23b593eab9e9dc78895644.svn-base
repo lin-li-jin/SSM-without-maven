@@ -1,0 +1,97 @@
+<%@ page contentType="text/html;charset=GBK" %>
+<%@ taglib prefix="ww" uri="webwork" %>
+<html>
+<%
+	String subjectPath=request.getContextPath();
+%>
+<head>
+	<title>外汇模拟投资系统</title>
+	<link rel="stylesheet" type="text/css" href="<%=subjectPath%>/resources/calendar/js/My97DatePicker/skin/WdatePicker.css"/>
+
+	<script src="<%=subjectPath%>/resources/js/jquery-1.8.3.js" type="text/javascript"></script>
+	<script src="<%=subjectPath%>/resources/js/jquery.validate.js" type="text/javascript"></script>
+	<script src="<%=subjectPath%>/resources/js/additional-methods.js"/>
+	<script src="<%=subjectPath%>/resources/ponycss/jquery_validate.css" type="text/javascript"></script>
+	<script src="<%=subjectPath%>/resources/js/jquery.easyui.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="<%=subjectPath%>/resources/css/easyui.css">
+	<script type="text/javascript" src="<%=subjectPath%>/resources/calendar/js/My97DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="<%=subjectPath%>/resources/js/exam/stop_loss.js"></script>
+	<script type="text/javascript">
+
+	</script>
+</head>
+<body>
+
+<div>
+	<div>
+		交易类型:人民币交易
+	</div>
+	题干:
+	<div style="border: solid 4px #148213;width: 400px;">
+		<!-- stop loss交易 -->
+		<!--
+			1.题目内容
+		 -->
+		<div style="margin: 3px 4px;" class="stop_loss">
+			<textarea style="width: 280px;height: 180px;">
+
+			</textarea>
+		</div>
+	</div>
+	算分交易要素:
+	<div style="border: solid 4px #148213;width:400px;">
+		<form id="form1">
+			<div style="margin-top: 3px;margin-left: 2px;margin-right: 2px;height: 40px;line-height: 40px;">
+				<input type="checkbox" name="acc.checkbox" value="checkbox"> 交易金额 &nbsp;&nbsp;&nbsp;
+				分数 : <input type="input" name="item.stopLossScore.AccScore" style="width: 60px;"> &nbsp;&nbsp;&nbsp;
+				<label for="core">正确答案 :</label>
+				 <input id="core" name="core" type="input"  style="width: 60px;" required minlength="2"> &nbsp;&nbsp;&nbsp;
+			</div>
+		</form>
+		<div style="margin-top: 3px;margin-left: 2px;margin-right: 2px;height: 40px;line-height: 40px;">
+			<input type="checkbox" name="stopLossAccmonitorPrice.checkbox" value="checkbox"> 交易币种 &nbsp;&nbsp;&nbsp;
+			分数 : <input type="input" name="item.stopLossScore.stopLossAccmonitorPriceScore" style="width: 60px;"> &nbsp;&nbsp;&nbsp;
+			正确答案 : <input type="input" name="item.stopLossAccmonitorPrice" style="width: 60px;"> &nbsp;&nbsp;&nbsp;
+		</div>
+		<div style="margin-top: 3px;margin-left: 2px;margin-right: 2px;height: 40px;line-height: 40px;">
+			<input type="checkbox" name="checkbox1" value="checkbox"> 交易方向 &nbsp;&nbsp;&nbsp;
+			分数 : <input type="input" name="" style="width: 60px;"> &nbsp;&nbsp;&nbsp;
+			正确答案 : <input type="input" name="item.Direction" style="width: 60px;"> &nbsp;&nbsp;&nbsp;
+		</div>
+		<div style="margin-top: 3px;margin-left: 2px;margin-right: 2px;height: 40px;line-height: 40px;">
+			<input type="checkbox" name="checkbox1" value="checkbox"> 交易价格 &nbsp;&nbsp;&nbsp;
+			分数 : <input type="input" name="" style="width: 60px;"> &nbsp;&nbsp;&nbsp;
+			正确答案 : <input type="input" name="item.stopLossPrice" style="width: 60px;"> &nbsp;&nbsp;&nbsp;
+		</div>
+		<div style="margin-top: 3px;margin-left: 2px;margin-right: 2px;height: 40px;line-height: 40px;">
+			<input type="checkbox" name="checkbox1" value="checkbox"> 模拟类型 &nbsp;&nbsp;&nbsp;
+			分数 : <input type="input" name="item.stopLossAccmonitorPrice" style="width: 60px;"> &nbsp;&nbsp;&nbsp;
+			正确答案 :
+			<select name="item.stopLossAccmonitorPrice">
+				<option value="ask">ask</option>
+				<option value="bid">bid</option>
+			</select> &nbsp;&nbsp;&nbsp;
+		</div>
+
+		<div style="margin-top: 3px;margin-left: 2px;margin-right: 2px;height: 40px;line-height: 40px;">
+			<input type="checkbox" name="checkbox1" value="checkbox"> 开始时间 &nbsp;&nbsp;&nbsp;
+			分数 : <input type="input" name="" style="width: 60px;"> &nbsp;&nbsp;&nbsp;
+			正确答案 : <img src="<%=subjectPath%>/resources/calendar/image/Button.gif" onclick="WdatePicker({el:'d1'})" > &nbsp;&nbsp;&nbsp;
+			<input type="text" id="d1" datatype="date" name="item.stopLossGoodFrom">
+		</div>
+		<div style="margin-top: 3px;margin-left: 2px;margin-right: 2px;height: 40px;line-height: 40px;">
+			<input type="checkbox" name="checkbox1" value="checkbox"> 交割时间 &nbsp;&nbsp;&nbsp;
+			分数 : <input type="input" name="item." style="width: 60px;"> &nbsp;&nbsp;&nbsp;
+			正确答案 : <img src="<%=subjectPath%>/resources/calendar/image/Button.gif" onclick="WdatePicker({el:'d2'})" > &nbsp;&nbsp;&nbsp;
+			<input type="text" id="d2" datatype="date" name="item.stopLossGoodTill">
+		</div>
+		<div style="margin-top: 3px;margin-left: 2px;margin-right: 2px;height: 40px;line-height: 40px;">
+			总分 : <input type="input" name="item." style="width: 60px;"> &nbsp;&nbsp;&nbsp;
+		</div>
+
+	</div>
+</div>
+
+</body>
+
+</html>

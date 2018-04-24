@@ -1,0 +1,107 @@
+package com.talent.auth.dao;
+
+import com.talent.auth.bean.domain.TClass;
+import com.talent.hibernate.base.AbstractDaoImpl;
+import com.talent.hibernate.util.HibernateUtil;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.criterion.MatchMode;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+/**
+ * Created by 吴樟 on www.haixiangzhene.xyz
+ * 2017/8/16.
+ */
+public class TClassDao extends AbstractDaoImpl{
+
+    private static final String BEAN_PACKAGE_NAME="com.talent.auth.bean.domain.TClass";
+
+    /*根据主键返回实体类*/
+    public TClass getBeanById(Long id){
+        return (TClass) getBeanById(BEAN_PACKAGE_NAME,id,false);
+    }
+
+    /*获取所有的班级*/
+    public Collection getAll(){
+        return getAll(BEAN_PACKAGE_NAME);
+    }
+
+    /*根据模式匹配符合的实体集合*/
+    public Collection getBeansByBean(TClass bean, MatchMode mode){
+        return super.getBeansByBean(bean,mode);
+    }
+
+    /**
+     * 使用hql匹配，需在hibernate中配置使用
+     * @param hqlName
+     * @param paraList hql的预留参数
+     * @return
+     */
+    public TClass getBeanByParams(String hqlName, ArrayList paraList){
+        return (TClass) getProtoBeanByParams(hqlName,paraList);
+    }
+
+    /*根据模式匹配符合的实体类*/
+    public TClass getBeanByBean(TClass bean, MatchMode mode){
+        return (TClass) getProtoBeanByBean(bean,mode);
+    }
+
+    /*提供单个插入*/
+    public void insertSingle(TClass bean){
+        ArrayList<TClass> tClasses=new ArrayList<TClass>();
+        tClasses.add(bean);
+        batchInsert(tClasses);
+    }
+
+
+    /**
+     * 提供分页查询支持
+     * @param startPage 当前显示页
+     * @param lineNum 每页显示多少行
+     * @param tId 当前登录的教师id
+     * @param classNo 查询的班级号
+     */
+    public List<TClass> queryByPage(int startPage, int lineNum, int tId, String classNo){
+        startPage=startPage-1;
+        int start=startPage*lineNum;
+        Session session= HibernateUtil.getSession();
+        String queryAllhql="select new com.talent.auth.bean.domain.TClass(t.classId,t.classNo,t.className) from com.talent.auth.bean.domain.TClass t," +
+                "com.talent.auth.bean.domain.TeacherClass tc where tc.tId="+tId+" and tc.classId=t.classId";
+        String queryAllByClassNohql="select new com.talent.auth.bean.domain.TClass(t.classId,t.classNo,t.className) from com.talent.auth.bean.domain.TClass t," +
+        		"com.talent.auth.bean.domain.TeacherClass tc where tc.tId="+tId+" and tc.classId=t.classId and t.classNo like '%"+classNo+"%'";
+        String hql = classNo==null?queryAllhql:queryAllByClassNohql;
+        Query query=session.createQuery(hql);
+        query.setFirstResult(start);
+        query.setMaxResults(lineNum);
+        List<TClass> list=query.list();
+        return list;
+    }
+
+    /**
+     * 查询TClass长度
+     * @return
+     */
+    public Long getTClassSize(int tId){
+        String hql="select count(*) from com.talent.auth.bean.domain.TeacherClass where tId="+tId;
+        Session session= HibernateUtil.getSession();
+        Query query=session.createQuery(hql);
+        Long len= (Long) query.uniqueResult();
+        return len;
+    }
+
+    /**
+     * 根据班级号查询班级id
+     */
+    public Long getIdByclassNo(String classNo){
+        String hql="select classId from com.talent.auth.bean.domain.TClass where " +
+                "classNo="+classNo;
+        Session session=HibernateUtil.getSession();
+        Query query=session.createQuery(hql);
+        Long len= (Long) query.uniqueResult();
+        return len;
+    }
+
+}

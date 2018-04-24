@@ -1,0 +1,101 @@
+<%@ page language="java" import="java.util.*" pageEncoding="gbk"%>
+<%@ page contentType="text/html;charset=gbk" %> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk">
+<title>收发卷</title>
+	<script src="/forex/resources/js/jquery-1.8.3.js" type="text/javascript"></script>
+	<script src="/forex/resources/js/jquery.validate.js" type="text/javascript"></script>
+	<script src="/forex/resources/ponycss/jquery_validate.css" type="text/javascript"></script>
+	<script src="/forex/resources/js/jquery.easyui.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="/forex/resources/css/easyui.css">
+	<style type="text/css"></style>
+	<script type="text/javascript">
+		$(function(){
+			getTest();
+			getClass();
+			$("#give").click(function(){
+				var paperId = $("#testNo option:selected").val();
+				var classId = $("#classNo option:selected").val();
+				var examPaperMessage = {"examPaperMessage.paperId":paperId,"examPaperMessage.classId":classId};
+				alert(paperId);
+				$.ajax({
+					type:"get",
+					url:"/forex/distributePaper.action",
+					data:examPaperMessage,
+					dataType:"json",
+					success:function(result){
+						alert("添加成功");
+					},
+					error:function(){
+						alert("添加失败！")
+					}
+				});
+			});
+		});
+	
+		function getTest(){
+			$.ajax({  
+                type: "get",  
+                url: "/forex/queryDistributedPaper.action", 
+                dataType: "json",  
+                success: function(result) {  
+                    var d = eval(result);
+                    $.each(d[0].message,function(i,result){
+                    	d = "<option value='" + result['paperNo'] + "'>" + result['paperTitle'] + "</option>"; 
+                    	$("#testNo").append(d); 
+                    });  
+                },  
+                error: function() {  
+                    alert("系统异常，请稍后再试！");  
+                }  
+            });  
+		}
+		
+		function getClass(){
+			$.ajax({  
+                type: "get",  
+                url: "/forex/queryClass.action?page=1&rows=100", 
+                dataType: "json",  
+                success: function(result) {  
+                    var d = eval(result);
+                    $.each(d.rows,function(i,result){
+                    	d = "<option value='" + result['classNo'] + "'>" + result['className'] + "</option>"; 
+                    	$("#classNo").append(d); 
+                    });   
+                },  
+                error: function() {  
+                    alert("系统异常，请稍后再试！");  
+                }  
+            });
+		}
+		
+        
+		
+	</script>
+</head>
+<body>
+	<div data-options="region:'north'" style="width:1140px;height:300px;">
+		<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		收发卷</h4>
+		<form id="distributeTestForm" method="post">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			试卷名称：<select name="testNo" id="testNo">
+						<option value="select" >请选择...</option>
+					</select>
+			<br><br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			分配班级：<select name="classNo" id="classNo">
+						<option value="select" >请选择...</option>
+					</select>
+			<br><br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type="button" value="发卷" id="give"/>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type="button" value="收卷" id="get"/>
+		</form>
+	</div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+package com.hh;
+import java.util.Scanner;
+
+public class JavaTest {
+	
+	///////
+	public static void main(String[] args) 
+	{
+		int a,b,t,sum=0;
+		a =new Scanner(System.in).nextInt();
+		b =new Scanner(System.in).nextInt();
+		for(int i=a;i<=b;i++)
+		{
+			t=i/2;
+			for(int k=1;k<t;k++)
+			{
+				if(k*k==i)
+				{
+					int su = 0;
+					String s = k+"";
+					int c = s.length();
+					for(int j=0;j<c;j++)
+					{
+						int d = (int)s.indexOf(j);
+						if(d==1)
+						{
+							su++;
+						}
+						else
+						{
+							for(int e=1;e<d/2;e++)
+							{
+								if(e*e==d)su++;
+							}
+						}
+						
+					}
+				}
+			}
+			
+		}
+	}
+
+	////
+		
+}

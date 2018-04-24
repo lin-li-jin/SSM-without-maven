@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<!-- 
+ Amendment No.: FOEXAS009
+ Create By    : wz
+ Description  : 学生考试模块
+ Modify Date  : 2017-08-16
+  -->
+<beans default-autowire="byName">
+
+</beans>

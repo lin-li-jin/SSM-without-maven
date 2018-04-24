@@ -1,0 +1,80 @@
+package com.talent.exam.domain;
+
+import com.talent.auth.bean.domain.TClass;
+
+/**
+ * Created by 吴樟 on www.haixiangzhene.xyz
+ * 2017/9/24.
+ */
+public class ExamPaperDistribute {
+    private int paperNo;
+    private String classPaperStatus;
+    private String createDate;
+    private String tillDate;
+    private TClass tClassByClassId;
+
+    public int getPaperNo() {
+        return paperNo;
+    }
+
+    public void setPaperNo(int paperNo) {
+        this.paperNo = paperNo;
+    }
+
+    public String getClassPaperStatus() {
+        return classPaperStatus;
+    }
+
+    public void setClassPaperStatus(String classPaperStatus) {
+        this.classPaperStatus = classPaperStatus;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getTillDate() {
+        return tillDate;
+    }
+
+    public void setTillDate(String tillDate) {
+        this.tillDate = tillDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ExamPaperDistribute that = (ExamPaperDistribute) o;
+
+        if (paperNo != that.paperNo) return false;
+        if (classPaperStatus != null ? !classPaperStatus.equals(that.classPaperStatus) : that.classPaperStatus != null)
+            return false;
+        if (createDate != null ? !createDate.equals(that.createDate) : that.createDate != null) return false;
+        if (tillDate != null ? !tillDate.equals(that.tillDate) : that.tillDate != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = paperNo;
+        result = 31 * result + (classPaperStatus != null ? classPaperStatus.hashCode() : 0);
+        result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
+        result = 31 * result + (tillDate != null ? tillDate.hashCode() : 0);
+        return result;
+    }
+
+    public TClass gettClassByClassId() {
+        return tClassByClassId;
+    }
+
+    public void settClassByClassId(TClass tClassByClassId) {
+        this.tClassByClassId = tClassByClassId;
+    }
+}

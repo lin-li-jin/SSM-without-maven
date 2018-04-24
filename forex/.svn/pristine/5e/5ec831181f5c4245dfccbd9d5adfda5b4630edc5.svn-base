@@ -1,0 +1,47 @@
+package com.talent.forex.advice;
+
+import com.talent.exam.modules.admin_mng.model.ExamContentItem;
+import com.talent.exam.modules.admin_mng.model.ExamResult;
+import com.talent.exception.BoException;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
+import org.apache.log4j.Logger;
+
+import java.lang.reflect.Method;
+import java.util.List;
+
+/**
+ * 考试模块
+ * Created by 吴樟 on www.haixiangzhene.xyz
+ * 2017/9/11.
+ */
+public class ExamAdvice implements MethodInterceptor {
+
+    private static final Logger logger=Logger.getLogger(ExamAdvice.class);
+
+    /**
+     * 1.检查参数是否存在空值
+     */
+    @Override
+    public Object invoke(MethodInvocation methodInvocation) throws Throwable {
+        Object result=null;
+        Object[] args=methodInvocation.getArguments();
+        Method method=methodInvocation.getMethod();
+        try {
+            if (method.getName().equals("queryBySubjectType") && (args==null || args[0]==null)){
+                logger.warn("参数"+"为空");
+                throw new BoException("传入参数不合法，请检查");
+            }
+            result=methodInvocation.proceed();
+        }catch (Exception e){
+            logger.warn(e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+        return result;
+    }
+
+
+
+
+}

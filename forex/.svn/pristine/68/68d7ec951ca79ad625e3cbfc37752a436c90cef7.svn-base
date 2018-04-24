@@ -1,0 +1,145 @@
+package com.talent.exam.dao;
+
+import java.util.List;
+
+import com.talent.exam.domain.ExamStuAnswer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.LockMode;
+import org.hibernate.Query;
+import org.hibernate.criterion.Example;
+
+/**
+ * A data access object (DAO) providing persistence and search support for
+ * ExamStuAnswer entities. Transaction control of the save(), update() and
+ * delete() operations can directly support Spring container-managed
+ * transactions or they can be augmented to handle user-managed Spring
+ * transactions. Each of these methods provides additional information for how
+ * to configure it for the desired type of transaction control.
+ * 
+ * @see com.talent.exam.domain.ExamStuAnswer
+ * @author MyEclipse Persistence Tools
+ */
+public class ExamStuAnswerDAO extends BaseHibernateDAO {
+	private static final Log log = LogFactory.getLog(ExamStuAnswerDAO.class);
+	// property constants
+	public static final String PAPER_EXAM_STATUS = "paperExamStatus";
+	public static final String STU_ANSWER = "stuAnswer";
+	public static final String STU_ANSWER_TABLE = "stuAnswerTable";
+	public static final String PAPER_GRADE = "paperGrade";
+
+	public void save(ExamStuAnswer transientInstance) {
+		log.debug("saving ExamStuAnswer instance");
+		try {
+			getSession().save(transientInstance);
+			getSession().flush();
+			log.debug("save successful");
+		} catch (RuntimeException re) {
+			log.error("save failed", re);
+			throw re;
+		}
+	}
+
+	public void delete(ExamStuAnswer persistentInstance) {
+		log.debug("deleting ExamStuAnswer instance");
+		try {
+			getSession().delete(persistentInstance);
+			log.debug("delete successful");
+		} catch (RuntimeException re) {
+			log.error("delete failed", re);
+			throw re;
+		}
+	}
+
+	public ExamStuAnswer findById(Integer id) {
+		log.debug("getting ExamStuAnswer instance with id: " + id);
+		try {
+			ExamStuAnswer instance = (ExamStuAnswer) getSession().get(
+					"com.talent.exam.domain.ExamStuAnswer", id);
+			return instance;
+		} catch (RuntimeException re) {
+			log.error("get failed", re);
+			throw re;
+		}
+	}
+
+
+
+	public List findByProperty(String propertyName, Object value) {
+		log.debug("finding ExamStuAnswer instance with property: "
+				+ propertyName + ", value: " + value);
+		try {
+			String queryString = "from ExamStuAnswer as model where model."
+					+ propertyName + "= ?";
+			Query queryObject = getSession().createQuery(queryString);
+			queryObject.setParameter(0, value);
+			return queryObject.list();
+		} catch (RuntimeException re) {
+			log.error("find by property name failed", re);
+			throw re;
+		}
+	}
+
+	public List findByPaperExamStatus(Object paperExamStatus) {
+		return findByProperty(PAPER_EXAM_STATUS, paperExamStatus);
+	}
+
+	public List findByStuAnswer(Object stuAnswer) {
+		return findByProperty(STU_ANSWER, stuAnswer);
+	}
+
+	public List findByStuAnswerTable(Object stuAnswerTable) {
+		return findByProperty(STU_ANSWER_TABLE, stuAnswerTable);
+	}
+
+	public List findByPaperGrade(Object paperGrade) {
+		return findByProperty(PAPER_GRADE, paperGrade);
+	}
+
+	public List findAll() {
+		log.debug("finding all ExamStuAnswer instances");
+		try {
+			String queryString = "from ExamStuAnswer";
+			Query queryObject = getSession().createQuery(queryString);
+			return queryObject.list();
+		} catch (RuntimeException re) {
+			log.error("find all failed", re);
+			throw re;
+		}
+	}
+
+	public ExamStuAnswer merge(ExamStuAnswer detachedInstance) {
+		log.debug("merging ExamStuAnswer instance");
+		try {
+			ExamStuAnswer result = (ExamStuAnswer) getSession().merge(
+					detachedInstance);
+			log.debug("merge successful");
+			return result;
+		} catch (RuntimeException re) {
+			log.error("merge failed", re);
+			throw re;
+		}
+	}
+
+	public void attachDirty(ExamStuAnswer instance) {
+		log.debug("attaching dirty ExamStuAnswer instance");
+		try {
+			getSession().saveOrUpdate(instance);
+			log.debug("attach successful");
+		} catch (RuntimeException re) {
+			log.error("attach failed", re);
+			throw re;
+		}
+	}
+
+	public void attachClean(ExamStuAnswer instance) {
+		log.debug("attaching clean ExamStuAnswer instance");
+		try {
+			getSession().lock(instance, LockMode.NONE);
+			log.debug("attach successful");
+		} catch (RuntimeException re) {
+			log.error("attach failed", re);
+			throw re;
+		}
+	}
+}

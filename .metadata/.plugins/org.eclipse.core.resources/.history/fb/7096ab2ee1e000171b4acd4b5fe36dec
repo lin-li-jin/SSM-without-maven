@@ -1,0 +1,70 @@
+package com.hh;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class JavaTest {
+	
+	///////
+	public static int count=0;
+	public static int[] fa(int N,int[] man){
+		
+		int[] sugar = new int[N];
+		
+		for(int i=0;i<N;i++){
+			sugar[i]=man[i]; 
+			sugar[i]=sugar[i]/2;
+		}
+		for(int i=0;i<N;i++){
+			if(i==N-1){
+				man[i] += sugar[0];
+				man[0] -= sugar[0];
+			}else{
+				man[i] += sugar[i+1];
+				man[i+1] -= sugar[i+1];
+			}
+		}
+		
+		for(int i=0;i<N;i++){
+			if(man[i]%2==1){
+				man[i]++;
+				count++;
+			}
+		}
+		
+		
+		return man;
+		
+	}
+	
+	public static boolean check(int[] man){
+		
+		for(int i=1;i<man.length;i++){
+			if(man[i] != man[i-1]){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public static void main(String[] args) {
+		
+		
+		Scanner in = new Scanner(System.in);
+		int N = in.nextInt();
+		int[] man = new int[N];
+		for(int i=0;i<N;i++){
+			man[i]=in.nextInt();
+		}
+		
+		do{
+			man=fa(N,man);
+		}while(!check(man));
+		
+		System.out.println(count);
+	}
+	
+	
+
+	//////////
+		
+}

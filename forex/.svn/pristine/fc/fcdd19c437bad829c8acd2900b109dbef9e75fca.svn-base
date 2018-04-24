@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
+<!-- 
+ Amendment No.: FOEXAS009
+ Create By    : lzc
+ Description  : 知识点维护
+ Modify Date  : 2014-07-21
+  -->
+<xwork>
+	<package name="admin_subject_mng" extends="default">
+		<action name="initExamMng" method="initExamMng" 
+			class="com.talent.exam.modules.admin_mng.controller.SubjectAction">		
+			<result name="success" type="dispatcher">
+				<param name="location">/jsp/exam/adminMng/initAdminMng.jsp</param>
+			</result>				
+			<interceptor-ref name="paramsLoginStack" />
+			<interceptor-ref name="examRssultStack"></interceptor-ref>
+		</action>
+		<action name="queryBySubjectType" method="queryBySubjectType"
+				class="com.talent.exam.modules.admin_mng.controller.SubjectAction">
+
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+			<interceptor-ref name="examRssultStack"></interceptor-ref>
+		</action>
+		<action name="addnewExchange" method="addnewExchange"
+				class="com.talent.exam.modules.admin_mng.controller.SubjectAction">
+
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+			<interceptor-ref name="examRssultStack"></interceptor-ref>
+		</action>
+		<action name="managePaper" method="managePaper"
+				class="com.talent.exam.modules.admin_mng.controller.SubjectAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+			<interceptor-ref name="examRssultStack"></interceptor-ref>
+		</action>
+		<action name="deleteSubject" method="deleteSubject"
+				class="com.talent.exam.modules.admin_mng.controller.SubjectAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+			<interceptor-ref name="examRssultStack"></interceptor-ref>
+		</action>
+		<action name="addExamPage" method="addExamPage" 
+			class="com.talent.exam.modules.admin_mng.controller.SubjectAction">
+			<result name="success" type="dispatcher">
+				<param name="location">/jsp/exam/subjectadmin/AddSubject.jsp</param>
+			</result>						
+			<interceptor-ref name="paramsLoginStack" />
+			<interceptor-ref name="examRssultStack"></interceptor-ref>
+		</action>
+		<action name="testAssembly" method="testAssembly" 
+			class="com.talent.exam.modules.admin_mng.controller.SubjectAction">
+			<result name="success" type="dispatcher">
+				<param name="location">/jsp/exam/teachadmin/managePaper.jsp</param>
+			</result>						
+			<interceptor-ref name="paramsLoginStack" />
+			<interceptor-ref name="examRssultStack"></interceptor-ref>
+		</action>
+		<action name="testAllot" method="testAllot" 
+			class="com.talent.exam.modules.admin_mng.controller.SubjectAction">
+			<result name="success" type="dispatcher">
+				<param name="location">/jsp/exam/subjectadmin/testAllot.jsp</param>
+			</result>						
+			<interceptor-ref name="paramsLoginStack" />
+			<interceptor-ref name="examRssultStack"></interceptor-ref>
+		</action>
+		<action name="testInit" method="testInit" 
+			class="com.talent.exam.modules.admin_mng.controller.SubjectAction">
+			<result name="success" type="dispatcher">
+				<param name="location">/jsp/exam/subjectadmin/testInit.jsp</param>
+			</result>						
+			<interceptor-ref name="paramsLoginStack" />
+			<interceptor-ref name="examRssultStack"></interceptor-ref>
+		</action>
+		<action name="gradeInit" method="gradeInit" 
+			class="com.talent.exam.modules.admin_mng.controller.SubjectAction">
+			<result name="success" type="dispatcher">
+				<param name="location">/jsp/exam/subjectadmin/gradeDetail.jsp</param>
+			</result>						
+			<interceptor-ref name="paramsLoginStack" />
+			<interceptor-ref name="examRssultStack"></interceptor-ref>
+		</action>
+	</package>
+</xwork>

@@ -1,0 +1,32 @@
+package com.talent.exam.modules.admin_mng.model;
+
+
+import java.util.HashMap;
+
+/**
+ * 组卷规则
+ * Created by 吴樟 on www.haixiangzhene.xyz
+ * 2017/9/14.
+ */
+public class ExamRule {
+
+    //格式形如 "C",3
+    private HashMap<String,Integer> titleScale;
+    private Integer titleSum;
+
+    public HashMap<String, Integer> getTitleScale() {
+        return titleScale;
+    }
+
+    public void setTitleScale(HashMap<String, Integer> titleScale) {
+        this.titleScale = titleScale;
+    }
+
+    public Integer getTitleSum() {
+        return titleSum;
+    }
+
+    public void setTitleSum(Integer titleSum) {
+        this.titleSum = titleSum;
+    }
+}

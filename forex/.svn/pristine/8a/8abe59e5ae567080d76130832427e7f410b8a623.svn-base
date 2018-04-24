@@ -1,0 +1,17 @@
+package com.talent.exam.domain;
+
+public class ExamContent extends AbstractExamContent implements
+		java.io.Serializable {
+
+	// Constructors
+
+	/** default constructor */
+	public ExamContent() {
+	}
+
+	/** full constructor */
+	public ExamContent(ExamAccType examAccType, String examContent) {
+		super(examAccType, examContent);
+	}
+
+}

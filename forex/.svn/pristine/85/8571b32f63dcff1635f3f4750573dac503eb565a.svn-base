@@ -1,0 +1,128 @@
+package com.talent.forex.modules.teach_mng.tClassMng;
+
+import com.opensymphony.webwork.ServletActionContext;
+import com.talent.auth.bean.domain.TClass;
+import com.talent.auth.bean.domain.Users;
+import com.talent.auth.bean.model.UserModel;
+import com.talent.auth.login.LoginConst;
+import com.talent.forex.core.ForexBaseAction;
+import com.talent.forex.modules.admin_mng.BaseMessage;
+import com.talent.forex.util.PageBean;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+
+import org.hibernate.criterion.DetachedCriteria;
+
+/**
+ * Created by 吴樟 on www.haixiangzhene.xyz
+ * 2017/8/17.
+ */
+public class ClassMngAction extends ForexBaseAction{
+
+//	private PageContext pageContext;
+	
+    private PageBean pageBean = new PageBean();//分页类
+
+    private TClass tClass;
+
+    private ClassMngBo classMngBo;
+    
+    private int page;//属性驱动接收页面传递的当前页数,用于封装进pageBean的currentPage
+    
+    private int rows;//属性驱动接收页面传递的每页显示条数,用于封装进pageBean的pageSize
+
+    /**
+     * 初始化班级
+     */
+    public String InitClass(){
+        return SUCCESS;
+    }
+
+    /**
+     * 新增班级
+     */
+    public void insertClass() throws UnsupportedEncodingException{
+        UserModel userModel= (UserModel) sessionGet(LoginConst.LOGIN_USER_MODEL);
+        tClass.setClassName(new String(tClass.getClassName().getBytes("GBK"),"utf-8"));
+        BaseMessage result=classMngBo.insertClass(userModel,tClass);
+        Collection<Object> list=new ArrayList<Object>();
+        list.add(result);
+        flushSuccessJSON(list);
+    }
+
+    /**
+     * 查询班级信息
+     * @return
+     */
+    public void queryClass() throws IOException{
+        UserModel userModel= (UserModel) sessionGet(LoginConst.LOGIN_USER_MODEL);
+        String classNo = tClass==null?null:tClass.getClassNo();//tClass为空说明这次查询是没有输入班级号的,直接查该教师关联的所有班级,否则带参数查询
+        classMngBo.queryClass(classNo,pageBean, userModel.getuId());
+//        ArrayList<PageBean> pageBeans=new ArrayList<PageBean>();
+//        pageBeans.add(pageBean);
+        //将封装好分页数据的pageBean写到页面
+		String json = JSONObject.fromObject((Object)pageBean).toString();
+		ServletActionContext.getResponse().setContentType("text/json;charset=utf-8");
+		ServletActionContext.getResponse().getWriter().print(json);
+    }
+    
+    /**
+     * 查询班级的详细信息
+     */
+    public void queryClassDetail(){
+    	String classId = tClass==null?null:tClass.getClassId().toString();
+        classMngBo.getStudentsByclassId(classId,pageBean);
+//      将封装好分页数据的pageBean写到页面
+        String json = JSONObject.fromObject((Object)pageBean).toString();
+		ServletActionContext.getResponse().setContentType("text/json;charset=utf-8");
+		try {
+			ServletActionContext.getResponse().getWriter().print(json);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+
+    public TClass gettClass() {
+        return tClass;
+    }
+
+    public void settClass(TClass tClass) {
+        this.tClass = tClass;
+    }
+
+    public ClassMngBo getClassMngBo() {
+        return classMngBo;
+    }
+
+    public void setClassMngBo(ClassMngBo classMngBo) {
+        this.classMngBo = classMngBo;
+    }
+    
+//	public PageContext getPageContext() {
+//		return pageContext;
+//	}
+//
+//	public void setPageContext(PageContext pageContext) {
+//		this.pageContext = pageContext;
+//	}
+
+	public void setPageBean(PageBean pageBean) {
+		this.pageBean = pageBean;
+	}
+
+	public void setPage(int page) {
+		this.pageBean.setCurrentPage(page);
+	}
+
+	public void setRows(int rows) {
+		this.pageBean.setPageSize(rows);
+	}
+    
+
+}

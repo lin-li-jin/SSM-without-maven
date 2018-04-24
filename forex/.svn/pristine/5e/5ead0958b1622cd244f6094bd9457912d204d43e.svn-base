@@ -1,0 +1,28 @@
+
+table.its {
+	width:100%;
+}
+
+table.its thead tr {
+  background-color: #69c;
+}
+table.its tr.even {
+  background-color: #def;
+}
+
+table.its th {
+	background-color: #308dbb;
+	color: white;
+	font-family: verdana, arial, helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: left;
+	padding-right: 3px;
+	padding-left: 3px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	margin: 0px;
+	border-right-style: solid;
+	border-right-width: 1px;
+	border-color: white;
+}

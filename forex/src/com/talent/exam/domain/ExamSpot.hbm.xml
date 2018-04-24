@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.talent.exam.domain.ExamSpot" table="exam_spot" schema="forex">
+        <id name="examSpotNo">
+            <column name="exam_spot_no" sql-type="int(12)"/>
+        </id>
+        <property name="accTypeNo">
+            <column name="acc_type_no" sql-type="char(1)" length="1"/>
+        </property>
+        <property name="direction">
+            <column name="DIRECTION" sql-type="char(1)" length="1"/>
+        </property>
+        <property name="acc">
+            <column name="ACC" sql-type="char(3)" length="3"/>
+        </property>
+        <property name="accAmount">
+            <column name="ACC_AMOUNT" sql-type="varchar(30)" length="30"/>
+        </property>
+        <property name="price">
+            <column name="price" sql-type="varchar(30)" length="30"/>
+        </property>
+        <property name="providerNo">
+            <column name="provider_no" sql-type="int(12)"/>
+        </property>
+        <property name="step">
+            <column name="STEP" sql-type="int(5)"/>
+        </property>
+        <property name="examScore">
+            <column name="exam_score" sql-type="varchar(100)" length="100"/>
+        </property>
+        <property name="userType">
+            <column name="user_type" sql-type="char(1)" length="1"/>
+        </property>
+        <many-to-one name="examContentByExamNo" class="com.talent.exam.domain.ExamContent" cascade="all">
+            <column name="exam_NO"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

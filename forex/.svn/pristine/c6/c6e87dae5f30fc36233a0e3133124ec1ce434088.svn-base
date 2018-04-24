@@ -1,0 +1,305 @@
+package com.talent.exam.modules.admin_mng.service;
+
+import com.talent.base.BaseBo;
+import com.talent.exam.constant.ExamConst;
+import com.talent.exam.dao.*;
+import com.talent.exam.domain.*;
+import com.talent.exam.model.MarketBreakoutScore;
+import com.talent.exam.modules.admin_mng.model.SubjectItem;
+import com.talent.exam.util.StringUtil;
+import com.talent.exception.BoException;
+import org.apache.log4j.Logger;
+
+import java.util.List;
+
+/**
+ * 题目管理
+ * 1.根据条件筛选查看题目
+ * 2.新增题目
+ * 传入数据格式:
+ * 1.交易类型
+ * 2.步骤
+ * 3.步骤类型
+ * 4.是否完成
+ *
+ * Created by 吴樟 on www.haixiangzhene.xyz
+ * 2017/9/11.
+ */
+public class SubjectBo extends BaseBo{
+
+    private static Logger logger=Logger.getLogger(SubjectBo.class);
+
+    private ExamContentDAO examContentDAO;
+
+    private ExamStopLossDAO examStopLossDAO;
+    private ExamTakeProfitDAO examTakeProfitDAO;
+    private ExamOcoDAO examOcoDAO;
+    private ExamSpotDAO examSpotDAO;
+    private ExamForwardDAO examForwardDAO;
+    private ExamMarketBreakoutDAO examMarketBreakoutDAO;
+    private ExamOneClickDAO examOneClickDAO;
+
+    private static StringUtil stringUtil=new StringUtil();
+
+
+    /**
+     * 根据交易类型筛选查看题目
+     * @param type
+     * 0:全部交易 1:人民币 2:外币对交易 3:保证金交易
+     * 返回格式:
+     * 1.当查询不到题目，则直接抛出错误，采用拦截器捕获
+     * 2.当查询到题目，则按照格式返回数据
+     */
+    public List<ExamContent> queryByExchangeType(Integer type){
+        List<ExamContent> subjectList=null;
+        if (type==0) {
+            subjectList = examContentDAO.findAll();
+        }else{
+            ExamContent examContent=new ExamContent();
+            ExamAccType examAccType=new ExamAccType();
+            if (type==1){
+                examAccType.setAccType(ExamConst.RMB);
+                examContent.setExamAccTypeByAccTypeNo(examAccType);
+                subjectList = examContentDAO.findByExample(examContent);
+            }else if (type==2){
+                examAccType.setAccType("W");
+                examContent.setExamAccTypeByAccTypeNo(examAccType);
+                subjectList = examContentDAO.findByExample(examContent);
+            }else if (type==3){
+                examAccType.setAccType("B");
+                examContent.setExamAccTypeByAccTypeNo(examAccType);
+                subjectList = examContentDAO.findByExample(examContent);
+            }
+        }
+
+        if (subjectList==null || subjectList.isEmpty()) {
+            logger.warn("根据交易类型筛选查看题目暂未查询到题目");
+            throw new BoException("暂未查询到题目");
+        }
+        logger.info("根据交易类型筛选查看题目,查询到题目:"+subjectList.size());
+        return subjectList;
+    }
+
+    /**
+     * 新增题目
+     */
+    public void addnewExchange(SubjectItem item){
+        if (ExamConst.STOPLOSS.equals(item.getType()))
+            addStopLossExchange(item);
+        else if (ExamConst.TAKEPRFIT.equals(item.getType()))
+            addTakeProfitExchange(item);
+        else if (ExamConst.OCO.equals(item.getType()))
+            addOCOProfitExchange(item);
+        else if (ExamConst.MARKETBREAKOUT.equals(item.getType()))
+            addMarkBreakoutExchange(item);
+        else if (ExamConst.ONECLICK.equals(item.getType()))
+            addOneClickExchange(item);
+        else if (ExamConst.SPOT.equals(item.getType()))
+            addSpotExchange(item);
+        else if (ExamConst.FORWARD.equals(item.getType()))
+            addForwardExchange(item);
+        else if (ExamConst.SWAP.equals(item.getType()))
+            addSwapExchange(item);
+        else
+            throw new BoException("暂无其它的交易类型");
+    }
+
+    private void addOneClickExchange(SubjectItem item) {
+        ExamOneClick examOneClick=new ExamOneClick();
+        examOneClick.setStep(ExamConst.DEFAULT_STEP);
+        examOneClick.setAcc(item.getAcc());
+        examOneClick.setAccAmount(item.getOneClickAccMount());
+        examOneClick.setDirection(item.getDirection());
+        ExamContent examContent=new ExamContent();
+        examContent.setExamNo(item.getExamNo());
+        examOneClick.setExamContentByExamNo(examContent);
+        String oneClickScore=stringUtil.FromBean(item.getOneClickScore());
+        examOneClick.setExamScore(oneClickScore);
+        examOneClick.setAccTypeNo(ExamConst.TEACHER);
+        examOneClick.setStep(ExamConst.DEFAULT_STEP);
+        examOneClickDAO.save(examOneClick);
+    }
+
+    private void addSwapExchange(SubjectItem item) {
+    }
+
+    private void addForwardExchange(SubjectItem item) {
+        ExamForward examForward=new ExamForward();
+        examForward.setStep(ExamConst.DEFAULT_STEP);
+        examForward.setDirection(item.getDirection());
+        examForward.setAcc(item.getAcc());
+        examForward.setAccAmount(item.getForwardAccMount());
+        examForward.setValueDate(item.getForwardValueDate());
+        examForward.setPrice(item.getForwardPrice());
+        examForward.setProviderNo(item.getForwardProviderNo());
+        ExamContent examContent=new ExamContent();
+        examContent.setExamNo(item.getExamNo());
+        examForward.setExamContentByExamNo(examContent);
+        String forwardScore=stringUtil.FromBean(item.getForwardScore());
+        examForward.setExamScore(forwardScore);
+        examForward.setUserType(ExamConst.TEACHER);
+        examForwardDAO.save(examForward);
+    }
+
+    private void addStopLossExchange(SubjectItem item) {
+        ExamStopLoss examStopLoss=new ExamStopLoss();
+        examStopLoss.setDirection(item.getDirection());
+        examStopLoss.setStep(ExamConst.DEFAULT_STEP);
+        examStopLoss.setAcc(item.getAcc());
+        examStopLoss.setAccAmount(item.getStopLossAccMount());
+        examStopLoss.setPrice(item.getStopLossPrice());
+        examStopLoss.setMonitorPrice(item.getStopLossAccmonitorPrice());
+        examStopLoss.setGoodFrom(item.getStopLossGoodFrom());
+        examStopLoss.setGoddTill(item.getStopLossGoodTill());
+        ExamContent examContent=new ExamContent();
+        examContent.setExamNo(item.getExamNo());
+        examStopLoss.setExamContentByExamNo(examContent);
+        String stopLossScore=stringUtil.FromBean(item.getStopLossScore());
+        examStopLoss.setExamScore(stopLossScore);
+        examStopLoss.setUserType(ExamConst.TEACHER);
+        examStopLoss.setAccTypeNo(item.getAccTypeNo());
+        examStopLossDAO.save(examStopLoss);
+        examStopLossDAO.getSession().flush();
+        examStopLossDAO.getSession().clear();
+    }
+
+    private void addMarkBreakoutExchange(SubjectItem item) {
+        ExamMarketBreakout examMarketBreakout=new ExamMarketBreakout();
+        examMarketBreakout.setStep(ExamConst.DEFAULT_STEP);
+        examMarketBreakout.setDirection(item.getDirection());
+        examMarketBreakout.setAcc(item.getAcc());
+        examMarketBreakout.setStopLossAmount1(item.getMbktStopLossAccMount1());
+        examMarketBreakout.setStopLossPrice1(item.getMbktStopLossPrice1());
+        examMarketBreakout.setStopLossAmount2(item.getMbktStopLossAccMount2());
+        examMarketBreakout.setStopLossPrice2(item.getMbktStopLossPrice2());
+        examMarketBreakout.setMonitorPrice(item.getMbkStopLossAccmonitorPrice());
+        examMarketBreakout.setGoodFrom(item.getMbkGoodFrom());
+        examMarketBreakout.setGoodTill(item.getMbkGoodTill());
+        ExamContent examContent=new ExamContent();
+        examContent.setExamNo(item.getExamNo());
+        examMarketBreakout.setExamContentByExamNo(examContent);
+        String marketBreakoutScore=stringUtil.FromBean(item.getMarketBreakoutScore());
+        examMarketBreakout.setExamScore(marketBreakoutScore);
+        examMarketBreakout.setUserType(ExamConst.TEACHER);
+        examMarketBreakoutDAO.save(examMarketBreakout);
+    }
+
+    private void addOCOProfitExchange(SubjectItem item) {
+        ExamOco examOco=new ExamOco();
+        examOco.setStep(ExamConst.DEFAULT_STEP);
+        examOco.setAcc(item.getAcc());
+        examOco.setDirection(item.getDirection());
+        examOco.setTakeProfitAmount(item.getOcoTakeProfitAccMount());
+        examOco.setTakeProfitPrice(item.getOcoTakeProfitPrice());
+        examOco.setStopLossAmount(item.getOcoStopLossAccMount());
+        examOco.setStopLossPrice(item.getOcoStopLossPrice());
+        examOco.setGoodFrom(item.getOcoGoodFrom());
+        examOco.setGoodTill(item.getOcoGoodTill());
+        ExamContent examContent=new ExamContent();
+        examContent.setExamNo(item.getExamNo());
+        examOco.setExamContentByExamNo(examContent);
+        String ocoScore=stringUtil.FromBean(item.getOcoScore());
+        examOco.setExamScore(ocoScore);
+        examOco.setUserType(ExamConst.TEACHER);
+        examOcoDAO.save(examOco);
+    }
+
+    private void addTakeProfitExchange(SubjectItem item) {
+        ExamTakeProfit examTakeProfit=new ExamTakeProfit();
+        examTakeProfit.setStep(ExamConst.DEFAULT_STEP);
+        examTakeProfit.setDirection(item.getDirection());
+        examTakeProfit.setAcc(item.getAcc());
+        examTakeProfit.setAccAmount(item.getTakeProfitAccMount());
+        examTakeProfit.setPrice(item.getTakeProfitPrice());
+        examTakeProfit.setGoodFrom(item.getTakeProfitGoodFrom());
+        examTakeProfit.setGoodTill(item.getTakeProfitGoodTill());
+        ExamContent examContent=new ExamContent();
+        examContent.setExamNo(item.getExamNo());
+        examTakeProfit.setExamContentByExamNo(examContent);
+        String takeProfitScore=stringUtil.FromBean(item.getTakeProfitScore());
+        examTakeProfit.setExamScore(takeProfitScore);
+        examTakeProfit.setUserType(ExamConst.TEACHER);
+        examTakeProfitDAO.save(examTakeProfit);
+    }
+
+    private void addSpotExchange(SubjectItem item) {
+        ExamSpot examSpot=new ExamSpot();
+        examSpot.setStep(ExamConst.DEFAULT_STEP);
+        examSpot.setAcc(item.getAcc());
+        examSpot.setAccAmount(item.getSpotAccMount());
+        examSpot.setPrice(item.getSpotPrice());
+        examSpot.setProviderNo(item.getSpotProviderNo());
+        ExamContent examContent=new ExamContent();
+        examContent.setExamNo(item.getExamNo());
+        examSpot.setExamContentByExamNo(examContent);
+        String spotScore=stringUtil.FromBean(item.getSpotScore());
+        examSpot.setExamScore(spotScore);
+        examSpot.setUserType(ExamConst.TEACHER);
+        examSpotDAO.save(examSpot);
+    }
+
+
+    public ExamContentDAO getExamContentDAO() {
+        return examContentDAO;
+    }
+
+    public void setExamContentDAO(ExamContentDAO examContentDAO) {
+        this.examContentDAO = examContentDAO;
+    }
+
+    public ExamStopLossDAO getExamStopLossDAO() {
+        return examStopLossDAO;
+    }
+
+    public void setExamStopLossDAO(ExamStopLossDAO examStopLossDAO) {
+        this.examStopLossDAO = examStopLossDAO;
+    }
+
+    public ExamTakeProfitDAO getExamTakeProfitDAO() {
+        return examTakeProfitDAO;
+    }
+
+    public void setExamTakeProfitDAO(ExamTakeProfitDAO examTakeProfitDAO) {
+        this.examTakeProfitDAO = examTakeProfitDAO;
+    }
+
+    public ExamOcoDAO getExamOcoDAO() {
+        return examOcoDAO;
+    }
+
+    public void setExamOcoDAO(ExamOcoDAO examOcoDAO) {
+        this.examOcoDAO = examOcoDAO;
+    }
+
+    public ExamSpotDAO getExamSpotDAO() {
+        return examSpotDAO;
+    }
+
+    public void setExamSpotDAO(ExamSpotDAO examSpotDAO) {
+        this.examSpotDAO = examSpotDAO;
+    }
+
+    public ExamForwardDAO getExamForwardDAO() {
+        return examForwardDAO;
+    }
+
+    public void setExamForwardDAO(ExamForwardDAO examForwardDAO) {
+        this.examForwardDAO = examForwardDAO;
+    }
+
+    public ExamMarketBreakoutDAO getExamMarketBreakoutDAO() {
+        return examMarketBreakoutDAO;
+    }
+
+    public void setExamMarketBreakoutDAO(ExamMarketBreakoutDAO examMarketBreakoutDAO) {
+        this.examMarketBreakoutDAO = examMarketBreakoutDAO;
+    }
+
+    public ExamOneClickDAO getExamOneClickDAO() {
+        return examOneClickDAO;
+    }
+
+    public void setExamOneClickDAO(ExamOneClickDAO examOneClickDAO) {
+        this.examOneClickDAO = examOneClickDAO;
+    }
+}

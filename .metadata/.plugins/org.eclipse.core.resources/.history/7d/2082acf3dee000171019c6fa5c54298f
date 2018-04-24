@@ -1,0 +1,65 @@
+package com.hh;
+import java.util.Scanner;
+
+public class JavaTest {
+	
+	///////
+	static boolean f(int a){
+		if(a%2!=0)
+			return true;
+		else
+			return false;
+		
+	}
+
+
+	
+	public static void main(String[] args) {
+		Scanner in=new Scanner(System.in);
+		int peo=0;
+		peo=in.nextInt();
+		int[] sugar=new int[1000];
+		int temp=0;
+		int count=0;;
+		for(int i=0;i<peo;i++){
+			sugar[i]=in.nextInt();
+		}
+		while(true){
+			
+			for(int i=peo-1;i>=0;i--){
+				int te=sugar[i];
+				sugar[i]=te/2+temp;
+				temp=te/2;
+
+			}
+		  int t1=sugar[0]; 	
+		  sugar[0]=sugar[0]+temp;
+		  temp=t1/2;
+          sugar[peo-1]=sugar[peo-1]+temp;
+			
+			for(int i=0;i<peo;i++){
+				if(f(sugar[i])){
+					sugar[i]++;
+					count++;
+				}
+			
+				
+			}
+			
+			if(f(peo)){
+				if(sugar[0]==sugar[(peo+1)/2]&&sugar[(peo+1)/2]==sugar[peo-1]&&sugar[peo-1]==sugar[0]){
+					break;
+					
+				}
+			}else{
+				if(sugar[0]==sugar[peo/2]&&sugar[peo-1]==sugar[0]&&sugar[0]==sugar[(peo)/2]){
+					break;
+				}
+			}
+		}
+		System.out.println(count+1);
+	}
+
+	////
+		
+}

@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+    <title>select列表双向选择</title> 
+    <style type="text/css"> 
+        select 
+        { 
+            width: 100%;              
+            height: 160px; 
+        } 
+        div 
+        { 
+            float: left; 
+        } 
+        #div1, #div3 
+        { 
+            width: 150px; 
+        } 
+        #div2 
+        { 
+            width: 120px; 
+        } 
+        .btn 
+        { 
+            display: block; 
+            margin: 10px auto; 
+            width: 80px; 
+        } 
+    </style> 
+<script src="jquery.js" type="text/javascript"></script> 
+
+<script type="text/javascript"> 
+    /* 添加选择的项 */ 
+    function Add(ObjSource, ObjTarget) { 
+       if(ObjSource.val() ==null) return;    // 如果没有选择则退出函数，无这句话的话IE6会报错 
+        $.each(ObjSource.val(), function(i, n) {    // 循环原列表中选中的值，依次添加到目标列表中 
+            var html = "<option value='" + n + "'>" + n + "</option>"; 
+            ObjTarget.append(html); 
+        }); 
+        ObjSource.find("option:selected").remove(); // 原列表中选中的值删除 
+    } 
+    /* 添加全部 */ 
+    function AddAll(ObjSource, ObjTarget) { 
+        ObjTarget.append(ObjSource.html()); // 目标列表的HTML加上原列表的所有HTML 
+        ObjSource.empty(); // 原列表清空 
+    } 
+</script> 
+</head> 
+<body> 
+    <div id="div1"> 
+        <select id="dltSource" name="dltSource" size="10" multiple="multiple"> 
+            <option value="苹果">苹果</option> 
+            <option value="雪梨">雪梨</option> 
+            <option value="西瓜">西瓜</option> 
+            <option value="荔枝">荔枝</option> 
+            <option value="龙眼">龙眼</option> 
+            <option value="香蕉">香蕉</option> 
+        </select> 
+    </div> 
+    <div id="div2"> 
+        <input type="button" value="&gt;" class="btn" onclick="Add($('#dltSource'),$('#dltTarget'))" /> 
+        <input type="button" value="&gt;&gt;" class="btn" onclick="AddAll($('#dltSource'),$('#dltTarget'))" /> 
+        <input type="button" value="&lt;" class="btn" onclick="Add($('#dltTarget'),$('#dltSource'))" /> 
+        <input type="button" value="&lt;&lt;" class="btn" onclick="AddAll($('#dltTarget'),$('#dltSource'))" /> 
+    </div> 
+    <div id="div3"> 
+        <select id="dltTarget" name="dltTarget" size="10" multiple="multiple"> 
+        </select> 
+    </div> 
+</body> 
+</html> 
+ 

@@ -1,0 +1,36 @@
+package com.talent.auth.bean.domain;
+
+/**
+ * 学生班级中间表(student_class)的实体类
+ */
+
+public class StudentClass implements java.io.Serializable {
+
+	private Integer sId;//学生id
+	private Integer classId;//班级id
+
+	public StudentClass() {
+	}
+
+	public StudentClass(Integer sId, Integer classId) {
+		this.sId = sId;
+		this.classId = classId;
+	}
+
+	public Integer getsId() {
+		return sId;
+	}
+
+	public void setsId(Integer sId) {
+		this.sId = sId;
+	}
+
+	public Integer getClassId() {
+		return this.classId;
+	}
+
+	public void setClassId(Integer classId) {
+		this.classId = classId;
+	}
+
+}

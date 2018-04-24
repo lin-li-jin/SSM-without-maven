@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
+
+<xwork>
+	<package name="adminMng" extends="default">
+		<action name="initExamMng" method="initExamMng" class="com.talent.exam.modules.admin_mng.action.InitExamMngAction">		
+			<result name="success" type="dispatcher">
+				<param name="location">/jsp/exam/adminMng/initAdminMng.jsp</param>
+			</result>				
+			<interceptor-ref name="paramsLoginStack" />
+		</action>
+	</package>
+</xwork>

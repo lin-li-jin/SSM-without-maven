@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName">
+	<bean id="examAccTypeDAO" class="com.talent.exam.dao.ExamAccTypeDAO" />
+	<bean id="examContentDAO" class="com.talent.exam.dao.ExamContentDAO"/>
+	<bean id="examMarketBreakoutDAO" class="com.talent.exam.dao.ExamMarketBreakoutDAO"/>
+	<bean id="examOcoDAO" class="com.talent.exam.dao.ExamOcoDAO" />
+	<bean id="examStopLossDAO" class="com.talent.exam.dao.ExamStopLossDAO"/>
+	<bean id="examTakeProfitDAO" class="com.talent.exam.dao.ExamTakeProfitDAO"/>
+</beans>

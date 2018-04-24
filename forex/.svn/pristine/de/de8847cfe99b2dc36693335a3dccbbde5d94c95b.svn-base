@@ -1,0 +1,151 @@
+package com.talent.forex.modules.trade.cash;
+
+import com.talent.auth.bean.model.UserModel;
+import com.talent.base.BaseBo;
+import com.talent.exception.BoException;
+import com.talent.forex.bean.domain.AccInfo;
+import com.talent.forex.bean.domain.MarginSpotInfo;
+import com.talent.forex.bean.model.MarginSpotInfoModel;
+import com.talent.forex.dao.AccInfoDao;
+import com.talent.forex.dao.MarginSpotInfoDao;
+import com.talent.forex.util.FormatParamUtil;
+import com.talent.forex.util.GetDateTimeUtil;
+import com.talent.forex.util.SequenceUtil;
+import com.talent.forex.util.UserModelUtil;
+import org.apache.log4j.Logger;
+import org.hibernate.criterion.MatchMode;
+import org.springframework.util.Assert;
+
+import java.util.Collection;
+import java.util.List;
+
+
+/**
+ * Created by 吴樟 on www.haixiangzhene.xyz
+ * 2017/8/23.
+ */
+public class SpotCashBo extends BaseBo {
+
+    Logger logger=Logger.getLogger(this.getClass());
+
+    private AccInfoDao accInfoDao;
+    private MarginSpotInfoDao marginSpotInfoDao;
+
+
+    public double queryAllDone(String anaccy){
+        MarginSpotInfo marginSpotInfo=new MarginSpotInfo();
+        marginSpotInfo.setStatue("D");
+        marginSpotInfo.setAnaCcy(anaccy);
+        Collection<MarginSpotInfo> marginSpotInfos=
+                marginSpotInfoDao.getBeansByBean(marginSpotInfo,MatchMode.ANYWHERE);
+        double d=0;
+        if (marginSpotInfo!=null && !marginSpotInfos.isEmpty()){
+            for (MarginSpotInfo marginSpotInfo1:marginSpotInfos){
+                d+=Double.valueOf(marginSpotInfo1.getDealAmt());
+            }
+        }
+        return d;
+    }
+
+    /**
+     * 新增即期交易记录
+     * 1.判断weCcy金额是否足够减保证金
+     * 2.更新账号余额
+     */
+    public void newSpotCashAdd(MarginSpotInfoModel model){
+        UserModel user=UserModelUtil.getUser();
+        Assert.notNull(user.getUserId());
+        //1根据用户id、账户类型以及需要缴纳的保证金金额
+        AccInfo accInfo=new AccInfo();
+        accInfo.setUserNum(user.getUserId());
+        accInfo.setCcy(model.getWeCcy());
+        accInfo.setAccType("B");
+        AccInfo accInfo1=accInfoDao.getBeanByBean(accInfo, MatchMode.ANYWHERE);
+        //判断账号是否被冻结
+        if(accInfo1.getActiveDate().equals("--------")){
+            logger.error("用户：" + user.getUserId() + " 添加远期交易失败！你的保证金账户已被冻结！");
+            BoException be = new BoException("forwardInfoAdd");
+            be.setExceptionType("添加远期交易失败！你的保证金账户已被冻结！");
+            throw be;
+        }
+        //判断当前是否足够扣掉保证金以及利息
+        double profit=Double.valueOf(model.getAccAmount());
+        double dealAmt=Double.valueOf(model.getDealAmt());
+        //利息=扩大的货币*基点
+        //10个基点 由于此系统是4位小数，所以是0.0010
+        double accrual=dealAmt*0.0010;
+        //需扣金额=利息+保证金
+        double charge=accrual+profit;
+        double amount=Double.valueOf(accInfo1.getAmount());
+        //判断当前账号余额是否大于需扣余额，暂时只有买的方向
+        if(model.getDirection().equals("1")) {
+            if (charge > amount) {
+                logger.error("用户" + user.getUserId() + "添加即期保证金交易失败,账户" + accInfo1.getCcy() + "金额不足");
+                BoException bo = new BoException("newSpotCashAdd");
+                bo.setExceptionType("保证金账户" +accInfo1.getCcy() + "金额不足,交易失败！当前余额为:" + accInfo1.getAmount() + "!进行此次交易需要" +
+                        accInfo1.getCcy() + ":" + charge + "元,其中保证金:" + profit + ",利息:" + accrual);
+                throw bo;
+            }
+        }
+        //获取当前的时间
+        String date = GetDateTimeUtil.getCurrentDateTimeToMinute();
+        //增加到即期交易的记录中
+        MarginSpotInfo marginSpotInfo=new MarginSpotInfo();
+        marginSpotInfo.setUserNum(accInfo1.getUserNum());
+        marginSpotInfo.setAccAmount(model.getAccAmount());
+        marginSpotInfo.setAccrual(String.valueOf(accrual));
+        marginSpotInfo.setAccount(FormatParamUtil.getAmountAndPriceFmt(accInfo1.getAccno()));
+        marginSpotInfo.setWeCcy(model.getWeCcy());
+        marginSpotInfo.setAnaCcy(model.getAnaCcy());
+        marginSpotInfo.setDealAmt(FormatParamUtil.getAmountAndPriceFmt(model.getDealAmt()));
+        marginSpotInfo.setCreateDatatime(date);
+        marginSpotInfo.setPrice(model.getPrice());
+        marginSpotInfo.setCreateDatatime(GetDateTimeUtil.getCurrentDateTimeToMinute());
+        marginSpotInfo.setDirection(model.getDirection());
+        marginSpotInfo.setTranType("B"); //设置交易的类型:保证金
+        marginSpotInfo.setStatue("D");  //设置清单的状态 A:激活 E:平仓 L:锁仓 R:归还 D:完成
+        marginSpotInfo.setTranNo(SequenceUtil.getNextTranSeq("MS")); //生成即期的流水号
+        marginSpotInfoDao.makePersistent(marginSpotInfo,false);
+        //更新账号余额 余额=原来的余额-(保证金+利息)
+        double updatedAccount=amount-charge;
+        accInfo1.setAmount(FormatParamUtil.formatDouble(updatedAccount));
+        accInfoDao.updateBean(accInfo1);
+    }
+
+    public MarginSpotInfo querySpotByTranNo(String tranNo){
+        MarginSpotInfo info=new MarginSpotInfo();
+        info.setTranNo(tranNo);
+        return marginSpotInfoDao.getBeanByBean(info,MatchMode.ANYWHERE);
+    }
+
+    /**
+     * 查询需使用的余额
+     * @param userNo
+     * @param accType
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public List<AccInfo> getAccInfoListByUserNoQuery(String userNo, String accType,String ccy){
+        AccInfo accInfo = new  AccInfo();
+        accInfo.setUserNum(userNo);
+        accInfo.setAccType(accType);
+        accInfo.setCcy(ccy);
+        return (List<AccInfo>) marginSpotInfoDao.getBeansByBean(accInfo, MatchMode.ANYWHERE);
+    }
+
+    public AccInfoDao getAccInfoDao() {
+        return accInfoDao;
+    }
+
+    public void setAccInfoDao(AccInfoDao accInfoDao) {
+        this.accInfoDao = accInfoDao;
+    }
+
+    public MarginSpotInfoDao getMarginSpotInfoDao() {
+        return marginSpotInfoDao;
+    }
+
+    public void setMarginSpotInfoDao(MarginSpotInfoDao marginSpotInfoDao) {
+        this.marginSpotInfoDao = marginSpotInfoDao;
+    }
+}

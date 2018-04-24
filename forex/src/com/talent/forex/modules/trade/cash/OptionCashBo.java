@@ -1,0 +1,366 @@
+package com.talent.forex.modules.trade.cash;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+import org.hibernate.criterion.MatchMode;
+
+import com.talent.auth.bean.model.UserModel;
+import com.talent.base.BaseBo;
+import com.talent.exception.BoException;
+import com.talent.forex.bean.domain.AccInfo;
+import com.talent.forex.bean.domain.BTranFlowMapping;
+import com.talent.forex.bean.domain.MarginEnlarge;
+import com.talent.forex.bean.domain.MarginOptionInfo;
+import com.talent.forex.bean.model.MarginOptionInfoModel;
+import com.talent.forex.dao.AccInfoDao;
+import com.talent.forex.dao.BTranFlowMappingDao;
+import com.talent.forex.dao.MarginEnlargeDao;
+import com.talent.forex.dao.MarginOptionInfoDao; 
+import com.talent.forex.util.FormatParamUtil;
+import com.talent.forex.util.GetDateTimeUtil;
+import com.talent.forex.util.GetFixWordUtil;
+import com.talent.forex.util.RateUtil;
+import com.talent.forex.util.SequenceUtil;
+import com.talent.forex.util.UserModelUtil;
+/*
+ * Amendment No.: FOEXAS014
+ * Create By    : atggdsaiDong
+ * Description  : 保证金期权交易
+ * Modify Date  : 2014-07-31
+ */
+public class OptionCashBo extends BaseBo{
+	
+	private MarginOptionInfoDao marginOptionInfoDao;
+	private MarginEnlargeDao marginEnlargeDao;
+	private AccInfoDao accInfoDao;
+	private BTranFlowMappingDao bTranFlowMappingDao;
+
+
+	/**
+	 * 查询anaccy已经生效的期权交易
+	 */
+	public double queryAllDone(String anaccy,String userNum){
+		MarginOptionInfo marginOptionInfo=new MarginOptionInfo();
+		marginOptionInfo.setStatue("D");
+		marginOptionInfo.setUserNum(userNum);
+		marginOptionInfo.setAnaCcy(anaccy);
+		List<MarginOptionInfo> marginOptionInfos=
+				(List<MarginOptionInfo>) marginOptionInfoDao.getBeansByBean(marginOptionInfo,MatchMode.ANYWHERE);
+		double d=0;
+		if (null!=marginOptionInfos && !marginOptionInfos.isEmpty()){
+			for (MarginOptionInfo info:marginOptionInfos){
+				d+=Double.valueOf(info.getDealAmt())*Double.valueOf(info.getPrice());
+			}
+		}
+		return d;
+	}
+
+	/**
+	 * 根据用户的登录账号和账户类型查询对应账户类型的信息
+	 * 对数据库的查询,不加try catch,事务不用回滚
+	 * @param userNo
+	 * @param accType
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<AccInfo> getAccInfoListByUserNoQuery(String userNo,String accType){
+		AccInfo accInfo = new  AccInfo();
+		accInfo.setUserNum(userNo);
+		accInfo.setAccType(accType);
+		return (List<AccInfo>) marginOptionInfoDao.getBeansByBean(accInfo, MatchMode.ANYWHERE);
+	}
+	
+	/**
+	 * 新增一条保证金期权交易记录
+	 * @param model
+	 */
+	public void newOptionCashAdd(MarginOptionInfoModel model){
+		try{
+			UserModel user = (UserModel)UserModelUtil.getUser();
+			MarginOptionInfo bean = new MarginOptionInfo();
+			
+			//因为无论是买或者卖  都是weCcy币种对应的账户在减少  anaCcy币种对应的账户金额在增加
+			//所以在判断余额是否足够用来交易,只需要判断weCcy币种对应的账户与用户输入的金额大小就行了,但是要区分买卖方向
+			//例如CNY/USD,当以买价交易,则是交易员买入CNY,卖出USD，用户的CNY增加,USD减少,所以把用户输入的金额与保证金账户里的USD币种比较
+			//要通过用户账户,账户类型,还有账户币种才能确定唯一的一条记录
+			AccInfo accInfo = new AccInfo();
+			accInfo.setUserNum(user.getUserId());
+			accInfo.setAccType("B");
+			accInfo.setCcy(model.getWeCcy());
+			accInfo = accInfoDao.getBeanByBean(accInfo, MatchMode.ANYWHERE);
+			
+			// start 先判断用户账户是否已被冻结 
+			if(accInfo.getActiveDate().equals("--------")){
+				logger.error("用户：" + user.getUserId() + " 添加期权交易失败！你的保证金账户已被冻结！");
+				BoException be = new BoException("forwardInfoAdd");
+					be.setExceptionType("添加期权交易失败！你的保证金账户已被冻结！");
+				throw be;
+			}
+			//end
+			//判断当前是否足够扣掉期权费
+			double option=Double.valueOf(model.getPremium());  //期权费用
+			double profit=Double.valueOf(model.getAccountAmount());		//抵扣的费用
+			//accInfo表里保存是实际金额   不是放大倍数的虚盘金额
+			if(model.getDirection().equals("1")) {
+				//1代表买方向   在判断余额时  判断余额是否足够抵扣期权费用
+				if ( option+profit> Double.parseDouble(accInfo.getAmount())) {
+					logger.error("用户：" + user.getUserId() + " 添加期权交易失败！账户" + accInfo.getCcy() + "金额不足");
+					BoException be = new BoException("forwardInfoAdd");
+					be.setExceptionType("保证金账户" + accInfo.getCcy() + "金额不足,交易失败！当前余额为:" + accInfo.getAmount()+"!进行此次交易需要"+accInfo.getCcy()+":"+(option+profit)+"元,其中:"
+					+"期权费:"+option+",担保金:"+profit);
+					throw be;
+				}
+			}else{
+				//model.getDirection().equals("0")
+				//1代表卖方向
+				BoException be=new BoException("forwardInfoAdd");
+				be.setExceptionType("暂不支持保证金的卖出操作");
+				throw be;
+				/*if (Double.parseDouble(model.getAccountAmount()) > Double.parseDouble(accInfo.getAmount())){
+					logger.error("用户：" + user.getUserId() + " 添加期权交易失败！账户"+ accInfo.getCcy() +"金额不足");
+					BoException be = new BoException("forwardInfoAdd");
+					be.setExceptionType("保证金账户"+ accInfo.getCcy() +"金额不足,交易失败！当前余额为:"+accInfo.getAmount()+"!进行此次交易需要"+accInfo.getCcy()+(Double.parseDouble(model.getAccountAmount()))+"元");
+					throw be;
+				}*/
+			}
+
+
+
+			int days = 0;
+			if("5d".equals(model.getValueDate())){
+				days = 5;
+			}else if("14d".equals(model.getValueDate())){
+				days = 14;
+			}else if("30d".equals(model.getValueDate())){
+				days = 30;
+			}else{
+				days = 60;
+			}
+			String date = GetDateTimeUtil.getCurrentDateTimeToMinute();
+			String afterDate = GetDateTimeUtil.getDates(GetDateTimeUtil.dateTransFmt(date), days);//远期执行的日期
+			
+			bean.setTranType("B");//保证金交易都属于外币交易,用B表示
+			bean.setTranNo(SequenceUtil.getNextTranSeq("MO"));//在BO里操作流水号为了出异常的时候,流水表的也能回滚,MO代码期权交易
+			bean.setUserNum(user.getUserId());
+			bean.setAccNo(model.getAccount());
+			//valueDate字段和maturity字段重复了 ，setMaturity就行了
+			bean.setMaturity(GetDateTimeUtil.dateTransFmt2(afterDate)); 
+			bean.setWeCcy(model.getWeCcy());
+			bean.setAnaCcy(model.getAnaCcy());
+			bean.setOptionType(model.getOptionType());
+			bean.setAccAmount(FormatParamUtil.getAmountAndPriceFmt(model.getAccountAmount()));
+			bean.setDealAmt(FormatParamUtil.getAmountAndPriceFmt(model.getDealAmount()));
+			bean.setPrice(model.getPrice());
+			bean.setPremium(model.getPremium());
+			bean.setStatue("A");
+			bean.setCreateDatetime(date);
+			bean.setDirection(model.getDirection());
+			marginOptionInfoDao.makePersistent(bean, false);
+			
+			//在新增一条期权交易的时候要先把期权费给扣了先    比如买卖USD/CAD  期权费都是扣USD的
+			if(model.getDirection().equals("1")){
+				AccInfo a = new AccInfo();
+				a.setUserNum(user.getUserId());
+				a.setAccType("B");
+				a.setCcy(model.getAnaCcy());
+				AccInfo a1 = accInfoDao.getBeanByBean(a, MatchMode.ANYWHERE);
+				Double originAmout = Double.parseDouble(a1.getAmount());
+				a1.setAmount(FormatParamUtil.getAmountAndPriceFmtByDouble(originAmout-Double.parseDouble(model.getPremium()))); 
+				accInfoDao.updateBean(a1);
+			}else{
+				AccInfo a = new AccInfo();
+				a.setUserNum(user.getUserId());
+				a.setAccType("B");
+				a.setCcy(model.getWeCcy());
+				AccInfo a1 = accInfoDao.getBeanByBean(a, MatchMode.ANYWHERE);
+				Double originAmout = Double.parseDouble(a1.getAmount());
+				a1.setAmount(FormatParamUtil.getAmountAndPriceFmtByDouble(originAmout-Double.parseDouble(model.getPremium())));
+				accInfoDao.updateBean(a1);
+			}
+			
+		}catch(Exception e){
+			if (e instanceof BoException) {
+				throw (BoException) e;
+			}
+			logger.error("新增保证金期权交易失败：");
+			logger.error(e.getMessage(), e);
+			BoException be = new BoException("newForwardCashAdd");
+			be.setExceptionType("新增保证金期权交易失败：");
+			throw be;
+		}
+
+	}
+	
+	
+	/**
+	 * 根据group1的编号从margin_enlarge表里查询对应的放大倍数
+	 * 对数据库的查询,不加try catch,事务不用回滚
+	 * @param GroupOne
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	public String EnlargementFactorQuery(String GroupOne){
+		String enlarge = "";
+		MarginEnlarge me = new MarginEnlarge();
+		me.setGroupId(GroupOne);
+		Collection<?> collection = marginEnlargeDao.getBeansByBean(me, MatchMode.ANYWHERE);
+		if(!collection.isEmpty()){
+			Iterator iterator = collection.iterator();
+			while(iterator.hasNext()){
+				enlarge = ((MarginEnlarge)iterator.next()).getEnlarge();
+				break;
+			}
+		}
+		return enlarge;
+	}
+	
+	
+	/**
+	 * 这个方法是查询所有的保证金期权交易记录,包括所有的状态
+	 * 不能用getAll()方法,这样子把整个table的记录都拿出来了,只需要拿当前登录账户的记录
+	 * 对数据库的查询,不加try catch,事务不用回滚
+	 * @return
+	 */
+	public Collection<?> allOptionCashQuery(String hql,String tradeStatus){
+		UserModel user = (UserModel)UserModelUtil.getUser();
+		ArrayList<String> paraList = new ArrayList<String>();
+		String status = tradeStatus.equals("0")?"":tradeStatus;
+		if (status.equals(""))
+			status = GetFixWordUtil.getLikeWords(status);
+		paraList.add(user.getUserId());
+		paraList.add(status);
+		return marginOptionInfoDao.getBeansByParams(hql, paraList);
+	}
+	
+	/**
+	 * 根据tranNo查询唯一的远期交易记录
+	 * @param tranNo
+	 * @return
+	 */
+	public MarginOptionInfo queryForwardCashByTranNo(String tranNo){
+		MarginOptionInfo marginOptionInfo = new MarginOptionInfo();
+		marginOptionInfo.setTranNo(tranNo);
+		return marginOptionInfoDao.getBeanByBean(marginOptionInfo, MatchMode.ANYWHERE);
+	}
+	
+	
+	/**
+	 * 执行一条期权交易
+	 * 功能：在期权交易表把这条远期交易的交易状态改成DONE,更新账户交易统计表,账户表
+	 * @param tradeNo
+	 * @return
+	 */
+	public void excuteOptionModify(String tradeNo){
+		try{		
+			MarginOptionInfo m  = new MarginOptionInfo();
+			m.setTranNo(tradeNo);
+			//根据唯一的流水号得到要被执行的期权交易记录Bean
+			MarginOptionInfo bean = marginOptionInfoDao.getBeanByBean(m, MatchMode.ANYWHERE);
+			//1.更新账户表acc_info,先得到保证金里的两个要交易的币种的账户bean
+			//weCcy卖出货币  anaCcy是买入货币
+			AccInfo a1 = new AccInfo();
+			a1.setUserNum(bean.getUserNum());
+			a1.setAccType("B");
+			a1.setCcy(bean.getWeCcy());
+			AccInfo weAccInfo = accInfoDao.getBeanByBean(a1, MatchMode.ANYWHERE);
+			
+			AccInfo a2 = new AccInfo();
+			a2.setUserNum(bean.getUserNum());
+			a2.setAccType("B");
+			a2.setCcy(bean.getAnaCcy());
+			AccInfo anaAccInfo = accInfoDao.getBeanByBean(a2, MatchMode.ANYWHERE);
+			
+			//acc_info表更新的金额用的是实际金额，不是虚盘金额
+			Double weCcyMoney = Double.parseDouble(weAccInfo.getAmount());//weCcy币种对应的账户余额
+			//Double anaCcyMoney = Double.parseDouble(anaAccInfo.getAmount());//anaCcy币种对应的账户余额
+			Double price = Double.parseDouble(bean.getPrice());//期权交易的价格
+			//Double amt = Double.parseDouble(bean.getAccAmount());//期权交易的实际交易金额
+			Double deal_amt = Double.parseDouble(bean.getDealAmt());//期权交易的虚盘交易金额
+			
+			Double currentPrice = RateUtil.getMarginRateByCcy(bean.getAnaCcy() + bean.getWeCcy(), bean.getDirection());//得到当前（把增加的币种转回减少币种）的价格
+			//Double currentPrice = RateUtil.getRate(bean.getAnaCcy(), bean.getWeCcy());//得到当前（把增加的币种转回减少币种）的价格
+			Double profit = 0.0;
+			if(bean.getDirection().equals("1")){
+				//买
+				//weCcy币种对应的账户金额     = 余额+虚盘交易的利润
+				profit = deal_amt*currentPrice-deal_amt*price;	//利润额，可能是正也可能是负
+				double option =Double.valueOf(bean.getPremium());	//期权费
+				double cash=Double.valueOf(bean.getAccAmount());
+				weAccInfo.setAmount(FormatParamUtil.getAmountAndPriceFmtByDouble(weCcyMoney+profit-option-cash));
+			}else{
+				//bean.getDirection().equals("0")
+				//卖
+				//weCcy币种对应的账户金额     = 余额+虚盘交易的利润
+				profit=deal_amt*price*currentPrice-deal_amt;
+				weAccInfo.setAmount(FormatParamUtil.getAmountAndPriceFmtByDouble(weCcyMoney+profit));
+			}
+			
+
+			
+			//2.更新保证金交易流水表b_tran_flow_mapping,更新金额用的是虚盘金额
+			BTranFlowMapping b = new BTranFlowMapping();
+			b.setUserNum(bean.getUserNum());
+			BTranFlowMapping bTranFlowMapping = bTranFlowMappingDao.getBeanByBean(b, MatchMode.ANYWHERE);
+			//期权交易次数加1，期权交易量加虚盘交易金额 
+			bTranFlowMapping.setMarginOptionQty((Integer.parseInt(bTranFlowMapping.getMarginOptionQty())+1)+"");
+			bTranFlowMapping.setMarginOptionAmt(FormatParamUtil.getAmountAndPriceFmtByDouble(Double.parseDouble(bTranFlowMapping.getMarginOptionAmt())+deal_amt));  
+			//总交易次数加一，总交易量加虚盘交易金额
+			bTranFlowMapping.setCount(bTranFlowMapping.getCount()+1);
+			bTranFlowMapping.setAmount(bTranFlowMapping.getAmount()+deal_amt);
+			
+			
+			
+			//3.更新bean的交易状态为完成
+			bean.setStatue("D");
+			
+			//4.把相关的bean更新到对应的表
+			marginOptionInfoDao.updateBean(bean);
+			bTranFlowMappingDao.updateBean(bTranFlowMapping);
+			accInfoDao.updateBean(weAccInfo);
+			accInfoDao.updateBean(anaAccInfo);
+			
+		}catch(Exception e){
+			if (e instanceof BoException) {
+				throw (BoException) e;
+			}
+			logger.error("保证金期权交易执行失败");
+			logger.error(e.getMessage(), e);
+			BoException be = new BoException("excuteOptionAdd");
+			be.setExceptionType("保证金期权交易执行失败");
+			throw be;
+		}
+
+	}
+	
+	public MarginOptionInfoDao getMarginOptionInfoDao() {
+		return marginOptionInfoDao;
+	}
+	public void setMarginOptionInfoDao(MarginOptionInfoDao marginOptionInfoDao) {
+		this.marginOptionInfoDao = marginOptionInfoDao;
+	}
+	public MarginEnlargeDao getMarginEnlargeDao() {
+		return marginEnlargeDao;
+	}
+	public void setMarginEnlargeDao(MarginEnlargeDao marginEnlargeDao) {
+		this.marginEnlargeDao = marginEnlargeDao;
+	}
+	
+	public AccInfoDao getAccInfoDao() {
+		return accInfoDao;
+	}
+
+	public void setAccInfoDao(AccInfoDao accInfoDao) {
+		this.accInfoDao = accInfoDao;
+	}
+
+	public BTranFlowMappingDao getbTranFlowMappingDao() {
+		return bTranFlowMappingDao;
+	}
+
+	public void setbTranFlowMappingDao(BTranFlowMappingDao bTranFlowMappingDao) {
+		this.bTranFlowMappingDao = bTranFlowMappingDao;
+	}
+}

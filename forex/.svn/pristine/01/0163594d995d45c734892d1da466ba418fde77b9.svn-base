@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	
+	
+	 
+	<bean id="tipAdvice" class="com.talent.forex.advice.TipAdvice" />
+ 	<bean id="flashAdvice" class="com.talent.forex.advice.FlashAdvice" />	
+	<!--  <bean id="commonLogAdvice" class="com.talent.forex.advice.CommonLogAdvice">
+		<property name="operationLogDao">
+			<ref bean="operationLogDao"/>
+		</property>
+		<property name="eventRegDao">
+			<ref bean="eventRegDao"/>
+		</property>
+	</bean>
+	
+	<bean id="doubleSignCheckAdvice" class="com.talent.forex.advice.DoubleSignCheckAdvice">
+		<property name="userInfoDao">
+			<ref bean="userInfoDao"/>
+		</property>
+	</bean>-->
+
+	
+	<bean id="transactionAdvice" class="com.talent.forex.advice.TransactionAdvice" />
+	 	
+	<bean id="tipAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+		<property name="order">
+			<value>1</value>
+		</property>
+    	<property name="advice">
+        	<ref bean="tipAdvice"/>
+    	</property>
+    	<property name="patterns">
+        	<list>
+        		<value>.*Bo.*Query</value>
+            	<value>.*Bo.*Add</value>
+            	<value>.*Bo.*Modify</value>
+            	<value>.*Bo.*Del</value>
+            	<value>.*Bo.*Done</value>
+            	<value>.*Bo.*Login</value>
+            	<value>.*Bo.*WithTs</value>
+            	<value>.*Bo.*Get</value>
+            	<value>.*Bo.*Save</value>
+            	<value>.*Bo.*Init</value>
+            	<value>.*Bo.*Update</value>
+        	</list>
+    	</property>
+	</bean>
+
+	<!-- <bean id="flashAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+		<property name="order">
+			<value>1</value>
+		</property>
+    	<property name="advice">
+        	<ref bean="flashAdvice"/>
+    	</property>
+    	<property name="patterns">
+        	<list>
+        		<value>.*Bo.*Query</value>
+            	<value>.*Bo.*Add</value>
+            	<value>.*Bo.*Modify</value>
+            	<value>.*Bo.*Del</value>
+            	<value>.*Bo.*Done</value>
+            	<value>.*Bo.*Login</value>
+            	<value>.*Bo.*WithTs</value>
+            	<value>.*Bo.*Get</value>
+            	<value>.*Bo.*Save</value>
+            	<value>.*Bo.*Init</value>
+            	<value>.*Bo.*Update</value>
+        	</list>
+    	</property>
+	</bean> -->
+	
+	<!--  <bean id="commonLogAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+		<property name="order">
+			<value>5</value>
+		</property>
+    	<property name="advice">
+        	<ref bean="commonLogAdvice"/>
+    	</property>
+    	<property name="patterns">
+        	<list>
+            	<value>.*Bo.*Add</value>
+            	<value>.*Bo.*Modify</value>
+            	<value>.*Bo.*Del</value>
+            	<value>.*Bo.*Done</value>
+        	</list>
+    	</property>
+	</bean>
+	
+	<bean id="doubleSignCheckAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+		<property name="order">
+			<value>10</value>
+		</property>
+    	<property name="advice">
+        	<ref bean="doubleSignCheckAdvice"/>
+    	</property>
+    	<property name="patterns">
+        	<list>
+            	<value>.*Bo.*Add</value>
+            	<value>.*Bo.*Modify</value>
+            	<value>.*Bo.*Del</value>
+            	<value>.*Bo.*Done</value>   	
+        	</list>
+    	</property>
+	</bean>-->
+	
+	<bean id="transactionAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+		<property name="order">
+			<value>15</value>
+		</property>
+    	<property name="advice">
+        	<ref bean="transactionAdvice"/>
+    	</property>
+    	<property name="patterns">
+        	<list>
+        		<value>.*Bo.*Query</value>
+            	<value>.*Bo.*Add</value>
+            	<value>.*Bo.*Modify</value>
+            	<value>.*Bo.*Del</value>
+            	<value>.*Bo.*Done</value>
+            	<value>.*Bo.*Login</value>
+            	<value>.*Bo.*WithTs</value>
+            	<value>.*Bo.*Get</value>
+            	<value>.*Bo.*Save</value>
+            	<value>.*Bo.*Init</value>
+            	<value>.*Bo.*Update</value>
+        	</list>
+    	</property>
+	</bean>
+	
+	<bean id="autoProxyCreator" 
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
+	</bean>
+</beans>

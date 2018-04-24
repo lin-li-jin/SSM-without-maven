@@ -1,0 +1,261 @@
+/**********************登录*********************/
+function  login(){
+//	alert("执行登录");
+	var password =$("#passwordLogin").val();
+	var userId =$("#userIdLogin").val(); 
+			$.post("login.action",{userId:userId,password:password},
+				function(dat){
+					 if(dat == "success"){
+						//alert("登录成功");	
+						location.href = "mainPage2.jsp";
+						//windows.location = "mainPage2.jsp";
+					}else{
+						alert(dat);
+					}
+				}
+				);
+
+}
+/**********************登录检查*********************/
+function checkLogin(){
+//登录检查
+//	var userId = '<ww:property value="#session.userModel.userId"/>';
+	var userId =$("#userId").val(); 
+	if(userId==null || userId == "" ){
+		alert("请先登录！");
+		return ;
+	}else{
+		return "true";
+	}
+}
+/**********************检查是否选择了群组*********************/
+function checkGroup()
+{
+//	alert("测试群组");
+//检查是否已选择群组,没有就跳转到选择群组界面
+	var loginflag = checkLogin();
+//	var groupId='<ww:property value="#session.userModel.groupId"/>';
+//	alert("群组:"+groupId);
+	var groupId=$("#groupId").val(); 
+	if(loginflag=="true"){
+		if(groupId==null || groupId == "" ){
+			//alert("请先选择群组号！");
+		var url = "choiseGroupInit.action";
+		location.href = url;
+		return ;	
+	}else{
+		return "true";
+	}
+}else{
+	return "false";	
+}
+}//end of checkGroup()
+
+
+
+/**********************启动客户端*********************/
+function callLocalExec(flag)
+{	
+	var groupflag = checkGroup();
+	//alert("flag1:"+flag1);
+	if(groupflag == "true"){	
+		var eiasPath = "\"C:\\EIAS\\bin\\EIAS.exe\"";//票据地址
+		var fntrunPath = "\"C:\\fntrun\\run.bat\"";//综合会计地址
+		var path2Run ;
+		//票据需要选择群组，群组必须是已组成核心情景包和票据情情基本的
+		if(flag=='eias'){
+			var areaNo=$("#areaId").val();
+			if(areaNo == "" ||areaNo ==null ){
+				alert("此群组不能进入票据系统！");
+				return;
+			}else{
+				changeEIASConfigFile();
+				path2Run=eiasPath;		
+			}
+		}
+		if(flag=='fnturn'){
+		var dbId=$("#dbId").val();
+			if(dbId == "" ||dbId ==null ){
+				alert("此群组不能进入综合会计核算系统！");
+				return;
+			}else{
+				changeConfigFile();
+			path2Run=fntrunPath;	
+			}
+			
+		}
+		var myShell = new ActiveXObject("WScript.Shell");
+		myShell.Run(path2Run);
+		myShell = null;
+	}
+}// end of callLocalExec(flag)
+
+/**********************修改柜面文件*********************/
+function changeConfigFile()
+{
+   var dbname = $("#dbId").val(); 
+   var groupId=$("#groupId").val(); 
+   var runModel = $("#runModel").val(); 
+   var runModelDescr ;
+ 	if(runModel=="0"){
+ 		runModelDescr="EXEC";
+ 	}else{
+ 		runModelDescr="EXAM";
+ 	}
+    var fso = new ActiveXObject("Scripting.FileSystemObject");
+    var fRead = fso.OpenTextFile("c:\\fntrun\\bin\\sysdef.lua",1);
+    var str2Write = "";
+    while (!fRead.AtEndOfStream){
+    	var eachLine =fRead.ReadLine();
+     	if(eachLine.indexOf("g_var.GROUPID")>0){
+			str2Write += "	g_var.GROUPID = \""+groupId+"\";"+"\n";
+     	}else if(eachLine.indexOf("g_var.DBSID")>0){
+     		str2Write += "	g_var.DBSID = \""+dbname+"\";"+"\n";
+     	}else if(eachLine.indexOf("g_var.DBSID")>0){
+     		str2Write += "	g_var.RUNMODE = \""+runModelDescr+"\";"+"\n";
+     	}else{
+            str2Write += eachLine+"\n";    	
+            }	
+     		//continue;
+     }
+    fRead.Close();
+    var fWrite= fso.CreateTextFile("c:\\fntrun\\bin\\sysdef.lua", true);
+    fWrite.WriteLine(str2Write);
+	//关闭文件
+	fWrite.Close();
+}//end of changeConfigFile()
+
+/**********************修改票据文件*********************/
+function changeEIASConfigFile(){
+//改写票据地区号 alert("调到了!");
+//	var areaNo ='<ww:property value="#session.userModel.areaId"/>';
+	var areaNo=$("#areaId").val();
+    
+    var fso = new ActiveXObject("Scripting.FileSystemObject");
+    var fRead = fso.OpenTextFile("c:\\EIAS\\Bin\\Eias.ini",1);
+    var str2Write = "";
+    while (!fRead.AtEndOfStream){ 
+    	var eachLine =fRead.ReadLine();
+ //alert("eachLie："+eachLine);   	
+     	if(eachLine.charAt(0)=='A'){
+//     	alert("地区号"+AreaNo);
+			str2Write += "AreaNo="+areaNo+"\n";
+     	}else
+            str2Write += eachLine+"\n";    		
+     		//continue;
+     }
+    fRead.Close();
+    var fWrite= fso.CreateTextFile("c:\\EIAS\\Bin\\Eias.ini", true);
+    fWrite.WriteLine(str2Write);
+	//关闭文件
+	fWrite.Close();	
+}
+
+/**********************联行*********************/
+function jump2Efes(){
+	
+	var flag1 = checkGroup();
+	
+	if(flag1 == "true"){
+//	var userId='<ww:property value="#session.userModel.UserId"/>';
+//	var groupId='<ww:property value="#session.userModel.groupId"/>';
+//	var password='<ww:property value="#session.userModel.password"/>';
+	var userId = $("#userId").val(); 
+    var groupId=$("#groupId").val(); 
+    var password=$("#password").val();
+    var efesUrl=$("#efesUrl").val();
+	
+//	var url="http://56.16.72.94:8080/efes/login.action?userModel.id="+userId+"&userModel.groupId="+groupId+"&userModel.password="+password;
+	var url=efesUrl+"login.action?userModel.id="+userId+"&userModel.groupId="+groupId+"&userModel.password="+password;
+	window.open(url);
+	//location.href = url;
+	return;
+	}
+}//end of jump2Efes()
+
+/**********************考核*********************/
+function jump2Ees(){
+var url =null;
+//	var userType = '<ww:property value="#session.userModel.userType"/>'; 
+//	var userId='<ww:property value="#session.userModel.userId"/>';
+//	var groupId='<ww:property value="#session.userModel.groupId"/>';
+//	var password='<ww:property value="#session.userModel.password"/>';
+//	var dbId = '<ww:property value="#session.userModel.dbId"/>';
+//	var areaId = '<ww:property value="#session.userModel.areaId"/>';
+	var userType = $("#userType").val(); 
+	var userId = $("#userId").val(); 
+    var groupId=$("#groupId").val(); 
+    var password=$("#password").val();
+    var dbId=$("#dbId").val(); 
+    var areaId=$("#areaId").val();
+    var ecbsOper=$("#ecbsOper").val();
+    var eiasOper=$("#eiasOper").val();
+	var eesUrl=$("#eesUrl").val();
+//	 alert(eesUrl);
+	var loginFlag = checkLogin();
+	if(loginFlag =="true"){
+		if(userType=="S"){
+		//如果是学生进入考核系统，需要检查是否已选择群组
+			groupFlag = checkGroup();
+			if(groupFlag == "true"){
+//				url="http://56.16.72.94:8089/ees/login.action?userModel.userId="+userId+"&userModel.groupId="+groupId+"&userModel.password="+password+"&userModel.dbId="+dbId+"&userModel.areaId="+areaId;
+				url=eesUrl+"login.action?userModel.userId="+userId+"&userModel.groupId="+groupId+"&userModel.password="+password
+					+"&userModel.dbId="+dbId+"&userModel.areaId="+areaId+"&userModel.operator="+ecbsOper+"&userModel.eiasOper="+eiasOper;
+				window.open(url);
+				//location.href = url;
+				return;
+			}else{
+				return;
+			}
+		}else if (userType=="T") {
+//			url="http://56.16.72.94:8089/ees/login.action?userModel.userId="+userId+"&userModel.password="+password;
+			url=eesUrl+"login.action?userModel.userId="+userId+"&userModel.password="+password;	
+			window.open(url);
+			//location.href = url;
+			return;
+		}				
+	}
+	return;
+}//end of jump2Ees()
+
+
+/**********************实验管理*********************/
+function jump2Ems(){
+	var loginFlag = checkLogin();
+		if(loginFlag =="true"){
+		//var url="emsIndex.jsp";
+		//window.open(url);
+		var url = "jump2ems.action";
+		location.href = url;
+		}
+	return;
+}//end of jump2Ems()
+/**********************知识库*********************/
+function jump2Ekss(){
+	var ekssUrl=$("#ekssUrl").val();
+	var loginFlag = checkLogin();
+//	alert(loginFlag);
+		if(loginFlag =="true"){
+//		var url="http://56.16.72.94:8089/ekss/";
+	//var test=window.open(ekssUrl,"ekss","scrollbars=yes,status=no,resizable=yes,top=20,left=20,width="+(screen.availWidth-40)+",height="+(screen.availHeight-60)+",channelmode=no");
+	//test.focus();
+		window.open(ekssUrl);
+		}
+	return;
+}//end of jump2Ekss()
+
+/**********************考核系统--成绩查询*********************/
+
+function  stuTestDetailQuery(){
+	var eesUrl=$("#eesUrl").val();
+	var url=eesUrl+"studentScoreQueryInit.action";
+	window.open(url);
+}//end of stuTestDetailQuery
+
+/**********************考核系统--考核回顾*********************/
+
+function  stuTestReviewQuery(){
+	var eesUrl=$("#eesUrl").val();
+	var url=eesUrl+"stuTestReviewQuery.action";
+	window.open(url);
+}//end of stuTestReviewQuery()

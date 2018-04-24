@@ -1,0 +1,61 @@
+package com.hh;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class JavaTest {
+	
+	///////
+	public static void main(String[] args) {
+		int[] num= new int[101];
+		int[] fenchu= new int[101];
+		int cound = 0;
+		int i;
+		
+		//输入人数
+		Scanner sc = new Scanner(System.in);
+	    i = sc.nextInt();
+	    //输入开始数
+	    for(int j=1; j<=i; j++){
+	    	num[j] = sc.nextInt();
+	    }
+	    
+	    while(true){
+	    	//判断是否相同
+	    	for(int j=1; j<=i; j++){
+		    	if(num[1]==num[i]){
+		    		System.out.println(cound);
+		    		return;
+		    	}
+		    }
+	    	
+		    //对半分
+		    for(int j=1; j<=i; j++){
+		    	if(j==1){
+		    		fenchu[i]=num[j]/2;
+		    		num[j]=num[j]/2;
+		    	}else{
+		    		fenchu[j-1]=num[j]/2;
+		    		num[j]=num[j]/2;
+		    	}
+		    }
+		    
+		    //相加
+		    for(int j=1; j<=i; j++){
+		    	num[j] += fenchu[j];
+		    	fenchu[j]=0;
+		    }
+		    
+		    //补齐
+		    for(int j=1; j<=i; j++){
+		    	if(num[j]%2!=0){
+		    		num[j]+=1;
+		    		cound++;
+		    	}
+		    }
+		}
+	}
+
+
+	//////////
+		
+}

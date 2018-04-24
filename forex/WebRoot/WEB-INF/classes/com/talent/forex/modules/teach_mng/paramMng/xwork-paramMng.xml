@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
+<!-- 
+ Amendment No.: FOEXAS009
+ Create By    : lzc
+ Description  : 交易首页
+ Modify Date  : 2014-07-21
+  -->
+<xwork>
+	<package name="paramMng" extends="default">
+		<action name="qryParamMngInit" method="qryParamMngInit"
+			class="com.talent.forex.modules.teach_mng.paramMng.ParamMngAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/paramMagModule/qryParamSet.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="accParamSetInit" method="accParamSetInit"
+			class="com.talent.forex.modules.teach_mng.paramMng.ParamMngAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/paramMagModule/accParamSet.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="pwResetAaccUnlockInit" method="pwResetAaccUnlockInit"
+			class="com.talent.forex.modules.teach_mng.paramMng.ParamMngAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/paramMagModule/pwResetAaccUnlock.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="pwResetGetUserList" method="pwResetGetUserList"
+			class="com.talent.forex.modules.teach_mng.paramMng.ParamMngAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/paramMagModule/pwResetAaccUnlock.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="resetUserPw" method="resetUserPw"
+			class="com.talent.forex.modules.teach_mng.paramMng.ParamMngAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/paramMagModule/Result.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="accoutUnlock" method="accoutUnlock"
+			class="com.talent.forex.modules.teach_mng.paramMng.ParamMngAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/paramMagModule/Result.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="accQryParamModify" method="accQryParamModify"
+			class="com.talent.forex.modules.teach_mng.paramMng.ParamMngAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/paramMagModule/Result.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="overAllQryParamModify" method="overAllQryParamModify"
+			class="com.talent.forex.modules.teach_mng.paramMng.ParamMngAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/paramMagModule/Result.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="setAnalogue" method="setAnalogue"
+			class="com.talent.forex.modules.teach_mng.paramMng.ParamMngAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/paramMagModule/Result.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="getGroupTwos" method="getGroupTwos"
+			class="com.talent.forex.modules.teach_mng.paramMng.ParamMngAction">
+			<interceptor-ref name="paramsLoginStack"/>
+		</action>
+		
+		<action name="accQryParamQuery" method="accQryParamQuery"
+			class="com.talent.forex.modules.teach_mng.paramMng.ParamMngAction">
+			<interceptor-ref name="paramsLoginStack"/>
+		</action>
+		<action name="getAnaGroup" method="getAnaGroup"
+			class="com.talent.forex.modules.teach_mng.paramMng.ParamMngAction">
+			<interceptor-ref name="paramsLoginStack"/>
+		</action>
+	</package>
+</xwork>

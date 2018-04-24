@@ -1,0 +1,33 @@
+package com.hh;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class JavaTest {
+	
+	///////
+	public static void main(String[] args) {
+		// TODO Auto-generated method st
+	
+		
+		
+		Scanner sc = new Scanner(System.in);
+		int x = sc.nextInt();
+		
+		while(true){
+			
+			if(x<1000 *1000){
+				System.out.println(x);
+				
+				break;
+			}
+			
+		}
+		
+		
+		
+	}
+
+
+	//////////
+		
+}

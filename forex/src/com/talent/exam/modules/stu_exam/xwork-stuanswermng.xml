@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
+<!-- 
+ Amendment No.: FOEXAS009
+ Create By    : lzc
+ Description  : 学生考试模块
+ Modify Date  : 2014-07-21
+  -->
+<xwork>
+	<package name="stu_exam_mng" extends="default">
+		<action name="startExam" method="startExam"
+				class="com.talent.exam.modules.stu_exam.controller.StuExamAction">
+
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+			<interceptor-ref name="examRssultStack"></interceptor-ref>
+		</action>
+		<action name="setUpSubject" method="setUpSubject"
+				class="com.talent.exam.modules.stu_exam.controller.StuExamAction">
+
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+			<interceptor-ref name="examRssultStack"></interceptor-ref>
+		</action>
+	</package>
+</xwork>

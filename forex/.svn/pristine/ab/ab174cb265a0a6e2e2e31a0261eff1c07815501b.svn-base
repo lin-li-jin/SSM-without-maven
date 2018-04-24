@@ -1,0 +1,9 @@
+package com.talent.exam.modules.admin_mng.action;
+
+public class InitExamMngAction {
+	
+	public String initExamMng(){
+		return "success";
+	}
+
+}

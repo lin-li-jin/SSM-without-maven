@@ -1,0 +1,27 @@
+@CHARSET "GBK";
+
+.table table{margin-top:20px;width:100%;border:1px #8dcdfd solid;color:#333;font-size:12px;	}
+.table table tr{color:#333;}
+.table table th{background: #8dcdfd;font-weight:normal; }
+.table table td{padding:3px;background : #ffffff;text-align:center;}	
+
+.divTable {font-size:12px;}
+label.error{background:url("image/unchecked.gif") no-repeat 0px 0px;padding-left:16px;margin-left:3px;}
+label.success{background:url("image/checked.gif") no-repeat 0px 0px;padding-left:16px;margin-left:3px;}
+.pn-flabel{background-color:#F9FBFD;text-align:right;padding-right:3px;font-size: 10pt;}
+.pn-flabel-h{height:27px;}
+.pn-fcontent{background-color:#FFFFFF;padding-left:5px;font-size: 10pt;}
+.pn-ftable{background-color:#B4CFCF;margin-top:5px;}
+
+.pn-flabel2{background-color:#F9FBFD;text-align:center;padding-right:3px;font-size: 10pt;}
+.pn-flabel22{background-color:#e5f2f8;text-align:center;padding-right:3px;font-size: 10pt;font-weight: bolder;}
+.pn-flabel2-h{height:27px;}
+.pn-fcontent2{background-color:#FFFFFF;padding-left:5px;font-size: 10pt;text-align: center;}
+.pn-ftable2{background-color:#B4CFCF;margin-top:5px;}
+/*后台右页头部*/
+.rhead{border:#b4cfcf 1px solid;padding:5px 15px;margin-top:5px;}
+/*后台右页当前位置*/
+.rpos{float:left;padding:3px 0px 3px 20px;background:url(image/arrow.gif) center left no-repeat;}
+/*后台右页操作*/
+.ropt{float:right;}
+.bodd{}

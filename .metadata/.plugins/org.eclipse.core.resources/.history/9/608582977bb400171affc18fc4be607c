@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+<session-factory>
+	<property name="hibernate.session_factory_name">
+		hibernate/sessionFactory/forex
+	</property>
+	<!-- for jboss -->
+
+	<property name="connection.datasource">
+		java:comp/env/jdbc/forex
+	</property>
+	<property name="hibernate.dialect">
+		org.hibernate.dialect.MySQLInnoDBDialect
+	</property>
+	<!-- <property name="connection.autocommit">false</property> -->
+	<property name="hibernate.jdbc.batch_size">30</property>
+	<property name="hibernate.show_sql">true</property>
+	<!-- c3p0 trial 
+	<property name="hibernate.connection.username">root</property>
+	<property name="hibernate.connection.password">141545344</property>
+	<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+	<property name="hibernate.connection.url">jdbc:mysql://127.0.0.1:3306/forex?characterEncoding=utf-8</property> 
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</property>
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:mysql://127.0.0.1:3306/forex?characterEncoding=utf-8</property> 
+		<property name="hibernate.connection.username">root</property>
+		<property name="hibernate.connection.password">ebss88</property>
+		<property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+        <property name="hibernate.c3p0.max_size">40</property>
+        <property name="hibernate.c3p0.min_size">10</property>
+        <property name="hibernate.c3p0.max_statements">0</property>
+        <property name="hibernate.c3p0.acquire_increment">5</property>
+        <property name="c3p0.testConnectionOnCheckout">false</property>
+        <property name="c3p0.idleConnectionTestPeriod">60</property>
+        <property name="c3p0.maxIdleTime">60</property>
+		 	 c3p0 end -->
+		 	 
+	<property name="hibernate.connection.username">lin</property>
+	<property name="hibernate.connection.password">password</property>
+	<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+	<property name="hibernate.connection.url">jdbc:mysql://127.0.0.1:3306/forex?characterEncoding=utf-8</property> 
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</property>
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:mysql://127.0.0.1:3306/forex?characterEncoding=utf-8</property> 
+		<property name="hibernate.connection.username">lin</property>
+		<property name="hibernate.connection.password">password</property>
+		<property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+        <property name="hibernate.c3p0.max_size">40</property>
+        <property name="hibernate.c3p0.min_size">10</property>
+        <property name="hibernate.c3p0.max_statements">0</property>
+        <property name="hibernate.c3p0.acquire_increment">5</property>
+        <property name="c3p0.testConnectionOnCheckout">false</property>
+        <property name="c3p0.idleConnectionTestPeriod">60</property>
+        <property name="c3p0.maxIdleTime">60</property>
+		 	 
+		 	 
+		 	 
+		 	 
+		 	 
+	<property name="hibernate.bytecode.use_reflection_optimizer">
+		true
+	</property>
+	<!-- auth -->
+	<mapping resource="com/talent/exam/domain/ExamStuAnswer.hbm.xml"/>
+	<mapping resource="com/talent/exam/domain/ExamPaper.hbm.xml"/>
+	<mapping resource="com/talent/exam/domain/ExamPaperDistribute.hbm.xml"/>
+	<mapping resource="com/talent/exam/domain/ExamSwap.hbm.xml"/>
+	<mapping resource="com/talent/exam/domain/ExamSpot.hbm.xml"/>
+	<mapping resource="com/talent/exam/domain/ExamForward.hbm.xml"/>
+	<mapping resource="com/talent/exam/domain/ExamTakeProfit.hbm.xml"/>
+	<mapping resource="com/talent/exam/domain/ExamOco.hbm.xml"/>
+	<mapping resource="com/talent/exam/domain/ExamMarketBreakout.hbm.xml"/>
+	<mapping resource="com/talent/exam/domain/ExamOneClick.hbm.xml"/>
+	<mapping resource="com/talent/exam/domain/ExamStopLoss.hbm.xml"/>
+	<mapping resource="com/talent/exam/domain/ExamContent.hbm.xml"/>
+	<mapping resource="com/talent/exam/domain/ExamAccType.hbm.xml"/>
+	<mapping resource="com/talent/auth/bean/domain/TeacherClass.hbm.xml"/>
+	<mapping resource="com/talent/auth/bean/domain/TClass.hbm.xml"/>
+	<mapping resource="com/talent/auth/bean/domain/Users.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/AccInfo.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/OneClickInfo.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/CodeTable.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/StopLossInfo.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/MarginEnlarge.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/AnalogueMag.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/TakeProfitInfo.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/OcoInfo.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/Seq.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/MarketBreakoutInfo.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/OtcSpotInfo.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/OtcForwardInfo.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/OtcSwapInfo.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/MarginForwardInfo.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/MarginOptionInfo.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/SysParam.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/GroupSysParam.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/GroupMng.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/CTranFlowMapping.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/BTranFlowMapping.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/WTranFlowMapping.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/view/CompletePriceTranInfo.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/Rate.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/OperationLog.hbm.xml" />
+	<mapping resource="com/talent/forex/bean/domain/MarginSpotInfo.hbm.xml"/>
+</session-factory>
+</hibernate-configuration>

@@ -1,0 +1,39 @@
+
+.header {
+font: 12px Arial, Tahoma !important;
+font-weight: bold !important;
+font: 11px Arial, Tahoma;
+font-weight: bold;
+color: #000000;
+height: 30px;
+padding-left: 10px;
+}
+.header td {
+padding-left: 10px;
+}
+
+.header input {
+background:none;
+vertical-align: middle;
+height: 16px;
+}
+
+.altbg2 {
+background: #F7F7F7;
+font: 12px Tahoma, Verdana;
+}
+.simpletable {
+border: 1px solid #D6D5D9;
+padding: 1px;
+clear: both;
+}
+.simpletable .header {
+background-image: url("../image/header_bg.gif");
+padding-top:7px;
+padding-bottom:0px;
+height: 21px !important;
+height: 30px;
+}
+.simpletable div {
+padding: 4px;
+}

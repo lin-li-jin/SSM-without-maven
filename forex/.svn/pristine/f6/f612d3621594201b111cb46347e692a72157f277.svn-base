@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<!-- 
+ Amendment No.: FOEXAS011
+ Create By    : 陈整队
+ Description  : 保证金交易首页
+ Modify Date  : 2014-07-23
+  -->
+<beans default-autowire="byName">
+	<bean id="cashBo" class="com.talent.forex.modules.trade.cash.cashManageBo" />
+	<bean id="forwardCashBo" class="com.talent.forex.modules.trade.cash.ForwardCashBo" />
+	<bean id="optionCashBo" class="com.talent.forex.modules.trade.cash.OptionCashBo" />
+</beans>

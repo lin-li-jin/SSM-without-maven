@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
+<!-- 
+ Amendment No.: FOEXAS009
+ Create By    : lzc
+ Description  : 知识点维护
+ Modify Date  : 2014-07-21
+  -->
+<xwork>
+	<package name="admin_subject_mng" extends="default">
+		<action name="queryBySubjectType" method="queryBySubjectType"
+				class="com.talent.exam.modules.admin_mng.controller.SubjectAction">
+
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+			<interceptor-ref name="examRssultStack"></interceptor-ref>
+		</action>
+		<action name="addnewExchange" method="addnewExchange"
+				class="com.talent.exam.modules.admin_mng.controller.SubjectAction">
+
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+			<interceptor-ref name="examRssultStack"></interceptor-ref>
+		</action>
+		<action name="managePaper" method="managePaper"
+				class="com.talent.exam.modules.admin_mng.controller.SubjectAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+			<interceptor-ref name="examRssultStack"></interceptor-ref>
+		</action>
+	</package>
+</xwork>

@@ -1,0 +1,239 @@
+package com.talent.forex.util;
+
+import java.util.Collection;
+import java.util.Iterator;
+
+import org.hibernate.criterion.MatchMode;
+
+import com.talent.forex.bean.domain.Rate;
+import com.talent.forex.bean.model.CcyModel;
+import com.talent.forex.dao.RateDao;
+import com.talent.forex.modules.rateFactory.RateReceive;
+
+/**
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2008
+ * </p>
+ * <p>
+ * Company: Talent Information Solutions Ltd.
+ * </p>
+ * 
+ * @author lcw
+ *
+ */
+public class RateUtil {
+	
+	/**
+	 * 获取实时汇率，主要用于计算盈亏额和盈亏率(证实有效)
+	 * @param tradeType 交易类型(1位大写字符串)
+	 * @param ccy 币种(只能是3位的字符串)
+	 * @return 汇率
+	 */
+	public static double getRateByCcy(String tradeType, String ccy){
+		double r = 0d;
+		Collection<?> origin = null;
+		if(tradeType.equals("C")){
+			origin = RateReceive.getInstance().getRmbJingJiaRate();
+			Iterator<?> iterator = origin.iterator();
+			while(iterator.hasNext()){
+				CcyModel ccyModel = (CcyModel) iterator.next();
+				if(ccyModel.getCcy().equals(ccy.substring(0, 3))){ 
+					r = Double.parseDouble(ccyModel.getBidValue());
+					break;
+				}
+			}
+		}
+		else if(tradeType.equals("W")){
+			origin = RateReceive.getInstance().getForJingJiaRate();
+			Iterator<?> iterator = origin.iterator();
+			while(iterator.hasNext()){
+				CcyModel ccyModel = (CcyModel) iterator.next();
+				String ccy2 = null;
+				if(ccy.equals("EUR") || ccy.equals("GBP") || ccy.equals("AUD")){
+					ccy2 = ccy + "USD";
+				}
+				else if(ccy.equals("JPY") || ccy.equals("CAD")){
+					ccy2 = "USD" + ccy;
+					/*if(ccyModel.getCcy().equals(ccy2)){
+						r = Double.parseDouble(ccyModel.getAskValue());
+						r = 1.0 / r;
+						break;
+					}*/
+				}
+				if(ccyModel.getCcy().equals(ccy2)){
+					r = Double.parseDouble(ccyModel.getBidValue());
+					break;
+				}
+			}
+		}
+		else if(tradeType.equals("B")){
+			origin = RateReceive.getInstance().getMarginRate();
+			Iterator<?> iterator = origin.iterator();
+			while(iterator.hasNext()){
+				CcyModel ccyModel = (CcyModel) iterator.next();
+				String ccy2 = null;
+				if(ccy.equals("EUR") || ccy.equals("GBP") || ccy.equals("AUD")){
+					ccy2 = ccy + "USD";
+				}
+				else if(ccy.equals("JPY") || ccy.equals("CAD")){
+					ccy2 = "USD" + ccy;
+					/*if(ccyModel.getCcy().equals(ccy2)){
+						r = Double.parseDouble(ccyModel.getAskValue());
+						r = 1.0 / r;
+						break;
+					}*/
+				}
+				if(ccyModel.getCcy().equals(ccy2)){
+					r = Double.parseDouble(ccyModel.getBidValue());
+					break;
+				}
+			}
+		}
+		return r;
+	}
+	
+	/**
+	 * 获取人民币实时汇率(证实有效)
+	 * @param type 竞价(B)或询价(A)
+	 * @param ccy 币种(只能是3位的字符串)
+	 * @param direction 买(1)或卖(0)
+	 * @return 汇率
+	 */
+	public static double getCNYRateByCcy(String type, String ccy, String direction){
+		double r = 0d;
+		Collection<?> origin = null;
+		if(type.equals("B")){
+			origin = RateReceive.getInstance().getRmbJingJiaRate();
+		}
+		else if(type.equals("A")){
+			origin = RateReceive.getInstance().getRmbXunJiaRate();
+		}
+		Iterator<?> iterator = origin.iterator();
+		while(iterator.hasNext()){
+			CcyModel ccyModel = (CcyModel) iterator.next();
+			if(ccyModel.getCcy().equals(ccy.substring(0, 3))){ 
+				if(direction.equals("1")){//买
+					r = Double.parseDouble(ccyModel.getBidValue());
+				}
+				else if(direction.equals("0")){//卖
+					r = Double.parseDouble(ccyModel.getAskValue());
+				}
+				break;
+			}
+		}
+		return r;
+	}
+	
+	/**
+	 * 获取外币实时汇率(证实有效)
+	 * @param ccy 币种(只能是3位的字符串)
+	 * @param direction 买(1)或卖(0)
+	 * @return 汇率
+	 */
+	public static double getForRateByCcy(String ccy, String direction){
+		double r = 0d;
+		Collection<?> origin = null;
+		origin = RateReceive.getInstance().getForJingJiaRate();//竞价询价都一样的价格
+		Iterator<?> iterator = origin.iterator();
+		while(iterator.hasNext()){
+			CcyModel ccyModel = (CcyModel) iterator.next();
+			String ccy2 = null;
+			if(ccy.equals("EUR") || ccy.equals("GBP") || ccy.equals("AUD")){
+				ccy2 = ccy + "USD";
+			}
+			else if(ccy.equals("JPY") || ccy.equals("CAD")){
+				ccy2 = "USD" + ccy;
+			}
+			if(ccyModel.getCcy().equals(ccy2)){ 
+				if(direction.equals("1")){//买
+					r = Double.parseDouble(ccyModel.getBidValue());
+				}
+				else if(direction.equals("0")){//卖
+					r = Double.parseDouble(ccyModel.getAskValue());
+				}
+				break;
+			}
+		}
+		return r;
+	}
+	
+	/**
+	 * 获取保证金实时汇率(证实有效)
+	 * @param ccy 币种(只能是6位的字符串，2币种合并)
+	 * @param direction 买(1)或卖(0)
+	 * @return 汇率
+	 */
+	public static double getMarginRateByCcy(String ccy, String direction){
+		double r = 0d;
+		Collection<?> origin = null;
+		origin = RateReceive.getInstance().getMarginRate();
+		Iterator<?> iterator = origin.iterator();
+		while(iterator.hasNext()){
+			CcyModel ccyModel = (CcyModel) iterator.next();
+			
+			if(ccyModel.getCcy().equals(ccy)){ 
+				if(direction.equals("1")){//买
+					r = Double.parseDouble(ccyModel.getBidValue());
+				}
+				else if(direction.equals("0")){//卖
+					r = Double.parseDouble(ccyModel.getAskValue());
+				}
+				break;
+			}
+		}
+		return r;
+	}
+	
+	/**
+	 * 操作汇率表Rate的方法(已停用)
+	 * @param source
+	 * @param target
+	 * @return
+	 */
+	/*public static double getRate(String source, String target){
+		RateDao rateDao = new RateDao();
+		Rate bean = new Rate();
+		bean.setSourceCcy(source);
+		bean.setTargetCcy(target);
+		Rate rate = rateDao.getBeanByBean(bean, MatchMode.ANYWHERE);
+		return Double.parseDouble(rate.getRate());
+	}*/
+	
+	/**
+	 * 得到对应货币     人民币或者外币竞价的买卖价格
+	 * @param weCcy
+	 * @return
+	 */
+	public static CcyModel getRateByCCy(String tranType ,String ccy){
+		Collection<?> origin;
+		if(tranType.equals("C")){
+			origin = RateReceive.getInstance().getRmbJingJiaRate();
+			Iterator<?> iterator = origin.iterator();
+			while(iterator.hasNext()){
+				CcyModel ccyModel = (CcyModel) iterator.next();
+				if(ccyModel.getCcy().equals(ccy.substring(0, 3))){ 
+					return ccyModel;
+				}
+			}
+		}else{
+			origin = RateReceive.getInstance().getForJingJiaRate();
+			Iterator<?> iterator = origin.iterator();
+			while(iterator.hasNext()){
+				CcyModel ccyModel = (CcyModel) iterator.next();
+				if(ccyModel.getCcy().equals(ccy)){
+					return ccyModel;
+				}
+			}
+		}
+		
+		
+		return null;//得确定session中有当前货币对价格
+	}
+
+}

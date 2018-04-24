@@ -1,0 +1,414 @@
+package com.talent.forex.modules.trade_mng;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+
+import com.talent.auth.bean.model.UserModel;
+import com.talent.forex.bean.domain.GroupMng;
+import com.talent.forex.bean.domain.MarginForwardInfo;
+import com.talent.forex.bean.domain.MarginOptionInfo;
+import com.talent.forex.bean.model.TradeFlowModel;
+import com.talent.forex.constant.SysParamNameConst;
+import com.talent.forex.core.ForexBaseAction;
+import com.talent.forex.modules.teach_mng.paramMng.ParamMngBo;
+import com.talent.forex.modules.trade.cash.ForwardCashBo;
+import com.talent.forex.modules.trade.cash.OptionCashBo;
+import com.talent.forex.util.CodeTableUtil;
+import com.talent.forex.util.UserModelUtil;
+/*
+ * Amendment No.: FOEXAS015
+ * Create By    : lzc
+ * Description  : 账户交易流水统计
+ * Modify Date  : 2014-08-05
+ * modify by atggdsaiDong 2014-08-11
+ */
+public class AccountFlowAction extends ForexBaseAction {
+	
+	private TradeFlowModel tradeFlowModel;//把页面传回来的参数封装成了model
+	private String tradeType;//交易类型
+	private String classNo;//班级号
+	private String groupOne;
+	private String groupTwo;
+	
+	private String tradeStatus;//交易状态
+	private String table;//交易所属实体（查看详细交易记录）
+	private String tradeNo;//交易编号（查看详细交易记录）
+	private String action = "success";//用于判断交易状态为active时跳转页面
+	
+	private String userNum;//这个是接收页面传回的参数，就是点击'查看所有'传回来的学号
+	
+	private AccountFlowManageBo accountFlowManageBo;//账户交易流水统计
+	private ForwardCashBo forwardCashBo;//保证金远期交易
+	private OptionCashBo optionCashBo;//保证金期权交易
+	
+	/**
+	 * 页面初始化
+	 */
+	public String pageInit(){
+		
+		//获取用户类型
+		UserModel user = UserModelUtil.getUser();
+		requestPut("tradeTypeList",CodeTableUtil.getInstance().getCodeList(SysParamNameConst.ACCOUNT_TYPE_LIST));
+		//若用户为学生则显示该学生的所有交易信息
+		if (user.getUserType().equals("S")){
+			Collection collection = accountFlowManageBo.accountFlowAllTradeRecordListQuery("getAllListByTranType", user.getUserId(), "");
+			if (collection.size() > 0){
+				requestPut("collection",collection);
+			}
+			return "student";
+		}
+		// start 这里的功能是把一级组列表放到页面初始化 和   在进到页面里默认查询第一个一级组的人民币外币交易记录,因为页面交易类型的下拉框第一个是人民币外币
+		Collection groupOneList = accountFlowManageBo.getGroupListDone(SysParamNameConst.GROUP_ONE);
+		if(groupOneList!=null){
+			String firstGroupOne = "";
+			Iterator iterator = groupOneList.iterator();
+			while(iterator.hasNext()){
+				firstGroupOne = ((GroupMng) iterator.next()).getGroupId();
+				break;
+			}
+			requestPut("listC",accountFlowManageBo.tradeRecordByClassNoQuery(firstGroupOne,"C")); //默认查询第一个班级的人民币外币交易
+			requestPut("groupOneList",groupOneList);
+		}
+		// end 这里的功能是把一级组列表放到页面初始化 和   在进到页面里默认查询第一个一级组的人民币外币交易记录,因为页面交易类型的下拉框第一个是人民币外币
+		return "admin";
+	}
+
+	/**
+	 * 根据交易类型进行交易记录查询
+	 */
+	public String tradeRecordSearch(){
+		requestPut("tradeTypeList",CodeTableUtil.getInstance().getCodeList(SysParamNameConst.ACCOUNT_TYPE_LIST));
+		UserModel user = UserModelUtil.getUser();
+		Collection<?> collection = accountFlowManageBo.accountFlowAllTradeRecordListQuery("getAllListByTranType", user.getUserId(), tradeType);
+		if (collection.size() > 0){
+			requestPut("collection",collection);
+			requestPut("tradeType",tradeType);
+		}
+		return "student";
+	}
+	
+	
+	/**
+	 * ajax执行的action，不进行页面转发
+	 * 根据一级组组号查询对应的二级组显示到页面的下拉框
+	 */
+	public void getGroupTwos(){
+		String dat=accountFlowManageBo.getGroupTwoDone(groupOne);
+		processText(dat,"text/plain;charset=GBK");
+	}
+	
+	/**
+	 * ajax执行的action，不进行页面转发
+	 * 根据二级组号查询对应的学生显示到页面的下拉框
+	 */
+	public void getStudents(){
+		String dat1 = accountFlowManageBo.getStudentDone(groupTwo);
+		processText(dat1, "text/plain;charset=GBK");
+	}
+	
+	
+	/**
+	 * ajax执行的action，不进行页面转发
+	 * 根据一级组号查询对应的学生显示到页面的下拉框
+	 */
+	public void getStudentsByGroupOne(){
+		String dat2 = accountFlowManageBo.getStudentQuery(classNo);
+		processText(dat2, "text/plain;charset=GBK");
+	}
+	
+	/**
+	 * 这个action是用来执行第一种查询方式,查询一个班级的所有学生，或者这个班级的一个学生
+	 * @return
+	 */
+	public String tradeRecordOne(){
+		
+		if(tradeFlowModel.getUserNum()!=null && !tradeFlowModel.getUserNum().equals("")){
+			if(tradeFlowModel.getTradeType().equals("B")){
+				requestPut("listB",accountFlowManageBo.tradeRecordByUserNumDone(tradeFlowModel.getUserNum(),tradeFlowModel.getTradeType()));
+			}else if(tradeFlowModel.getTradeType().equals("C")){
+				requestPut("listC",accountFlowManageBo.tradeRecordByUserNumDone(tradeFlowModel.getUserNum(),tradeFlowModel.getTradeType()));
+			}else if(tradeFlowModel.getTradeType().equals("W")){
+				requestPut("listW",accountFlowManageBo.tradeRecordByUserNumDone(tradeFlowModel.getUserNum(),tradeFlowModel.getTradeType()));
+			}
+			
+		}else if(tradeFlowModel.getClassNo()!=null && !tradeFlowModel.getClassNo().equals("")){
+			if(tradeFlowModel.getTradeType().equals("B")){
+				requestPut("listB",accountFlowManageBo.tradeRecordByClassNoQuery(tradeFlowModel.getClassNo(),tradeFlowModel.getTradeType())); 
+			}else if(tradeFlowModel.getTradeType().equals("C")){
+				requestPut("listC",accountFlowManageBo.tradeRecordByClassNoQuery(tradeFlowModel.getClassNo(),tradeFlowModel.getTradeType())); 
+			}else if(tradeFlowModel.getTradeType().equals("W")){
+				requestPut("listW",accountFlowManageBo.tradeRecordByClassNoQuery(tradeFlowModel.getClassNo(),tradeFlowModel.getTradeType())); 
+			}
+			
+		}
+		requestPut("groupOneList",accountFlowManageBo.getGroupListDone(SysParamNameConst.GROUP_ONE));
+		requestPut("tradeFlowModel",tradeFlowModel);
+		return SUCCESS;
+	}
+	
+	/**
+	 * 这个action是用来执行第二种查询方式,查询一个班级的分组学生或者分组里的一个学生
+	 * @return
+	 */
+	public String tradeRecordTwo(){
+		if(tradeFlowModel.getUserNumber()!=null && !tradeFlowModel.getUserNumber().equals("")){
+			if(tradeFlowModel.getTradeType().equals("B")){
+				requestPut("listB",accountFlowManageBo.tradeRecordByUserNumDone(tradeFlowModel.getUserNumber(),tradeFlowModel.getTradeType()));
+			}else if(tradeFlowModel.getTradeType().equals("C")){
+				requestPut("listC",accountFlowManageBo.tradeRecordByUserNumDone(tradeFlowModel.getUserNumber(),tradeFlowModel.getTradeType()));
+			}else if(tradeFlowModel.getTradeType().equals("W")){
+				requestPut("listW",accountFlowManageBo.tradeRecordByUserNumDone(tradeFlowModel.getUserNumber(),tradeFlowModel.getTradeType()));
+			}
+			
+		}else if(tradeFlowModel.getGroupTwo()!=null && !tradeFlowModel.getGroupTwo().equals("")){
+			if(tradeFlowModel.getTradeType().equals("B")){
+				requestPut("listB",accountFlowManageBo.getStudentByGroupOneTwoQuery(tradeFlowModel.getGroupOne(), tradeFlowModel.getGroupTwo(),tradeFlowModel.getTradeType())); 
+			}else if(tradeFlowModel.getTradeType().equals("C")){
+				requestPut("listC",accountFlowManageBo.getStudentByGroupOneTwoQuery(tradeFlowModel.getGroupOne(), tradeFlowModel.getGroupTwo(),tradeFlowModel.getTradeType())); 
+			}else if(tradeFlowModel.getTradeType().equals("W")){
+				requestPut("listW",accountFlowManageBo.getStudentByGroupOneTwoQuery(tradeFlowModel.getGroupOne(), tradeFlowModel.getGroupTwo(),tradeFlowModel.getTradeType())); 
+			}
+			
+		}else if(tradeFlowModel.getGroupOne()!=null && !tradeFlowModel.getGroupOne().equals("")){
+			if(tradeFlowModel.getTradeType().equals("B")){
+				requestPut("listB",accountFlowManageBo.tradeRecordByClassNoQuery(tradeFlowModel.getGroupOne(),tradeFlowModel.getTradeType())); 
+			}else if(tradeFlowModel.getTradeType().equals("C")){
+				requestPut("listC",accountFlowManageBo.tradeRecordByClassNoQuery(tradeFlowModel.getGroupOne(),tradeFlowModel.getTradeType())); 
+			}else if(tradeFlowModel.getTradeType().equals("W")){
+				requestPut("listW",accountFlowManageBo.tradeRecordByClassNoQuery(tradeFlowModel.getGroupOne(),tradeFlowModel.getTradeType())); 
+			}
+			
+		}
+		requestPut("groupOneList",accountFlowManageBo.getGroupListDone(SysParamNameConst.GROUP_ONE));
+		requestPut("tradeFlowModel",tradeFlowModel);
+		return SUCCESS;
+	}
+	
+	public String getTradeListByUserNum(){
+		requestPut("tradeList",accountFlowManageBo.accountFlowAllTradeRecordListQuery("getAllListByTranType", userNum, ""));
+		requestPut("userNum",userNum);
+		return SUCCESS;
+	}
+	
+	/**
+	 * 用户一条交易详细记录查询
+	 * FC指保证金远期交易
+	 * MO指保证金期权交易
+	 */
+	public String totalTradeDetail(){
+		if(tradeNo.startsWith("FC") || tradeNo.startsWith("MO")){
+			return queryDetail();
+		}
+		else{
+			List<?> list = (List<?>)getTradeDetailByTradeNo();
+			if (list.size() > 0){
+				requestPut("tradeCard",list.get(0));
+				requestPut("table", table);
+			}
+			return action;
+		}
+	}
+	
+	/**
+	 * 根据交易编号获得该条交易记录的的详情
+	 * 先判断交易类型
+	 * 再查看交易状态是否有效
+	 * 有效则显示正在交易的页面，可以进行交易取消操作
+	 * 其他交易状态则直接显示交易信息
+	 */
+	private Collection<?> getTradeDetailByTradeNo(){
+		//判断是否为一口价交易
+		if (table.equals("OneClickInfo"))
+			return accountFlowManageBo.tradeDetailQuery("getOneClickDetailByTradeNo",tradeNo);
+		//是否为止损交易
+		else if (table.equals("StopLossInfo")){
+			//交易状态是否有效
+			if (tradeStatus.equals("A")){
+				action = "STActive";
+				return accountFlowManageBo.tradeDetailQuery("getStopLossActiveDetailByTradeNo",tradeNo);
+			}
+			return accountFlowManageBo.tradeDetailQuery("getStopLossDetailByTradeNo",tradeNo);
+		}
+		//是否为止盈交易
+		else if (table.equals("TakeProfitInfo")){
+			//交易状态是否有效
+			if (tradeStatus.equals("A")){
+				action = "STActive";
+				return accountFlowManageBo.tradeDetailQuery("getTakeProfitActiveDetailByTradeNo",tradeNo);
+			}
+			return accountFlowManageBo.tradeDetailQuery("getTakeProfitDetailByTradeNo",tradeNo);
+		}
+		//是否为oco交易
+		else if (table.equals("OcoInfo")){
+			//交易状态是否有效
+			if (tradeStatus.equals("A")){
+				action = "OMActive";
+				return accountFlowManageBo.tradeDetailQuery("getOcoActiveDetailByTradeNo",tradeNo);
+			}
+			return accountFlowManageBo.tradeDetailQuery("getOcoDetailByTradeNo",tradeNo);
+		}
+		//是否为market breakout交易
+		else if (table.equals("MarketBreakoutInfo")){
+			//交易状态是否有效
+			if (tradeStatus.equals("A")){
+				action = "OMActive";
+				return accountFlowManageBo.tradeDetailQuery("getMarketBreakoutActiveDetailByTradeNo",tradeNo);
+			}
+			return accountFlowManageBo.tradeDetailQuery("getMarketBreakoutDetailByTradeNo",tradeNo);
+		}
+		//是否为远期询价交易
+		else if (table.equals("OtcForwardInfo")){
+			action="Forward";
+			return accountFlowManageBo.tradeDetailQuery("getOtcForwardDetailByTradeNo",tradeNo);
+		}
+		//是否为即期询价交易
+		else if (table.equals("OtcSpotInfo")){
+			action="Spot";
+			return accountFlowManageBo.tradeDetailQuery("getOtcSpotDetailByTradeNo",tradeNo);
+		}
+		//是否为掉期询价交易
+		else if (table.equals("OtcSwapInfo")){
+			action="Swap";
+			return accountFlowManageBo.tradeDetailQuery("getOtcSwapDetailByTradeNo",tradeNo);
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * 在保证金首页下面的ectable点查看时跳到detail页面的action
+	 * @return
+	 */
+	public String queryDetail(){
+		UserModel user = (UserModel)UserModelUtil.getUser();
+		if(tradeNo.startsWith("FC")){
+			//查看远期交易的详情
+			MarginForwardInfo bean = forwardCashBo.queryForwardCashByTranNo(tradeNo);
+			requestPut("forwardDetail", bean);
+			String createDatetime = bean.getCreateDatetime();
+			requestPut("createDatetime", createDatetime.substring(0, 4) + "-" + createDatetime.substring(4, 6) + "-" + createDatetime.substring(6, 8));
+			String valueDate = bean.getValueDate();
+			requestPut("valueDate", valueDate.substring(0, 4) + "-" + valueDate.substring(4, 6) + "-" + valueDate.substring(6, 8));
+			return "_forward";
+		}else{
+			//查看期权交易的详情
+			MarginOptionInfo bean = optionCashBo.queryForwardCashByTranNo(tradeNo);
+			requestPut("optionDetail", bean); 
+			requestPut("enlarge",optionCashBo.EnlargementFactorQuery(user.getGroupOneId()));
+			String createDatetime = bean.getCreateDatetime();
+			requestPut("createDatetime", createDatetime.substring(0, 4) + "-" + createDatetime.substring(4, 6) + "-" + createDatetime.substring(6, 8));
+			String maturity = bean.getMaturity();
+			requestPut("maturity", maturity.substring(0, 4) + "-" + maturity.substring(4, 6) + "-" + maturity.substring(6, 8));
+			return "option";
+		}
+	}
+	
+	public AccountFlowManageBo getAccountFlowManageBo() {
+		return accountFlowManageBo;
+	}
+
+	public void setAccountFlowManageBo(AccountFlowManageBo accountFlowManageBo) {
+		this.accountFlowManageBo = accountFlowManageBo;
+	}
+
+
+
+	public TradeFlowModel getTradeFlowModel() {
+		return tradeFlowModel;
+	}
+
+	public void setTradeFlowModel(TradeFlowModel tradeFlowModel) {
+		this.tradeFlowModel = tradeFlowModel;
+	}
+
+	public String getClassNo() {
+		return classNo;
+	}
+
+	public void setClassNo(String classNo) {
+		this.classNo = classNo;
+	}
+
+	public String getGroupOne() {
+		return groupOne;
+	}
+
+	public void setGroupOne(String groupOne) {
+		this.groupOne = groupOne;
+	}
+
+	public String getGroupTwo() {
+		return groupTwo;
+	}
+
+	public void setGroupTwo(String groupTwo) {
+		this.groupTwo = groupTwo;
+	}
+
+	public String getUserNum() {
+		return userNum;
+	}
+
+	public void setUserNum(String userNum) {
+		this.userNum = userNum;
+	}
+
+	public String getTradeType() {
+		return tradeType;
+	}
+
+	public void setTradeType(String tradeType) {
+		this.tradeType = tradeType;
+	}
+
+	public String getTradeStatus() {
+		return tradeStatus;
+	}
+
+	public void setTradeStatus(String tradeStatus) {
+		this.tradeStatus = tradeStatus;
+	}
+
+	public String getTable() {
+		return table;
+	}
+
+	public void setTable(String table) {
+		this.table = table;
+	}
+
+	public String getTradeNo() {
+		return tradeNo;
+	}
+
+	public void setTradeNo(String tradeNo) {
+		this.tradeNo = tradeNo;
+	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
+
+	public ForwardCashBo getForwardCashBo() {
+		return forwardCashBo;
+	}
+
+	public void setForwardCashBo(ForwardCashBo forwardCashBo) {
+		this.forwardCashBo = forwardCashBo;
+	}
+
+	public OptionCashBo getOptionCashBo() {
+		return optionCashBo;
+	}
+
+	public void setOptionCashBo(OptionCashBo optionCashBo) {
+		this.optionCashBo = optionCashBo;
+	}
+	
+}

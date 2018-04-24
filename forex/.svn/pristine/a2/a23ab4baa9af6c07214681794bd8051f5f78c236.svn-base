@@ -1,0 +1,165 @@
+package com.talent.exam.dao;
+
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.LockMode;
+import org.hibernate.Query;
+import org.hibernate.criterion.Example;
+
+import com.talent.exam.domain.ExamTakeProfit;
+
+/**
+ * A data access object (DAO) providing persistence and search support for
+ * ExamTakeProfit entities. Transaction control of the save(), update() and
+ * delete() operations can directly support Spring container-managed
+ * transactions or they can be augmented to handle user-managed Spring
+ * transactions. Each of these methods provides additional information for how
+ * to configure it for the desired type of transaction control.
+ * 
+ * @see com.talent.exam.dao.ExamTakeProfit
+ * @author MyEclipse Persistence Tools
+ */
+public class ExamTakeProfitDAO extends BaseHibernateDAO {
+	private static final Log log = LogFactory.getLog(ExamTakeProfitDAO.class);
+	// property constants
+	public static final String ACC_TYPE_NO = "accTypeNo";
+	public static final String DIRECTION = "direction";
+	public static final String ACC = "acc";
+	public static final String ACC_AMOUNT = "accAmount";
+	public static final String PRICE = "price";
+	public static final String GOOD_FROM = "goodFrom";
+	public static final String GOOD_TILL = "goodTill";
+	public static final String STEP = "step";
+
+	public void save(ExamTakeProfit transientInstance) {
+		log.debug("saving ExamTakeProfit instance");
+		try {
+			getSession().save(transientInstance);
+			log.debug("save successful");
+		} catch (RuntimeException re) {
+			log.error("save failed", re);
+			throw re;
+		}
+	}
+
+	public void delete(ExamTakeProfit persistentInstance) {
+		log.debug("deleting ExamTakeProfit instance");
+		try {
+			getSession().delete(persistentInstance);
+			log.debug("delete successful");
+		} catch (RuntimeException re) {
+			log.error("delete failed", re);
+			throw re;
+		}
+	}
+
+	public ExamTakeProfit findById(java.lang.Integer id) {
+		log.debug("getting ExamTakeProfit instance with id: " + id);
+		try {
+			ExamTakeProfit instance = (ExamTakeProfit) getSession().get(
+					"com.talent.exam.domain.ExamTakeProfit", id);
+			return instance;
+		} catch (RuntimeException re) {
+			log.error("get failed", re);
+			throw re;
+		}
+	}
+
+
+
+	public List findByProperty(String propertyName, Object value) {
+		log.debug("finding ExamTakeProfit instance with property: "
+				+ propertyName + ", value: " + value);
+		try {
+			String queryString = "from ExamTakeProfit as model where model."
+					+ propertyName + "= ?";
+			Query queryObject = getSession().createQuery(queryString);
+			queryObject.setParameter(0, value);
+			return queryObject.list();
+		} catch (RuntimeException re) {
+			log.error("find by property name failed", re);
+			throw re;
+		}
+	}
+
+	public List findByAccTypeNo(Object accTypeNo) {
+		return findByProperty(ACC_TYPE_NO, accTypeNo);
+	}
+
+	public List findByDirection(Object direction) {
+		return findByProperty(DIRECTION, direction);
+	}
+
+	public List findByAcc(Object acc) {
+		return findByProperty(ACC, acc);
+	}
+
+	public List findByAccAmount(Object accAmount) {
+		return findByProperty(ACC_AMOUNT, accAmount);
+	}
+
+	public List findByPrice(Object price) {
+		return findByProperty(PRICE, price);
+	}
+
+	public List findByGoodFrom(Object goodFrom) {
+		return findByProperty(GOOD_FROM, goodFrom);
+	}
+
+	public List findByGoodTill(Object goodTill) {
+		return findByProperty(GOOD_TILL, goodTill);
+	}
+
+	public List findByStep(Object step) {
+		return findByProperty(STEP, step);
+	}
+
+	public List findAll() {
+		log.debug("finding all ExamTakeProfit instances");
+		try {
+			String queryString = "from ExamTakeProfit";
+			Query queryObject = getSession().createQuery(queryString);
+			return queryObject.list();
+		} catch (RuntimeException re) {
+			log.error("find all failed", re);
+			throw re;
+		}
+	}
+
+	public ExamTakeProfit merge(ExamTakeProfit detachedInstance) {
+		log.debug("merging ExamTakeProfit instance");
+		try {
+			ExamTakeProfit result = (ExamTakeProfit) getSession().merge(
+					detachedInstance);
+			log.debug("merge successful");
+			return result;
+		} catch (RuntimeException re) {
+			log.error("merge failed", re);
+			throw re;
+		}
+	}
+
+	public void attachDirty(ExamTakeProfit instance) {
+		log.debug("attaching dirty ExamTakeProfit instance");
+		try {
+			getSession().saveOrUpdate(instance);
+			log.debug("attach successful");
+		} catch (RuntimeException re) {
+			log.error("attach failed", re);
+			throw re;
+		}
+	}
+
+	public void attachClean(ExamTakeProfit instance) {
+		log.debug("attaching clean ExamTakeProfit instance");
+		try {
+			getSession().lock(instance, LockMode.NONE);
+			log.debug("attach successful");
+		} catch (RuntimeException re) {
+			log.error("attach failed", re);
+			throw re;
+		}
+	}
+}

@@ -1,0 +1,42 @@
+package com.talent.exam.modules.stu_exam.model;
+
+/**
+ * Created by 吴樟 on www.haixiangzhene.xyz
+ * 2017/9/25.
+ */
+
+/**
+ * 监听交易配置,存储在会话中
+ */
+public class ListenModelConfig {
+
+    private boolean isOnAnswer; //是否在答题状态
+    //答题时配置试卷id
+    private Integer paperId;
+    //配置试卷题号id
+    private Integer subjectId;
+
+    public boolean isOnAnswer() {
+        return isOnAnswer;
+    }
+
+    public void setOnAnswer(boolean onAnswer) {
+        isOnAnswer = onAnswer;
+    }
+
+    public Integer getPaperId() {
+        return paperId;
+    }
+
+    public void setPaperId(Integer paperId) {
+        this.paperId = paperId;
+    }
+
+    public Integer getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(Integer subjectId) {
+        this.subjectId = subjectId;
+    }
+}

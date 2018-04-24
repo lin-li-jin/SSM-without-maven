@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.talent.exam.domain.ExamPaperDistribute" table="exam_paper_distribute" schema="forex">
+        <id name="paperId">
+            <column name="paper_id" sql-type="int(12)"/>
+        </id>
+        <property name="paperNo">
+            <column name="paper_NO" sql-type="int(11)"/>
+        </property>
+        <property name="classPaperStatus">
+            <column name="class_paper_status" sql-type="char(1)" length="1"/>
+        </property>
+        <property name="createDate">
+            <column name="create_date" sql-type="varchar(8)" length="8"/>
+        </property>
+        <property name="tillDate">
+            <column name="till_date" sql-type="varchar(8)" length="8"/>
+        </property>
+        <many-to-one name="tClassByClassId" class="com.talent.auth.bean.domain.TClass">
+            <column name="class_id"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

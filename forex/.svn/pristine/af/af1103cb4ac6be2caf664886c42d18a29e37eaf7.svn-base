@@ -1,0 +1,336 @@
+package com.talent.forex.util;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Hashtable;
+
+import com.talent.forex.bean.domain.*;
+import org.apache.log4j.Logger;
+import org.hibernate.criterion.MatchMode;
+
+import com.talent.auth.bean.domain.Users;
+import com.talent.auth.dao.UsersDao;
+import com.talent.forex.dao.AccInfoDao;
+import com.talent.forex.dao.BTranFlowMappingDao;
+import com.talent.forex.dao.MarginForwardInfoDao;
+import com.talent.forex.dao.MarginOptionInfoDao;
+import com.talent.hibernate.util.HibernateUtil;
+import com.talent.hibernate.util.TransactionNestUtil;
+
+/**
+ *
+ * @author atggdsaiDong
+ *
+ */
+public class CashPollingUtil {
+	
+	private static Logger logger = Logger.getLogger(CashPollingUtil.class);
+	
+	/**
+	 * 这个方法是被定时器轮询执行  如果保证金远期交易的日期与服务器系统日期符合则执行远期
+	 */
+	@SuppressWarnings("unchecked")
+	public static void checkForwardValueDate() {
+		System.out.println("----------保证金远期轮询已执行一遍-------------");
+		MarginForwardInfoDao marginForwardInfoDao = new MarginForwardInfoDao();
+		String rsf=null;
+		try {
+			rsf = TransactionNestUtil.reference();
+			//查询当前是否有远期交易可以执行
+			MarginForwardInfo m = new MarginForwardInfo();
+			m.setStatue("A");
+			m.setValueDate(GetDateTimeUtil.getCurrentDate());
+			ArrayList<MarginForwardInfo> list =(ArrayList<MarginForwardInfo>)marginForwardInfoDao.getBeansByBean(m, MatchMode.ANYWHERE);
+			for(int i=0;i<list.size();i++){
+				executeForward(list.get(i),true);//调用方法执行一条远期交易
+			}
+			TransactionNestUtil.releaseRef(rsf);
+		} catch (Exception e) {
+			TransactionNestUtil.releaseRef(rsf);
+			if (!TransactionNestUtil.isReference()) {
+				HibernateUtil.rollbackTransaction();
+			}
+			logger.error("保证金远期轮询出错！" + e.getMessage());
+		} finally {
+			if (!TransactionNestUtil.isReference()) {
+				HibernateUtil.closeSession();			
+			}
+		}
+	}
+	
+	/**
+	 * 这个方法是被定时器轮询执行  如果保证金期权交易的日期与服务器系统日期符合则把期权交易的状态设置为处理中  
+	 * 交易员在界面可以选择执行
+	 */
+	@SuppressWarnings("unchecked")
+	public static void checkOptionValueDate(){
+		System.out.println("----------保证金期权轮询已执行一遍-------------");
+		MarginOptionInfoDao marginOptionInfoDao = new MarginOptionInfoDao();
+		String rsf=null;
+		try {
+			rsf = TransactionNestUtil.reference();
+			ArrayList<MarginOptionInfo> listToUpdate = new ArrayList<MarginOptionInfo>();
+			
+			//start 把状态为A的刚好到了交割日期的设置成P
+			MarginOptionInfo m = new MarginOptionInfo();
+			m.setStatue("A");
+			m.setMaturity(GetDateTimeUtil.getCurrentDate());
+			ArrayList<MarginOptionInfo> list =(ArrayList<MarginOptionInfo>)marginOptionInfoDao.getBeansByBean(m, MatchMode.ANYWHERE);
+			for(int i=0 ; i<list.size(); i++){
+				MarginOptionInfo bean = list.get(i);
+				bean.setStatue("P");
+				listToUpdate.add(bean);
+			}
+			//end 把状态为A的刚好到了交割日期的设置成P
+			
+			//start 把状态为P的过了交割日期的设置成I
+			MarginOptionInfo n = new MarginOptionInfo();
+			n.setStatue("P");
+			ArrayList<MarginOptionInfo> list1 =(ArrayList<MarginOptionInfo>)marginOptionInfoDao.getBeansByBean(n, MatchMode.ANYWHERE);
+			for(int i=0 ; i<list1.size(); i++){
+				if(!list1.get(i).getMaturity().equals(GetDateTimeUtil.getCurrentDate())){
+					MarginOptionInfo bean1 = list1.get(i);
+					bean1.setStatue("I");
+					listToUpdate.add(bean1);
+				}
+			}
+			//end 把状态为P的过了交割日期的设置成I
+			
+			marginOptionInfoDao.batchUpdate(listToUpdate);
+			TransactionNestUtil.releaseRef(rsf);
+		} catch (Exception e) {
+			TransactionNestUtil.releaseRef(rsf);
+			if (!TransactionNestUtil.isReference()) {
+				HibernateUtil.rollbackTransaction();
+			}
+			logger.error("保证金期权轮询出错！" + e.getMessage());
+		} finally {
+			if (!TransactionNestUtil.isReference()) {
+				HibernateUtil.closeSession();			
+			}
+		}
+	}
+	
+	/**
+	 * 对于保证金来说   先把各个币种都转成USD再计算余额
+	 */
+	@SuppressWarnings("unchecked")
+	public static void checkCashBalance(){
+		System.out.println("----------保证金账户余额轮询已执行一遍-------------");
+		AccInfoDao accInfoDao = new AccInfoDao();
+		String rsf=null;
+		try {
+			rsf = TransactionNestUtil.reference();
+
+			//这里得到所有用户  因为要轮询每个用户的保证金账户
+			Users u = new Users();
+			u.setUserType("S");
+			ArrayList<Users> usersList = (ArrayList<Users>)(new UsersDao().getBeansByBean(u, MatchMode.ANYWHERE)); 
+			for(int i=0; i<usersList.size(); i++){
+				//start 得到保证金账户的原始金额,原始金额是存在USD账户的
+				AccInfo usd = new AccInfo();
+				usd.setCcy("USD");
+				usd.setAccType("B");
+				usd.setUserNum(usersList.get(i).getUserNum());
+				Double beginUsd = Double.parseDouble(accInfoDao.getBeanByBean(usd, MatchMode.ANYWHERE).getOriginalAmt());
+				//end 得到保证金账户的原始金额,原始金额是存在USD账户的
+				
+				AccInfo accInfo = new AccInfo();
+				accInfo.setUserNum(usersList.get(i).getUserNum());
+				accInfo.setAccType("B");
+				//根据用户名和账户类型B得到当前用户保证金账户各个币种的一个List,遍历这个list计算各个币种转换成usd的和
+				ArrayList<AccInfo> accInfoList = (ArrayList<AccInfo>)(accInfoDao.getBeansByBean(accInfo, MatchMode.ANYWHERE));
+				Double lastSum = 0.0;//当前用户各个币种转换成USD的总和
+				for(int j=0; j<accInfoList.size(); j++){
+					Double a = Double.parseDouble(accInfoList.get(j).getAmount());
+					Double b = RateUtil.getRateByCcy("B", accInfoList.get(j).getCcy());
+					System.out.println(a+b);
+					lastSum = lastSum + Double.parseDouble(accInfoList.get(j).getAmount()) * RateUtil.getRateByCcy("B", accInfoList.get(j).getCcy());
+				}
+				if(lastSum+findMostLoss(usersList.get(i).getUserNum(),false)<beginUsd*0.25){
+					//账户余额少于25%   冻结账户
+					for(int k=0; k<accInfoList.size();k++){
+						accInfoList.get(k).setActiveDate("--------");
+					}
+					accInfoDao.batchUpdate(accInfoList);
+					
+					//start 如果账户余额少于20% ，要把持仓单中亏损最大交易按当前市场价格平仓
+					if(lastSum+findMostLoss(usersList.get(i).getUserNum(),false)<beginUsd*0.2){
+						findMostLoss(usersList.get(i).getUserNum(),true);
+					}
+					//end 如果账户余额少于20% ，要把持仓单中亏损最大交易按当前市场价格平仓
+					
+				}else{
+					//大于等于25%  解锁
+					//先判断用户是否被锁//只要一个币种是被锁，则是都被锁了
+					if(accInfoList.get(0).getActiveDate().equals("--------")){
+						for(int k=0; k<accInfoList.size();k++){
+							accInfoList.get(k).setActiveDate(GetDateTimeUtil.getCurrentDate());
+						}
+						accInfoDao.batchUpdate(accInfoList);
+					}
+				}
+			}
+			TransactionNestUtil.releaseRef(rsf);
+		} catch (Exception e) {
+			TransactionNestUtil.releaseRef(rsf);
+			if (!TransactionNestUtil.isReference()) {
+				HibernateUtil.rollbackTransaction();
+			}
+			logger.error("保证金账户余额轮询出错！" + e.getMessage());
+		} finally {
+			if (!TransactionNestUtil.isReference()) {
+				HibernateUtil.closeSession();			
+			}
+		}
+	}
+
+	
+	
+	/**
+	 * 返回当前用户的远期的交易的虚盘金额盈亏总额
+	 * 如果flag为true则把亏损最大的交易平仓    如果为false则仅仅是计算余额
+	 * 净值少于或等于初始保证金的20%时，系统根据市场价格将从该账户中亏损最大的持仓单开始逐单自动强平
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	public static double findMostLoss(String userNum,boolean flag){
+		System.out.println("----------查询单用户中保证金亏损最多的一笔远期交易-------------");
+		Double result = 0.0;
+		MarginForwardInfoDao mDao = new MarginForwardInfoDao();
+		String rsf=null;
+		try {
+			rsf = TransactionNestUtil.reference();
+			//得到当前用户的所有有效的远期交易
+			MarginForwardInfo m = new MarginForwardInfo();
+			m.setUserNum(userNum);
+			m.setStatue("A");
+			ArrayList<MarginForwardInfo> list = (ArrayList<MarginForwardInfo>)mDao.getBeansByBean(m, MatchMode.ANYWHERE);
+			Double profit[] = new Double[list.size()];//定义一个数组来保存每一条远期交易的盈亏，最后求和
+			Hashtable<Double, Integer> table = new Hashtable<Double, Integer>();//定义hashtable保存对应盈亏的下标
+			for(int i=0; i<list.size();i++){
+				MarginForwardInfo each = list.get(i);
+				Double amount = Double.parseDouble(each.getDealAmt());//得到虚盘交易金额
+				Double originPrice = Double.parseDouble(each.getPrice());//当前生成交易的价格
+				Double currentPrice = RateUtil.getMarginRateByCcy(each.getAnaCcy() + each.getWeCcy(), each.getDirection());//得到当前（把增加的币种转回减少币种）的价格
+				//买卖方向不同   计算盈亏方法不一样
+				if(each.getDirection().equals("1")){
+					profit[i] = amount*currentPrice-amount*originPrice;
+					table.put(profit[i], i);
+				}else{
+					profit[i]=amount*originPrice*currentPrice-amount;
+					table.put(profit[i], i);
+				}
+			}
+			Arrays.sort(profit);//从小到大排序  
+			//根据flag判断是否执行平仓
+			if(flag){
+				executeForward(list.get(table.get(profit[0])),false);
+			}
+			//计算总盈亏
+			for(Double i: profit){   
+                //System.out.println(i);   
+                result = result +i;
+			}  
+			TransactionNestUtil.releaseRef(rsf);
+		} catch (Exception e) {
+			TransactionNestUtil.releaseRef(rsf);
+			if (!TransactionNestUtil.isReference()) {
+				HibernateUtil.rollbackTransaction();
+			}
+			logger.error("查询单用户中保证金亏损最多的一笔远期交易！" + e.getMessage());
+		} finally {
+			if (!TransactionNestUtil.isReference()) {
+				HibernateUtil.closeSession();			
+			}
+		}
+		
+		return result;
+		
+	}
+	
+	
+	/**
+	 * 执行一条远期交易  内部调用
+	 * 参数flag为ture代表正常执行     false代表被强行平仓   不同标志在执行完交易后设置的交易状态不同
+	 * @param bean
+	 */
+	public static void executeForward(MarginForwardInfo bean,boolean flag){
+		MarginForwardInfoDao marginForwardInfoDao = new MarginForwardInfoDao();
+		AccInfoDao accInfoDao = new AccInfoDao();
+		BTranFlowMappingDao bTranFlowMappingDao = new BTranFlowMappingDao();
+		
+		//因为updateBean方法无法使用   只能通过批量提交了
+		ArrayList<MarginForwardInfo> marginListToUpdate = new ArrayList<MarginForwardInfo>();
+		ArrayList<BTranFlowMapping> bTranListToUpdate = new ArrayList<BTranFlowMapping>();
+		ArrayList<AccInfo> accListToUpdate = new ArrayList<AccInfo>();
+		
+		//1.更新账户表acc_info,先得到保证金里的两个要交易的币种的账户bean
+		//weCcy卖出货币  anaCcy是买入货币
+		AccInfo a1 = new AccInfo();
+		a1.setUserNum(bean.getUserNum());
+		a1.setAccType("B");
+		a1.setCcy(bean.getWeCcy());
+		AccInfo weAccInfo = accInfoDao.getBeanByBean(a1, MatchMode.ANYWHERE);
+		
+		AccInfo a2 = new AccInfo();
+		a2.setUserNum(bean.getUserNum());
+		a2.setAccType("B");
+		a2.setCcy(bean.getAnaCcy());
+		AccInfo anaAccInfo = accInfoDao.getBeanByBean(a2, MatchMode.ANYWHERE);
+		
+		//acc_info表更新的金额用的是实际金额，不是虚盘金额,不过虚盘金额产生的盈亏要计算到实际金额中去
+		Double weCcyMoney = Double.parseDouble(weAccInfo.getAmount());//weCcy币种对应的账户余额
+		//Double anaCcyMoney = Double.parseDouble(anaAccInfo.getAmount());//anaCcy币种对应的账户余额
+		Double price = Double.parseDouble(bean.getPrice());//远期交易的价格
+		//Double amt = Double.parseDouble(bean.getAccAmount());//远期交易的实际交易金额
+		Double deal_amt = Double.parseDouble(bean.getDealAmt());//远期交易的虚盘交易金额
+		Double currentPrice = RateUtil.getMarginRateByCcy(bean.getAnaCcy() + bean.getWeCcy(), bean.getDirection());//得到当前（把增加的币种转回减少币种）的价格
+		Double profit = 0.0;
+		if(bean.getDirection().equals("1")){
+			//买
+			//weCcy币种对应的账户金额=余额+虚盘交易的利润
+			profit = deal_amt*currentPrice-deal_amt*price;	//交易的利润
+			double accrual=deal_amt*0.0010; //向银行缴纳利息
+			double charge=profit-accrual-Double.valueOf(bean.getAccAmount());	//净额等于利润减去缴纳的金额
+			weAccInfo.setAmount(FormatParamUtil.getAmountAndPriceFmtByDouble(weCcyMoney+charge));
+		}
+		//暂时不考虑卖的逻辑
+		/*else{
+			//bean.getDirection().equals("0")
+			//卖
+			//weCcy币种对应的账户金额 = 余额+虚盘交易的利润
+			profit=deal_amt*price*currentPrice-deal_amt;
+			weAccInfo.setAmount(FormatParamUtil.getAmountAndPriceFmtByDouble(weCcyMoney+profit));
+		}*/
+
+		//2.更新保证金交易流水表b_tran_flow_mapping,更新金额用的是虚盘金额
+		BTranFlowMapping b = new BTranFlowMapping();
+		b.setUserNum(bean.getUserNum());
+		BTranFlowMapping bTranFlowMapping = bTranFlowMappingDao.getBeanByBean(b, MatchMode.ANYWHERE);
+		//远期交易次数加1，远期交易量加虚盘交易金额 ， 总交易次数加一，总交易量加虚盘交易金额
+		bTranFlowMapping.setMarginSpotQty((Integer.parseInt(bTranFlowMapping.getMarginSpotQty())+1)+"");
+		bTranFlowMapping.setMarginSpotAmt(FormatParamUtil.getAmountAndPriceFmtByDouble(Double.parseDouble(bTranFlowMapping.getMarginSpotAmt())+deal_amt));  
+		bTranFlowMapping.setCount(bTranFlowMapping.getCount()+1);
+		bTranFlowMapping.setAmount(bTranFlowMapping.getAmount()+deal_amt);
+		
+		//3.更新bean的交易状态为完成
+		if(flag==true){
+			bean.setStatue("D");//正常执行
+		}else{
+			bean.setStatue("E");//强行平仓
+		}
+		
+		
+		//4.把相关的bean更新到对应的表
+		marginListToUpdate.add(bean);
+		bTranListToUpdate.add(bTranFlowMapping);
+		accListToUpdate.add(weAccInfo);
+		accListToUpdate.add(anaAccInfo);
+		
+		//批量提交
+		marginForwardInfoDao.batchUpdate(marginListToUpdate);
+		bTranFlowMappingDao.batchUpdate(bTranListToUpdate);
+		accInfoDao.batchUpdate(accListToUpdate);
+	}
+}

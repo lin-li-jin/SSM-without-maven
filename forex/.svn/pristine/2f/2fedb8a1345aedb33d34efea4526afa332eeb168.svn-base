@@ -1,0 +1,103 @@
+html,body{font-size:13px;}
+#layout_main
+{
+	width:960px;
+    border-color:#FFCC66;
+    margin:0px auto;
+	z-index:-1;
+	overflow:hidden;
+	min-height:768px;
+	overflow:auto;
+}
+
+/*
+margin:
+
+用来控制对象的上 右 下 左 4个方向的外边距
+- 如果只设定2个参数  则第一个表示上下边距 ，第二个表示左右边距
+- 如果只设定1个参数  则表示所有的四个方向的边距都是如此
+*/
+
+.clear{
+ clear:both;
+}
+#layout_top
+{
+	border:1px solid #B9BEC6;	
+	width:956px;  
+	height:410px;
+	z-index:-1;
+}
+#sys1{	
+	float:left;
+	left:0px;
+	top:0px;
+	height:50px;
+	width:470px;
+	margin-top:8px;
+	min-width:470px;
+	z-index:-1;
+}
+#sys2{
+	float:left;
+	left:475px;
+	top:0px;
+	height:50px;
+	width:470px;
+	margin-top:8px;
+	min-width:470px;
+	z-index:-1;
+}
+
+#listModel
+{
+	border:1px solid #B9BEC6;	
+	height:120px;
+	width:650px;
+	float:left;
+	margin-top:8px;
+	margin-left:4px;
+	z-index:-1;
+}
+
+#addXuhao
+{
+	border:1px solid #B9BEC6;	
+	height:240px;
+	width:650px;
+	float:left;
+	margin-top:8px;
+	margin-left:4px;
+	z-index:-1;
+}
+
+
+#layout_body
+{
+	width:958px;    
+	height:280px;
+	margin-top:5px; 
+	z-index:-1;
+}
+#layout_body1
+{
+	border:1px solid #B9BEC6;	
+	height:155px;
+	width:942px;
+	float:left;
+	margin-left:4px;
+	z-index:-1;
+}
+
+
+#layout_body2
+{
+	border:1px solid #B9BEC6;
+	height:70px;
+    width:942px;
+	float:left;
+	margin-top:5px;
+	margin-left:4px;
+	margin-bottom:4px;
+	z-index:-1;
+}

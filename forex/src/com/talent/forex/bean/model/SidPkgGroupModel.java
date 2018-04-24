@@ -1,0 +1,547 @@
+package com.talent.forex.bean.model;//package com.talent.forex.bean.model;
+//
+//import java.util.ArrayList;
+//import java.util.List;
+//
+////
+////import org.hibernate.criterion.MatchMode;
+////
+////import com.talent.ems.bean.domain.Teacher;
+////import com.talent.ems.constant.CodeTypeNameConst;
+////import com.talent.ems.dao.TeacherDao;
+////import com.talent.ems.util.GlobalCodeTableUtil;
+////
+//public class SidPkgGroupModel {
+//
+//	// sid_pool
+//	private String sidId;
+//	private String systemId;
+//	private String sidName;
+//	private String sidType;
+//	private String loadType;
+//	private String status;
+//	private String devLevel;
+//	private String  useFor;
+//	
+//	//pkg
+//	private Long id;
+//	private String pkgNum;
+//	private String pkgName;
+//	private String pkgType;
+//	private String descr;
+//	private String creater;
+//	private String createDatetime;
+//	private String contentId;
+//	private String upperPkgNum;
+//	private String isused;
+//	private String isload;
+//	private String isbackup;
+//	private String backPath;
+//	private String backName;
+//	private List<Pkg> pkgs = new ArrayList<Pkg>();
+//	//private Long pkgCount;
+//	private Integer sidCount;
+//	private String ip;
+//	private String srvKey;
+//	private String srvName;
+//	public SidPkgGroupModel(){}
+//	
+//	public SidPkgGroupModel( int sidCount, String sidType, String pkgNum, String pkgName ){
+//		//this.pkgCount = pkgCount;
+//		//, Long pkgCount
+//		this.sidCount = sidCount;
+//		this.sidType = sidType;
+//		this.pkgNum = pkgNum;
+//		this.pkgName = pkgName;
+//	}
+//	
+//	public String getPkgToLoad(){
+//		StringBuilder sb = new StringBuilder(255);
+//		sb.append("<select id='sidType"+this.getSidType()+"' >")
+//		  .append("<option></option>");
+//		for (Pkg pkg : pkgs) {
+//			sb.append("<option value='")
+//			  .append(this.getSidType())
+//			  .append("-")
+//			  .append(pkg.getPkgNum())
+//			  .append("'>")
+//			  .append(pkg.getPkgNum())
+//			  .append("-")
+//			  .append(pkg.getPkgName())
+//			  .append("</option>");
+//		}
+//		sb.append("</select>")
+//		  .append("<input type='hidden' name='type2pkg' />");
+//		return sb.toString();
+//	}
+//	
+//	public String getLockBtn(){
+//		StringBuilder sb = new StringBuilder(255);
+//		sb.append("<input type='button' class='lock button' value='����' sidType='sidType")
+//		  .append(this.getSidType())
+//		  .append("' />");
+//		return sb.toString();
+//	}
+//	
+//	public String getPkgDescr(){
+//		return new GlobalCodeTableUtil().codeValToDescr( CodeTypeNameConst.SIDTYP, this.getSidType() );
+//	}
+//	
+//	public List<Pkg> getPkgs() {
+//		return pkgs;
+//	}
+//	public void setPkgs(List<Pkg> pkgs) {
+//		this.pkgs = pkgs;
+//	}
+//	public String getSidId() {
+//		return sidId;
+//	}
+//	public void setSidId(String sidId) {
+//		this.sidId = sidId;
+//	}
+//	public String getSystemId() {
+//		return systemId;
+//	}
+//	public void setSystemId(String systemId) {
+//		this.systemId = systemId;
+//	}
+//	public String getSidName() {
+//		return sidName;
+//	}
+//	public void setSidName(String sidName) {
+//		this.sidName = sidName;
+//	}
+//	public String getSidType() {
+//		return sidType;
+//	}
+//	public void setSidType(String sidType) {
+//		this.sidType = sidType;
+//	}
+//	public String getLoadType() {
+//		return loadType;
+//	}
+//	public void setLoadType(String loadType) {
+//		this.loadType = loadType;
+//	}
+//	public String getStatus() {
+//		return status;
+//	}
+//	public void setStatus(String status) {
+//		this.status = status;
+//	}
+//	public String getDevLevel() {
+//		return devLevel;
+//	}
+//	public void setDevLevel(String devLevel) {
+//		this.devLevel = devLevel;
+//	}
+//	public String getUseFor() {
+//		return useFor;
+//	}
+//	public void setUseFor(String useFor) {
+//		this.useFor = useFor;
+//	}
+//	public Long getId() {
+//		return id;
+//	}
+//	public void setId(Long id) {
+//		this.id = id;
+//	}
+//	public String getPkgNum() {
+//		return pkgNum;
+//	}
+//	public void setPkgNum(String pkgNum) {
+//		this.pkgNum = pkgNum;
+//	}
+//	public String getPkgName() {
+//		return pkgName;
+//	}
+//	public void setPkgName(String pkgName) {
+//		this.pkgName = pkgName;
+//	}
+//	public String getPkgType() {
+//		return pkgType;
+//	}
+//	public void setPkgType(String pkgType) {
+//		this.pkgType = pkgType;
+//	}
+//	public String getDescr() {
+//		return descr;
+//	}
+//	public void setDescr(String descr) {
+//		this.descr = descr;
+//	}
+//	public String getCreater() {
+//		return creater;
+//	}
+//	
+//	public String getSrvName() {
+//		return srvName;
+//	}
+//
+//	public void setSrvName(String srvName) {
+//		this.srvName = srvName;
+//	}
+//
+//	public void setCreater(String creater) {
+//		this.creater = creater;
+//	}
+//	public String getCreateDatetime() {
+//		return createDatetime;
+//	}
+//	public void setCreateDatetime(String createDatetime) {
+//		this.createDatetime = createDatetime;
+//	}
+//	public String getContentId() {
+//		return contentId;
+//	}
+//	public void setContentId(String contentId) {
+//		this.contentId = contentId;
+//	}
+//	public String getUpperPkgNum() {
+//		return upperPkgNum;
+//	}
+//	public void setUpperPkgNum(String upperPkgNum) {
+//		this.upperPkgNum = upperPkgNum;
+//	}
+//	public String getIsused() {
+//		return isused;
+//	}
+//	public void setIsused(String isused) {
+//		this.isused = isused;
+//	}
+//	public String getIsload() {
+//		return isload;
+//	}
+//	public void setIsload(String isload) {
+//		this.isload = isload;
+//	}
+//	public String getIsbackup() {
+//		return isbackup;
+//	}
+//	public void setIsbackup(String isbackup) {
+//		this.isbackup = isbackup;
+//	}
+//
+//	public Integer getSidCount() {
+//		return sidCount;
+//	}
+//
+//	public void setSidCount(Integer sidCount) {
+//		this.sidCount = sidCount;
+//	}
+//
+//	public String getBackPath() {
+//		return backPath;
+//	}
+//
+//	public void setBackPath(String backPath) {
+//		this.backPath = backPath;
+//	}
+//
+//	public String getBackName() {
+//		return backName;
+//	}
+//
+//	public void setBackName(String backName) {
+//		this.backName = backName;
+//	}
+//
+//	public String getIp() {
+//		return ip;
+//	}
+//
+//	public void setIp(String ip) {
+//		this.ip = ip;
+//	}
+//
+//	public String getSrvKey() {
+//		return srvKey;
+//	}
+//
+//	public void setSrvKey(String srvKey) {
+//		this.srvKey = srvKey;
+//	}
+//	
+////	
+////	//Group_info
+////	private String groupNum;
+////	private String alias;
+/////*	private String status;
+////	private String descr;
+////	private String creater;
+////	private String createDatetime;*/
+////	private String activeDatetime;
+////	private String closeDatetime;
+////	private String scorFor;
+////	
+////	
+////	
+////	
+////	/**
+////	 * //ʵ����ʵ������_����ϵͳ�����龰�����龰�����͡�ʹ��Ⱥ���_������
+////	 * ����ʵ��Ⱥ���ϵ��ѯ
+////	 */
+////	public SidPkgGroupModel(String sidId, String systemId, String sidName,
+////			String sidType,String pkgNum, String pkgName,String pkgType,
+////			String descr, String creater, String groupNum,String alias,String scorFor) {
+////		super();
+////		this.sidId = sidId;
+////		this.systemId = systemId;
+////		this.sidName = sidName;
+////		this.sidType = sidType;
+////		this.pkgNum = pkgNum;
+////		this.pkgName = pkgName;
+////		this.pkgType = pkgType;
+////		this.descr = descr;
+////		this.creater = creater;
+////		this.groupNum = groupNum;
+////		this.alias = alias;
+////		this.scorFor = scorFor;
+////	}
+////	/***���˿⻹ԭ*/
+////	public String getSelect(){                                             
+////		StringBuffer buffer = new StringBuffer();                            
+////	  
+////			buffer.append("<input type='checkbox' checked='true' name=\"select\" value=\"");  
+////			buffer.append(this.getSidName());                                                                  
+////			buffer.append("\">");                                                                                                                   
+////		return buffer.toString();                                            
+////	}    
+////	
+////	
+////	public SidPkgGroupModel(String sidId, String sidName,
+////			String sidType, String groupNum,String alias,String status,String useFor) {
+////		super();
+////		this.sidId = sidId;
+////		this.sidName = sidName;
+////		this.sidType = sidType;
+////		this.groupNum = groupNum;
+////		this.alias = alias;
+////		this.status =status;
+////		this.useFor =useFor;
+////	}
+////	
+////	/***���˿⻹ԭ*/
+////	
+////	public SidPkgGroupModel() {
+////	}
+////	public  String getScorForDescr() {
+////		String str="";
+////		str=GlobalCodeTableUtil.getInstance().
+////		codeValToDescr( CodeTypeNameConst.SCOFOR, this.getScorFor());
+////		return str;
+////	}
+////	public  String getCreaterName(){
+////		TeacherDao tdao = new TeacherDao();
+////		String str = "";
+////		if(this.getCreater()!=null){
+////			Teacher t = new Teacher();
+////			t.setTeacherNum(this.getCreater());
+////			try{
+////				t = tdao.getBeanByBean(t,MatchMode.EXACT);
+////				str = t.getTeacherName();
+////			}catch (Exception e) {
+////				
+////			}
+////			
+////		}
+////		return str;
+////	}
+////	
+////	public String getSidTypeDescr(){
+////		//ʵ������	TRUE	0:BASIC(���ģ�ֻ��һ��)��1:ԭʼ(��ʦ)��2:��ͨ(���ˣ���ϰ)
+////		String str="";
+////		str=GlobalCodeTableUtil.getInstance().
+////		codeValToDescr( CodeTypeNameConst.SIDTYP, this.getSidType());
+////		return str;
+////	
+////	}
+////	public String getSystemIdDescr(){		
+////		String str="";
+////		str=  GlobalCodeTableUtil.getInstance().
+////		codeValToDescr( CodeTypeNameConst.SYSTYP,this.getSystemId() );
+////		return str;
+////	}
+////	public String getSidId() {
+////		return sidId;
+////	}
+////	public void setSidId(String sidId) {
+////		this.sidId = sidId;
+////	}
+////	public String getSystemId() {
+////		return systemId;
+////	}
+////	public void setSystemId(String systemId) {
+////		this.systemId = systemId;
+////	}
+////	public String getSidName() {
+////		return sidName;
+////	}
+////	public void setSidName(String sidName) {
+////		this.sidName = sidName;
+////	}
+////	public String getSidType() {
+////		return sidType;
+////	}
+////	public void setSidType(String sidType) {
+////		this.sidType = sidType;
+////	}
+////	public String getLoadType() {
+////		return loadType;
+////	}
+////	public void setLoadType(String loadType) {
+////		this.loadType = loadType;
+////	}
+////	public String getStatus() {
+////		return status;
+////	}
+////	public void setStatus(String status) {
+////		this.status = status;
+////	}
+////	public String getDevLevel() {
+////		return devLevel;
+////	}
+////	public void setDevLevel(String devLevel) {
+////		this.devLevel = devLevel;
+////	}
+////	public String getUseFor() {
+////		return useFor;
+////	}
+////	public void setUseFor(String useFor) {
+////		this.useFor = useFor;
+////	}
+////	public Long getId() {
+////		return id;
+////	}
+////	public void setId(Long id) {
+////		this.id = id;
+////	}
+////	public String getPkgNum() {
+////		return pkgNum;
+////	}
+////	public void setPkgNum(String pkgNum) {
+////		this.pkgNum = pkgNum;
+////	}
+////	public String getPkgName() {
+////		return pkgName;
+////	}
+////	public void setPkgName(String pkgName) {
+////		this.pkgName = pkgName;
+////	}
+////	public String getPkgType() {
+////		return pkgType;
+////	}
+////	public void setPkgType(String pkgType) {
+////		this.pkgType = pkgType;
+////	}
+////	public String getDescr() {
+////		return descr;
+////	}
+////	public void setDescr(String descr) {
+////		this.descr = descr;
+////	}
+////	public String getCreater() {
+////		return creater;
+////	}
+////	public void setCreater(String creater) {
+////		this.creater = creater;
+////	}
+////	public String getCreateDatetime() {
+////		return createDatetime;
+////	}
+////	public void setCreateDatetime(String createDatetime) {
+////		this.createDatetime = createDatetime;
+////	}
+////	public String getContentId() {
+////		return contentId;
+////	}
+////	public void setContentId(String contentId) {
+////		this.contentId = contentId;
+////	}
+////	public String getUpperPkgNum() {
+////		return upperPkgNum;
+////	}
+////	public void setUpperPkgNum(String upperPkgNum) {
+////		this.upperPkgNum = upperPkgNum;
+////	}
+////	public String getIsused() {
+////		return isused;
+////	}
+////	public void setIsused(String isused) {
+////		this.isused = isused;
+////	}
+////	public String getIsload() {
+////		return isload;
+////	}
+////	public void setIsload(String isload) {
+////		this.isload = isload;
+////	}
+////	public String getIsbackup() {
+////		return isbackup;
+////	}
+////	public void setIsbackup(String isbackup) {
+////		this.isbackup = isbackup;
+////	}
+////	public String getGroupNum() {
+////		return groupNum;
+////	}
+////	public void setGroupNum(String groupNum) {
+////		this.groupNum = groupNum;
+////	}
+////	public String getAlias() {
+////		return alias;
+////	}
+////	public void setAlias(String alias) {
+////		this.alias = alias;
+////	}
+////	public String getActiveDatetime() {
+////		return activeDatetime;
+////	}
+////	public void setActiveDatetime(String activeDatetime) {
+////		this.activeDatetime = activeDatetime;
+////	}
+////	public String getCloseDatetime() {
+////		return closeDatetime;
+////	}
+////	public void setCloseDatetime(String closeDatetime) {
+////		this.closeDatetime = closeDatetime;
+////	}
+////	public String getScorFor() {
+////		return scorFor;
+////	}
+////	public void setScorFor(String scorFor) {
+////		this.scorFor = scorFor;
+////	}
+////	
+////	
+////	public String getStatusDescr(){
+////		String str="";
+////		str=GlobalCodeTableUtil.getInstance().
+////		codeValToDescr( CodeTypeNameConst.SIDSTA, this.getStatus());
+////		return str;
+////	}
+////
+////	public String getUseForDescr(){
+////		String str="";
+////		str=GlobalCodeTableUtil.getInstance().
+////		codeValToDescr( CodeTypeNameConst.SCOFOR, this.getUseFor());
+////		return str;
+////	}
+////	public String getDevLevelDescr(){
+////		String str="";
+////		str=GlobalCodeTableUtil.getInstance().
+////		codeValToDescr( CodeTypeNameConst.DEVLEV, this.getDevLevel());
+////		return str;
+////		
+////	}
+////	public String getLoadTypeDescr(){
+////		String str="";
+////		str=GlobalCodeTableUtil.getInstance().
+////		codeValToDescr( CodeTypeNameConst.SIDAST, this.getLoadType());
+////		return str;
+////		
+////	}
+////	
+//	
+//}

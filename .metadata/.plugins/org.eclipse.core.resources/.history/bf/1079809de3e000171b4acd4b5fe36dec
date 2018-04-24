@@ -1,0 +1,59 @@
+package com.hh;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class JavaTest {
+	
+	///////
+public static void main(String[] args) {
+	Scanner sc = new Scanner(System.in);
+	int ww  = sc.nextInt();
+	Scanner cc = new Scanner(System.in);
+	int xx  = cc.nextInt();
+	
+	for (int i = ww; i < xx; i++) {
+		int a=i;
+		int b = i;
+		if (i>99) {
+			a = i%10;
+			b = i/10;
+			for (int j = 2; j < 100; j++) {
+				if (Math.sqrt(a)==j ) {
+					for (int z = 2; z < 100; z++) {
+					if ( Math.sqrt(b)==4) {
+						System.out.println(i);
+						break;
+						}	
+					}
+					
+				}
+			}
+			
+			
+		}
+		if (i>9999) {
+			a = i%10;
+			b = i/100;
+			for (int j = 2; j < 100; j++) {
+				if (Math.sqrt(a)==j ) {
+					for (int z = 2; z < 100; z++) {
+					if ( Math.sqrt(b)==4) {
+						System.out.println(i);
+						break;
+						}	
+					}
+					
+				}
+			}
+			
+			
+		}
+	}
+	
+	
+
+		}
+
+	//////////
+		
+}

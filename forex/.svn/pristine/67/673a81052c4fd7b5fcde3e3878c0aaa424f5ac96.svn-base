@@ -1,0 +1,44 @@
+package com.talent.exam.modules.teach_mng.controller;
+
+import com.talent.exam.modules.teach_mng.model.ExamPaperMessage;
+import com.talent.exam.modules.teach_mng.service.ExamBo;
+
+/**
+ * Created by 吴樟 on www.haixiangzhene.xyz
+ * 2017/9/24.
+ * 1.分配试卷
+ */
+public class ExamAction {
+    /**
+     * @param examPaperMessage 分配试卷信息
+     */
+    private ExamPaperMessage examPaperMessage;
+
+    private ExamBo examBo;
+
+
+    /**
+     * 分发试卷
+     */
+    public void distributePaper(){
+        examBo.distributePaper(examPaperMessage);
+    }
+
+    public ExamPaperMessage getExamPaperMessage() {
+        return examPaperMessage;
+    }
+
+    public void setExamPaperMessage(ExamPaperMessage examPaperMessage) {
+        this.examPaperMessage = examPaperMessage;
+    }
+
+    public ExamBo getExamBo() {
+        return examBo;
+    }
+
+    public void setExamBo(ExamBo examBo) {
+        this.examBo = examBo;
+    }
+
+
+}

@@ -1,0 +1,36 @@
+package com.hh;
+import java.util.Scanner;
+
+public class JavaTest {
+	
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		int a,b,h,q,su;
+		Scanner scanner=new Scanner(System.in);
+		a=scanner.nextInt();
+		b=scanner.nextInt();
+		for(h=a;h<=b;h++)
+		{
+			if(Math.sqrt(h)%1==0)
+				for(q=a;q<=b;h++)
+				{
+					if(Math.sqrt(q)%1==0)
+						if(h>10&&h<100){
+							q=q*100;
+							su=q+h;
+							if(Math.sqrt(su)%1==0)
+							System.out.println(su);
+							}
+						else if(h<10){
+							q=q*10;
+							su=q+h;
+							if(Math.sqrt(su)%1==0)
+							System.out.println(su);
+						}
+				}
+		}
+	}
+		
+}

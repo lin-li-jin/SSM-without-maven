@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<!-- 
+/*
+ * Amendment No.: forex130008
+ * Modify By    : sunyan
+ * Description  : 报文部分
+ * Modify Date  : 2013-7-3
+ * 
+ */
+  -->
+<beans default-autowire="byName">
+	<bean id="marginSpotInfoDao" class="com.talent.forex.dao.MarginSpotInfoDao"></bean>
+	<bean id="marginForwardInfoDao" class="com.talent.forex.dao.MarginForwardInfoDao"></bean>
+	<bean id="marginOptionInfoDao" class="com.talent.forex.dao.MarginOptionInfoDao"></bean>
+	<bean id="homePageDao" class="com.talent.forex.dao.HomePageDao"></bean>
+	<bean id="CNYDao" class="com.talent.forex.dao.CNYTradeDao"></bean>
+	<bean id="foreignTradeDao" class="com.talent.forex.dao.ForeignTradeDao"></bean>
+	<bean id="stopLossDao" class="com.talent.forex.dao.StopLossDao"></bean>
+	<bean id="marginEnlargeDao" class="com.talent.forex.dao.MarginEnlargeDao"></bean>
+	<bean id="takeProfitDao" class="com.talent.forex.dao.TakeProfitDao"></bean>
+	<bean id="ocoDao" class="com.talent.forex.dao.OcoDao"></bean>
+	<bean id="marketBreakoutDao" class="com.talent.forex.dao.MarketBreakoutDao"></bean>
+	<bean id="oneClickDao" class="com.talent.forex.dao.OneClickDao"></bean>
+	<bean id="codeTableDao" class="com.talent.forex.dao.CodeTableDao"></bean>
+	<bean id="otcSpotDao" class="com.talent.forex.dao.OtcSpotDao"></bean>
+	<bean id="otcForwardDao" class="com.talent.forex.dao.OtcForwardDao"></bean>
+	<bean id="analogueMagDao" class="com.talent.forex.dao.AnalogueMagDao"></bean>
+	<bean id="otcSwapDao" class="com.talent.forex.dao.OtcSwapDao"></bean>
+	<bean id="sysParamDao" class="com.talent.forex.dao.SysParamDao"></bean>
+	<bean id="seqDao" class="com.talent.forex.dao.SeqDao"></bean>
+	<bean id="bTranFlowMappingDao" class="com.talent.forex.dao.BTranFlowMappingDao"></bean>
+	<bean id="wTranFlowMappingDao" class="com.talent.forex.dao.WTranFlowMappingDao"></bean>
+	<bean id="cTranFlowMappingDao" class="com.talent.forex.dao.CTranFlowMappingDao"></bean>
+	<bean id="groupSysParamDao" class="com.talent.forex.dao.GroupSysParamDao"></bean>
+	<bean id="groupMngDao" class="com.talent.forex.dao.GroupMngDao"></bean>
+	<bean id="accInfoDao" class="com.talent.forex.dao.AccInfoDao"></bean>
+	<bean id="rateDao" class="com.talent.forex.dao.RateDao"></bean>
+	<bean id="completePriceTranInfoDao" class="com.talent.forex.dao.CompletePriceTranInfoDao"></bean>
+	<bean id="operationLogDao" class="com.talent.forex.dao.OperationLogDao"></bean>
+	<bean id="cashDao" class="com.talent.forex.dao.CashDao"></bean>
+	<bean id="teachDao" class="com.talent.forex.dao.TeachDao"></bean>
+</beans>

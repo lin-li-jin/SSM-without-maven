@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.test.ssm.mapper.UserMapper">
+	<resultMap id="BaseResultMap" type="cn.test.ssm.pojo.User">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="USERNAME" property="username" jdbcType="VARCHAR" />
+		<result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="loginByPwd" parameterType="cn.test.ssm.pojo.User"
+		resultMap="BaseResultMap">
+		select * from USER where username = #{username} and password
+		= #{password}
+	</select>
+</mapper>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<!-- 
+ Create By    : lzc
+ Description  : 交易管理
+ Modify Date  : 2014-08-05
+  -->
+<beans default-autowire="byName">
+
+	<bean id="accountNumberManageBo" class="com.talent.forex.modules.trade_mng.AccountNumberManageBo" />
+	<bean id="accountBalanceManageBo" class="com.talent.forex.modules.trade_mng.AccountBalanceManageBo" />
+	<bean id="accountStatementBo" class="com.talent.forex.modules.trade_mng.AccountStatementBo" />
+	<bean id="accountFlowManageBo" class="com.talent.forex.modules.trade_mng.AccountFlowManageBo" />
+</beans>

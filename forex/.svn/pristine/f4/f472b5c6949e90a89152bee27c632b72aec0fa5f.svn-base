@@ -1,0 +1,569 @@
+package com.talent.exam.modules.admin_mng.service;
+
+import com.talent.base.BaseBo;
+import com.talent.exam.constant.ExamConst;
+import com.talent.exam.dao.*;
+import com.talent.exam.domain.*;
+import com.talent.exam.exception.IllegaleLengthException;
+import com.talent.exam.modules.admin_mng.model.ExamContentResult;
+import com.talent.exam.modules.admin_mng.model.ExamRule;
+import com.talent.exam.modules.admin_mng.model.SubjectItem;
+import com.talent.exam.util.StringUtil;
+import com.talent.exception.BoException;
+import org.apache.log4j.Logger;
+
+import java.io.UnsupportedEncodingException;
+import java.util.*;
+import java.util.concurrent.*;
+
+/**
+ * 题目管理
+ * 1.根据条件筛选查看题目
+ * 2.新增题目
+ * 传入数据格式:
+ * 1.交易类型
+ * 2.步骤
+ * 3.步骤类型
+ * 4.是否完成
+ *
+ * Created by 吴樟 on www.haixiangzhene.xyz
+ * 2017/9/11.
+ */
+public class SubjectBo extends BaseBo{
+
+    private static Logger logger=Logger.getLogger(SubjectBo.class);
+
+    /**
+     * @param executorService 执行组卷任务处理
+     */
+    private ExecutorService executorService= Executors.newFixedThreadPool(4);
+
+    private ExamContentDAO examContentDAO;
+
+    private ExamStopLossDAO examStopLossDAO;
+    private ExamTakeProfitDAO examTakeProfitDAO;
+    private ExamOcoDAO examOcoDAO;
+    private ExamSpotDAO examSpotDAO;
+    private ExamForwardDAO examForwardDAO;
+    private ExamMarketBreakoutDAO examMarketBreakoutDAO;
+    private ExamOneClickDAO examOneClickDAO;
+    private ExamSwapDAO examSwapDAO;
+    private ExamPaperDAO examPaperDAO;
+
+    private static StringUtil stringUtil=new StringUtil();
+
+
+    /**
+     * 根据交易类型筛选查看题目
+     * @param type
+     * 0:全部交易 1:人民币 2:外币对交易 3:保证金交易
+     * 返回格式:
+     * 1.当查询不到题目，则直接抛出错误，采用拦截器捕获
+     * 2.当查询到题目，则按照格式返回数据
+     */
+    public List<ExamContent> queryByExchangeType(Integer type) throws IllegalAccessException {
+        List<ExamContent> subjectList=null;
+        if (type==0) {
+            subjectList = examContentDAO.findAll();
+        }else{
+            ExamContent examContent=new ExamContent();
+            ExamAccType examAccType=new ExamAccType();
+            if (type==1){
+                examAccType.setAccTypeNo(ExamConst.RMB);
+                examContent.setExamAccTypeByAccTypeNo(examAccType);
+                subjectList = examContentDAO.findByExample(examContent);
+            }else if (type==2){
+                examAccType.setAccTypeNo(ExamConst.W);
+                examContent.setExamAccTypeByAccTypeNo(examAccType);
+                subjectList = examContentDAO.findByExample(examContent);
+            }else if (type==3){
+                examAccType.setAccTypeNo(ExamConst.B);
+                examContent.setExamAccTypeByAccTypeNo(examAccType);
+                subjectList = examContentDAO.findByExample(examContent);
+            }
+        }
+
+        if (subjectList==null || subjectList.isEmpty()) {
+            logger.warn("根据交易类型筛选查看题目暂未查询到题目");
+            throw new BoException("暂未查询到题目");
+        }
+        logger.info("根据交易类型筛选查看题目,查询到题目:"+subjectList.size());
+        return subjectList;
+    }
+
+    /**
+     * 新增题目
+     */
+    public void addnewExchange(SubjectItem item) {
+        ExamContent examContent=new ExamContent();
+        try {
+            examContent.setExamContent(item.getExamContent().getBytes("utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            logger.error("charset is throw error");
+        }
+        ExamAccType examAccType=new ExamAccType();
+        examAccType.setAccTypeNo(item.getAccTypeNo());
+        examContent.setExamAccTypeByAccTypeNo(examAccType);
+        examContentDAO.save(examContent);
+        List<ExamContent> examContents= null;
+        try {
+            examContents = examContentDAO.findByExample(examContent);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        if (examContents!=null && examContents.size()==1){
+            item.setExamNo(examContents.get(0).getExamNo());
+        }
+        if (ExamConst.STOPLOSS.equals(item.getType()))
+            addStopLossExchange(item);
+        else if (ExamConst.TAKEPRFIT.equals(item.getType()))
+            addTakeProfitExchange(item);
+        else if (ExamConst.OCO.equals(item.getType()))
+            addOCOProfitExchange(item);
+        else if (ExamConst.MARKETBREAKOUT.equals(item.getType()))
+            addMarkBreakoutExchange(item);
+        else if (ExamConst.ONECLICK.equals(item.getType()))
+            addOneClickExchange(item);
+        else if (ExamConst.SPOT.equals(item.getType()))
+            addSpotExchange(item);
+        else if (ExamConst.FORWARD.equals(item.getType()))
+            addForwardExchange(item);
+        else if (ExamConst.SWAP.equals(item.getType()))
+            addSwapExchange(item);
+        else
+            throw new BoException("暂无其它的交易类型");
+    }
+
+
+
+    /**
+     *  组卷
+     */
+    public List<List<ExamContentResult>> managePaper(ExamRule examRule) throws IllegalAccessException {
+        int w = 0,b = 0,c=0;
+        if (examRule==null || examRule.getTitleScale()==null || examRule.getTitleScale().isEmpty())
+            throw new NullPointerException("exam rule can not be null,please check rule is right");
+        HashMap<String ,String[]> titleScale=examRule.getTitleScale();
+        String[] ws=titleScale.get("W");
+        String[] bs=titleScale.get("B");
+        String[] cs=titleScale.get("C");
+        if (ws!=null&&ws.length!=0)
+            w=Integer.valueOf(ws[0]);
+        if (bs!=null&&bs.length!=0)
+            b=Integer.valueOf(bs[0]);
+        if (cs!=null&&cs.length!=0)
+            c=Integer.valueOf(cs[0]);
+        List<ExamContent> examContents= examContentDAO.findAll();
+        CountDownLatch countDownLatch=new CountDownLatch(3);
+        List<List<ExamContentResult>> examContS=new LinkedList<List<ExamContentResult>>();
+        int finalW = w;
+        FutureTask<List<ExamContentResult>> taskW=new FutureTask(new Callable() {
+            @Override
+            public List<ExamContentResult> call() throws Exception {
+                List<ExamContentResult> wExamContents=randomSelect(ExamConst.W, finalW,examContents);
+                countDownLatch.countDown();
+                return wExamContents;
+            }
+        });
+        int finalB = b;
+        FutureTask<List<ExamContentResult>> taskB=new FutureTask(new Callable() {
+            @Override
+            public List<ExamContentResult> call() throws Exception {
+                List<ExamContentResult> bExamContents=randomSelect(ExamConst.B,
+                        finalB,examContents);
+                countDownLatch.countDown();
+                return bExamContents;
+            }
+        });
+
+        int finalC = c;
+        FutureTask<List<ExamContentResult>> taskC=new FutureTask(new Callable() {
+            @Override
+            public List<ExamContentResult> call() throws Exception {
+                List<ExamContentResult> cExamContents=randomSelect(ExamConst.RMB,
+                        finalC,examContents);
+                countDownLatch.countDown();
+                return cExamContents;
+            }
+        });
+        executorService.submit(taskB);
+        executorService.submit(taskC);
+        executorService.submit(taskW);
+
+
+
+        try {
+            countDownLatch.await();
+            List<ExamContentResult> cExamContents=taskC.get();
+            List<ExamContentResult> bExamContents=taskB.get();
+            List<ExamContentResult> wExamContents=taskW.get();
+            examContS.add(cExamContents);
+            examContS.add(bExamContents);
+            examContS.add(wExamContents);
+        } catch (InterruptedException | ExecutionException e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+            throw new IllegalAccessException("线程池执行出现问题");
+        }
+
+        //4.write to db
+        ExamPaper examPaper=new ExamPaper();
+        try {
+            examPaper.setPaperTitle(examRule.getPaperTitle().getBytes("utf-8"));
+            examPaper.setPaperExamContent(getExamNo(examContS));
+        } catch (UnsupportedEncodingException e) {
+            logger.error("unsuport encode...");
+            e.printStackTrace();
+        }
+        examPaperDAO.save(examPaper);
+        return examContS;
+    }
+
+    public String getExamNo(List<List<ExamContentResult>> exams){
+        StringBuffer sb=new StringBuffer();
+        if (exams!=null && !exams.isEmpty()){
+            for (List<ExamContentResult> examContentResults:exams){
+                for (ExamContentResult examContentResult:examContentResults){
+                    sb.append(examContentResult.getExamNo()+",");
+                }
+            }
+            sb.delete(sb.length()-1,sb.length());
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 随机抽取多少比例
+     * 1.类型  2.条数
+     * 步骤:
+     * 1.读取某个类型的id，并转换为数组
+     * 2.随机抽取
+     * 3.
+     */
+    public List<ExamContentResult> randomSelect(String subType,int subSum,List<ExamContent> examContents){
+        if (examContents==null || examContents.isEmpty())
+            throw new NullPointerException(examContents+" is null,ca not be null");
+        Iterator<ExamContent> iterator= examContents.iterator();
+        //1
+        List<Integer> W=new LinkedList<Integer>();
+        while (iterator.hasNext()){
+            ExamContent examContent=iterator.next();
+            int examNo = examContent.getExamNo();
+            if (subType.equals(examContent.getExamAccTypeByAccTypeNo().getAccTypeNo())) {
+                W.add(examNo);
+            }
+        }
+        Integer[] wInt= W.toArray(new Integer[W.size()]);
+        //2
+        Random random=new Random();
+        int size=wInt.length;
+        if (size<subSum){
+            logger.error(size+"is lower than "+subSum+",please check the size");
+            throw new IllegaleLengthException("ExamContent size is lower than required size");
+        }
+        List<Integer> selected=new LinkedList<Integer>();
+        for (int i=0;i<subSum;i++) {
+            int ran=random.nextInt(size);     //[0,subSum)
+            selected.add(wInt[ran]);    //add to selected
+            wInt[ran]=wInt[size-1];       //覆盖已被选取的值
+            wInt[size-1]=null;            //help gc
+            size--;
+        }
+        //3
+        Iterator<ExamContent> ite= examContents.iterator();
+
+        List<ExamContentResult> selectedW=new LinkedList<ExamContentResult>();
+        while (ite.hasNext()){
+            ExamContent examContent=ite.next();
+            int examNo = examContent.getExamNo();
+            Iterator<Integer> it=selected.iterator();
+            while (it.hasNext()){
+                if (examNo==it.next()){
+                    ExamContentResult examContentResult=new ExamContentResult();
+                    try {
+                        examContentResult.setExamContent(new String(examContent.getExamContent(),"utf-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        logger.error("byte to string throw unsupportexception");
+                    }
+                    examContentResult.setExamNo(examContent.getExamNo());
+                    selectedW.add(examContentResult);
+                }
+            }
+        }
+
+        return selectedW;
+    }
+
+    /**
+     * 根据题目id删除
+     * @param examId
+     * 1.查找是否存在该题目
+     * 2.设置级联删除
+     * result
+     * success:true  fail:throw exception
+     */
+    public boolean deleteById(Integer examId){
+        ExamContent examContent=examContentDAO.findById(examId);
+        if (examContent==null){
+            logger.error("该题目编号不存在");
+            throw new NullPointerException("暂时不存在该题目");
+        }
+        examContentDAO.delete(examContent);
+        return true;
+    }
+
+
+    private void addOneClickExchange(SubjectItem item) {
+        ExamOneClick examOneClick=new ExamOneClick();
+        examOneClick.setStep(ExamConst.DEFAULT_STEP);
+        examOneClick.setAcc(item.getAcc());
+        examOneClick.setAccAmount(item.getOneClickAccMount());
+        examOneClick.setDirection(item.getDirection());
+        ExamContent examContent=new ExamContent();
+        examContent.setExamNo(item.getExamNo());
+        examOneClick.setExamContentByExamNo(examContent);
+        String oneClickScore=stringUtil.FromBean(item.getOneClickScore());
+        examOneClick.setExamScore(oneClickScore);
+        examOneClick.setUserType(ExamConst.TEACHER);
+        examOneClick.setAccTypeNo(item.getAccTypeNo());
+        examOneClick.setStep(ExamConst.DEFAULT_STEP);
+        examOneClickDAO.save(examOneClick);
+        examOneClickDAO.getSession().flush();
+        examOneClickDAO.getSession().clear();
+    }
+
+    private void addSwapExchange(SubjectItem item) {
+    	ExamSwap examSwap = new ExamSwap();
+    	examSwap.setStep(ExamConst.DEFAULT_STEP);
+    	examSwap.setAcc(item.getAcc());
+    	examSwap.setAccAmount(item.getSwapAccAmount());
+    	examSwap.setAccTypeNo(item.getAccTypeNo());
+    	examSwap.setcBasis(item.getSwapCbasis());
+    	examSwap.setDirection(item.getDirection());
+    	ExamContent examContent = new ExamContent();
+    	examContent.setExamNo(item.getExamNo());
+    	examSwap.setExamContentByExamNo(examContent);
+    	String swapScore=stringUtil.FromBean(item.getSwapScore());
+    	examSwap.setExamScore(swapScore);
+    	examSwap.setfBasis(item.getSwapFbasis());
+    	examSwap.setFixedRate(item.getSwapFixedRate());
+    	examSwap.setFixedType(item.getSwapFixedType());
+    	examSwap.setFrequency(item.getSwapFrequency());
+    	examSwap.setLibor(item.getSwapLibor());
+    	examSwap.setMaturityDate(item.getSwapMaturityDate());
+    	examSwap.setPoint(item.getSwapPoint());
+    	examSwap.setProviderNo(item.getSwapProviderNo());
+    	examSwap.setSpot(item.getSwapSpot());
+    	examSwap.setStartDate(item.getSwapStartDate());
+    	examSwap.setUserType(ExamConst.TEACHER);
+    	examSwap.setAccTypeNo(item.getAccTypeNo());
+    	examSwapDAO.save(examSwap);
+    }
+
+    private void addForwardExchange(SubjectItem item) {
+        ExamForward examForward=new ExamForward();
+        examForward.setStep(ExamConst.DEFAULT_STEP);
+        examForward.setDirection(item.getDirection());
+        examForward.setAcc(item.getAcc());
+        examForward.setAccAmount(item.getForwardAccMount());
+        examForward.setValueDate(item.getForwardValueDate());
+        examForward.setPrice(item.getForwardPrice());
+        examForward.setProviderNo(item.getForwardProviderNo());
+        ExamContent examContent=new ExamContent();
+        examContent.setExamNo(item.getExamNo());
+        examForward.setExamContentByExamNo(examContent);
+        String forwardScore=stringUtil.FromBean(item.getForwardScore());
+        examForward.setExamScore(forwardScore);
+        examForward.setUserType(ExamConst.TEACHER);
+        examForwardDAO.save(examForward);
+        examForwardDAO.getSession().flush();
+        examForwardDAO.getSession().clear();
+    }
+
+    private void addStopLossExchange(SubjectItem item) {
+        ExamStopLoss examStopLoss=new ExamStopLoss();
+        examStopLoss.setDirection(item.getDirection());
+        examStopLoss.setStep(ExamConst.DEFAULT_STEP);
+        examStopLoss.setAcc(item.getAcc());
+        examStopLoss.setAccAmount(item.getStopLossAccMount());
+        examStopLoss.setPrice(item.getStopLossPrice());
+        examStopLoss.setMonitorPrice(item.getStopLossAccmonitorPrice());
+        examStopLoss.setGoodFrom(item.getStopLossGoodFrom());
+        examStopLoss.setGoddTill(item.getStopLossGoodTill());
+        ExamContent examContent=new ExamContent();
+        examContent.setExamNo(item.getExamNo());
+        examStopLoss.setExamContentByExamNo(examContent);
+        String stopLossScore=stringUtil.FromBean(item.getStopLossScore());
+        examStopLoss.setExamScore(stopLossScore);
+        examStopLoss.setUserType(ExamConst.TEACHER);
+        examStopLoss.setAccTypeNo(item.getAccTypeNo());
+        examStopLossDAO.save(examStopLoss);
+        examStopLossDAO.getSession().flush();
+        examStopLossDAO.getSession().clear();
+    }
+
+    private void addMarkBreakoutExchange(SubjectItem item) {
+        ExamMarketBreakout examMarketBreakout=new ExamMarketBreakout();
+        examMarketBreakout.setStep(ExamConst.DEFAULT_STEP);
+        examMarketBreakout.setDirection(item.getDirection());
+        examMarketBreakout.setAcc(item.getAcc());
+        examMarketBreakout.setStopLossAmount1(item.getMbktStopLossAccMount1());
+        examMarketBreakout.setStopLossPrice1(item.getMbktStopLossPrice1());
+        examMarketBreakout.setStopLossAmount2(item.getMbktStopLossAccMount2());
+        examMarketBreakout.setStopLossPrice2(item.getMbktStopLossPrice2());
+        examMarketBreakout.setMonitorPrice(item.getMbkStopLossAccmonitorPrice());
+        examMarketBreakout.setGoodFrom(item.getMbkGoodFrom());
+        examMarketBreakout.setGoodTill(item.getMbkGoodTill());
+        ExamContent examContent=new ExamContent();
+        examContent.setExamNo(item.getExamNo());
+        examMarketBreakout.setExamContentByExamNo(examContent);
+        String marketBreakoutScore=stringUtil.FromBean(item.getMarketBreakoutScore());
+        examMarketBreakout.setExamScore(marketBreakoutScore);
+        examMarketBreakout.setUserType(ExamConst.TEACHER);
+        examMarketBreakoutDAO.save(examMarketBreakout);
+        examMarketBreakoutDAO.getSession().flush();
+        examMarketBreakoutDAO.getSession().clear();
+    }
+
+    private void addOCOProfitExchange(SubjectItem item) {
+        ExamOco examOco=new ExamOco();
+        examOco.setStep(ExamConst.DEFAULT_STEP);
+        examOco.setAcc(item.getAcc());
+        examOco.setDirection(item.getDirection());
+        examOco.setTakeProfitAmount(item.getOcoTakeProfitAccMount());
+        examOco.setTakeProfitPrice(item.getOcoTakeProfitPrice());
+        examOco.setStopLossAmount(item.getOcoStopLossAccMount());
+        examOco.setStopLossPrice(item.getOcoStopLossPrice());
+        examOco.setGoodFrom(item.getOcoGoodFrom());
+        examOco.setGoodTill(item.getOcoGoodTill());
+        ExamContent examContent=new ExamContent();
+        examContent.setExamNo(item.getExamNo());
+        examOco.setExamContentByExamNo(examContent);
+        String ocoScore=stringUtil.FromBean(item.getOcoScore());
+        examOco.setExamScore(ocoScore);
+        examOco.setUserType(ExamConst.TEACHER);
+        examOcoDAO.save(examOco);
+        examOcoDAO.getSession().flush();
+        examOcoDAO.getSession().clear();
+    }
+
+    private void addTakeProfitExchange(SubjectItem item) {
+        ExamTakeProfit examTakeProfit=new ExamTakeProfit();
+        examTakeProfit.setStep(ExamConst.DEFAULT_STEP);
+        examTakeProfit.setDirection(item.getDirection());
+        examTakeProfit.setAcc(item.getAcc());
+        examTakeProfit.setAccAmount(item.getTakeProfitAccMount());
+        examTakeProfit.setPrice(item.getTakeProfitPrice());
+        examTakeProfit.setGoodFrom(item.getTakeProfitGoodFrom());
+        examTakeProfit.setGoodTill(item.getTakeProfitGoodTill());
+        ExamContent examContent=new ExamContent();
+        examContent.setExamNo(item.getExamNo());
+        examTakeProfit.setExamContentByExamNo(examContent);
+        String takeProfitScore=stringUtil.FromBean(item.getTakeProfitScore());
+        examTakeProfit.setExamScore(takeProfitScore);
+        examTakeProfit.setUserType(ExamConst.TEACHER);
+        examTakeProfitDAO.save(examTakeProfit);
+        examTakeProfitDAO.getSession().flush();
+        examTakeProfitDAO.getSession().clear();
+    }
+
+    private void addSpotExchange(SubjectItem item) {
+        ExamSpot examSpot=new ExamSpot();
+        examSpot.setStep(ExamConst.DEFAULT_STEP);
+        examSpot.setAcc(item.getAcc());
+        examSpot.setAccAmount(item.getSpotAccMount());
+        examSpot.setPrice(item.getSpotPrice());
+        examSpot.setProviderNo(item.getSpotProviderNo());
+        ExamContent examContent=new ExamContent();
+        examContent.setExamNo(item.getExamNo());
+        examSpot.setExamContentByExamNo(examContent);
+        String spotScore=stringUtil.FromBean(item.getSpotScore());
+        examSpot.setExamScore(spotScore);
+        examSpot.setUserType(ExamConst.TEACHER);
+        examSpotDAO.save(examSpot);
+        examSpotDAO.getSession().flush();
+        examSpotDAO.getSession().clear();
+    }
+
+
+    public ExamContentDAO getExamContentDAO() {
+        return examContentDAO;
+    }
+
+    public void setExamContentDAO(ExamContentDAO examContentDAO) {
+        this.examContentDAO = examContentDAO;
+    }
+
+    public ExamStopLossDAO getExamStopLossDAO() {
+        return examStopLossDAO;
+    }
+
+    public void setExamStopLossDAO(ExamStopLossDAO examStopLossDAO) {
+        this.examStopLossDAO = examStopLossDAO;
+    }
+
+    public ExamTakeProfitDAO getExamTakeProfitDAO() {
+        return examTakeProfitDAO;
+    }
+
+    public void setExamTakeProfitDAO(ExamTakeProfitDAO examTakeProfitDAO) {
+        this.examTakeProfitDAO = examTakeProfitDAO;
+    }
+
+    public ExamOcoDAO getExamOcoDAO() {
+        return examOcoDAO;
+    }
+
+    public void setExamOcoDAO(ExamOcoDAO examOcoDAO) {
+        this.examOcoDAO = examOcoDAO;
+    }
+
+    public ExamSpotDAO getExamSpotDAO() {
+        return examSpotDAO;
+    }
+
+    public void setExamSpotDAO(ExamSpotDAO examSpotDAO) {
+        this.examSpotDAO = examSpotDAO;
+    }
+
+    public ExamForwardDAO getExamForwardDAO() {
+        return examForwardDAO;
+    }
+
+    public void setExamForwardDAO(ExamForwardDAO examForwardDAO) {
+        this.examForwardDAO = examForwardDAO;
+    }
+
+    public ExamMarketBreakoutDAO getExamMarketBreakoutDAO() {
+        return examMarketBreakoutDAO;
+    }
+
+    public void setExamMarketBreakoutDAO(ExamMarketBreakoutDAO examMarketBreakoutDAO) {
+        this.examMarketBreakoutDAO = examMarketBreakoutDAO;
+    }
+
+    public ExamOneClickDAO getExamOneClickDAO() {
+        return examOneClickDAO;
+    }
+
+    public void setExamOneClickDAO(ExamOneClickDAO examOneClickDAO) {
+        this.examOneClickDAO = examOneClickDAO;
+    }
+
+	public ExamSwapDAO getExamSwapDAO() {
+		return examSwapDAO;
+	}
+
+	public void setExamSwapDAO(ExamSwapDAO examSwapDAO) {
+		this.examSwapDAO = examSwapDAO;
+	}
+
+    public ExamPaperDAO getExamPaperDAO() {
+        return examPaperDAO;
+    }
+
+    public void setExamPaperDAO(ExamPaperDAO examPaperDAO) {
+        this.examPaperDAO = examPaperDAO;
+    }
+}

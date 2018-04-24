@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
+<!-- 
+ Amendment No.: FOEXAS009
+ Create By    : lzc
+ Description  : 交易首页
+ Modify Date  : 2014-07-21
+  -->
+<xwork>
+	<package name="bid" extends="default">
+		<action name="oneClickTradePageInit" method="pageInit"
+			class="com.talent.forex.modules.trade.bid.OneClickTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/bid/StopLossTrade.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="stopLossTradePageInit" method="pageInit"
+			class="com.talent.forex.modules.trade.bid.StopLossTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/bid/StopLossTrade.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="takeProfitTradePageInit" method="pageInit"
+			class="com.talent.forex.modules.trade.bid.TakeProfitTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/bid/takeProfitTrade.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="ocoTradePageInit" method="pageInit"
+			class="com.talent.forex.modules.trade.bid.OcoTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/bid/ocoTrade.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="marketBreakoutTradePageInit" method="pageInit"
+			class="com.talent.forex.modules.trade.bid.MarketBreakoutTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/bid/marketBreakoutTrade.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="oneClickOneTradeRecordAdd" method="oneTradeRecordAdd"
+			class="com.talent.forex.modules.trade.bid.OneClickTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/bid/oneClickTrade.jsp
+				</param>
+			</result>
+			<result name="error" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="foreign" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/foreignResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="stopLossOneTradeRecordAdd" method="oneTradeRecordAdd"
+			class="com.talent.forex.modules.trade.bid.StopLossTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="foreign" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/foreignResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="takeProfitOneTradeRecordAdd" method="oneTradeRecordAdd"
+			class="com.talent.forex.modules.trade.bid.TakeProfitTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="foreign" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/foreignResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="ocoOneTradeRecordAdd" method="oneTradeRecordAdd"
+			class="com.talent.forex.modules.trade.bid.OcoTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="foreign" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/foreignResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="marketOneTradeRecordAdd" method="oneTradeRecordAdd"
+			class="com.talent.forex.modules.trade.bid.MarketBreakoutTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="foreign" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/foreignResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="StopLossInfoCancel" method="oneTradeRecordCancel"
+			class="com.talent.forex.modules.trade.bid.StopLossTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="foreign" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/foreignResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="TakeProfitInfoCancel" method="oneTradeRecordCancel"
+			class="com.talent.forex.modules.trade.bid.TakeProfitTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="foreign" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/foreignResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="OcoInfoCancel" method="oneTradeRecordCancel"
+			class="com.talent.forex.modules.trade.bid.OcoTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="foreign" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/foreignResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="MarketBreakoutInfoCancel" method="oneTradeRecordCancel"
+			class="com.talent.forex.modules.trade.bid.MarketBreakoutTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="foreign" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/foreignResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+	</package>
+</xwork>

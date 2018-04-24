@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
+<!-- 
+ Create By    : 陈整队
+ Description  : 询价交易
+ Modify Date  : 2014-07-24
+  -->
+<xwork>
+	<package name="ask" extends="default">
+		<action name="spotTradePageInit" method="spotTradePageInit"
+			class="com.talent.forex.modules.trade.ask.SpotTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/ask/spotTrade.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="spotTradeAllOpponent" method="spotTradeAllOpponent" 
+			class="com.talent.forex.modules.trade.ask.SpotTradeAction">
+			<result name="success" type="redirect">
+				<param name="location">
+					spotTradePageInit.action
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="spotTradeSend" method="spotTradeSend" 
+			class="com.talent.forex.modules.trade.ask.SpotTradeAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="spotTradeAccept" method="spotTradeAccept" 
+			class="com.talent.forex.modules.trade.ask.SpotTradeAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="spotTradeCheckPrice" method="spotTradeCheckPrice"
+			class="com.talent.forex.modules.trade.ask.SpotTradeAction">
+		 	<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="spotTradeDel" method="spotTradeDel"
+			class="com.talent.forex.modules.trade.ask.SpotTradeAction">
+		 	<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="spotTradeWithdraw" method="spotTradeWithdraw"
+			class="com.talent.forex.modules.trade.ask.SpotTradeAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<!-- 远期询价交易 -->
+		<action name="forwardTradePageInit" method="forwardTradepageInit"
+			class="com.talent.forex.modules.trade.ask.ForwardTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/ask/forwardTrade.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="forwardTradeAllOpponent" method="forwardTradeAllOpponent" 
+			class="com.talent.forex.modules.trade.ask.ForwardTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="fail" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="forwardTradeSend" method="forwardTradeSend" 
+			class="com.talent.forex.modules.trade.ask.ForwardTradeAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="forwardTradeAccept" method="forwardTradeAccept" 
+			class="com.talent.forex.modules.trade.ask.ForwardTradeAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="forwardTradeCheckPoint" method="forwardTradeCheckPoint"
+			class="com.talent.forex.modules.trade.ask.ForwardTradeAction">
+		 	<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="forwardTradeDel" method="forwardTradeDel"
+			class="com.talent.forex.modules.trade.ask.ForwardTradeAction">
+		 	<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="forwardTradeWithdraw" method="forwardTradeWithdraw"
+			class="com.talent.forex.modules.trade.ask.ForwardTradeAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<!-- 掉期询价交易 -->
+		<action name="swapTradePageInit" method="swapTradePageInit"
+			class="com.talent.forex.modules.trade.ask.SwapTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/ask/swapTrade.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="swapTradeAllOpponent" method="swapTradeAllOpponent" 
+			class="com.talent.forex.modules.trade.ask.SwapTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="fail" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="swapTradeSend" method="swapTradeSend" 
+			class="com.talent.forex.modules.trade.ask.SwapTradeAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="swapTradeCheckPoint" method="swapTradeCheckPoint" 
+			class="com.talent.forex.modules.trade.ask.SwapTradeAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="swapTradeWithdraw" method="swapTradeWithdraw" 
+			class="com.talent.forex.modules.trade.ask.SwapTradeAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="swapTradeDel" method="swapTradeDel"
+			class="com.talent.forex.modules.trade.ask.SwapTradeAction">
+		 	<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="swapTradeAccept" method="swapTradeAccept" 
+			class="com.talent.forex.modules.trade.ask.SwapTradeAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="swapTradeSendOne" method="swapTradeSendOne" 
+			class="com.talent.forex.modules.trade.ask.SwapTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="fail" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="swapTradeSendTwo" method="swapTradeSendTwo" 
+			class="com.talent.forex.modules.trade.ask.SwapTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="fail" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="swapTradeSendThree" method="swapTradeSendThree" 
+			class="com.talent.forex.modules.trade.ask.SwapTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="fail" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="swapTradeSendFour" method="swapTradeSendFour" 
+			class="com.talent.forex.modules.trade.ask.SwapTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="fail" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="swapTradeSendFive" method="swapTradeSendFive" 
+			class="com.talent.forex.modules.trade.ask.SwapTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="fail" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="swapTradeAcceptOne" method="swapTradeAcceptOne" 
+			class="com.talent.forex.modules.trade.ask.SwapTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="fail" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="swapTradeAcceptTwo" method="swapTradeAcceptTwo" 
+			class="com.talent.forex.modules.trade.ask.SwapTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="fail" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="swapTradeAcceptThree" method="swapTradeAcceptThree" 
+			class="com.talent.forex.modules.trade.ask.SwapTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="fail" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="swapTradeAcceptFour" method="swapTradeAcceptFour" 
+			class="com.talent.forex.modules.trade.ask.SwapTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="fail" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="swapTradeAcceptFive" method="swapTradeAcceptFive" 
+			class="com.talent.forex.modules.trade.ask.SwapTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<result name="fail" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/CNYResultPage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<!-- 对手方交易！ -->
+		<action name="tradeMessageInit" method="tradeMessageInit"
+			class="com.talent.forex.modules.trade.ask.TradeMessageAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/ask/tradeMessagePage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="tradeMessageQuery" method="tradeMessageQuery"
+			class="com.talent.forex.modules.trade.ask.TradeMessageAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/ask/tradeMessagePage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="tradeMessageDetail" method="tradeMessageDetail"
+			class="com.talent.forex.modules.trade.ask.TradeMessageAction">
+			<result name="spot" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/ask/spotOpponentTrade.jsp
+				</param>
+			</result>
+			<result name="forward" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/ask/forwardOpponentTrade.jsp
+				</param>
+			</result>
+			<result name="swap" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/ask/swapOpponentTrade.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="sendBySpot" method="sendBySpot"
+			class="com.talent.forex.modules.trade.ask.TradeMessageAction">
+			<result name="success" type="redirect">
+				<param name="location">
+					tradeMessageInit.action
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="closeBySpot" method="closeBySpot"
+			class="com.talent.forex.modules.trade.ask.TradeMessageAction">
+			<result name="success" type="redirect">
+				<param name="location">
+					tradeMessageInit.action
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="sendByForward" method="sendByForward"
+			class="com.talent.forex.modules.trade.ask.TradeMessageAction">
+			<result name="success" type="redirect">
+				<param name="location">
+					tradeMessageInit.action
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="closeByForward" method="closeByForward"
+			class="com.talent.forex.modules.trade.ask.TradeMessageAction">
+			<result name="success" type="redirect">
+				<param name="location">
+					tradeMessageInit.action
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="sendBySwap" method="sendBySwap"
+			class="com.talent.forex.modules.trade.ask.TradeMessageAction">
+			<result name="success" type="redirect">
+				<param name="location">
+					tradeMessageInit.action
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="closeBySwap" method="closeBySwap"
+			class="com.talent.forex.modules.trade.ask.TradeMessageAction">
+			<result name="success" type="redirect">
+				<param name="location">
+					tradeMessageInit.action
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+	</package>
+</xwork>

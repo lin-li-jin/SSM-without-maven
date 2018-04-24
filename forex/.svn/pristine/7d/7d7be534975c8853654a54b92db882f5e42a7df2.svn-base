@@ -1,0 +1,215 @@
+package com.talent.exam.modules.stu_exam.service;
+
+import com.talent.auth.bean.domain.TClass;
+import com.talent.auth.bean.model.UserModel;
+import com.talent.auth.dao.TClassDao;
+import com.talent.auth.login.LoginConst;
+import com.talent.base.BaseBo;
+import com.talent.exam.constant.ExamConst;
+import com.talent.exam.dao.ExamPaperDAO;
+import com.talent.exam.dao.ExamPaperDistributeDAO;
+import com.talent.exam.dao.ExamStopLossDAO;
+import com.talent.exam.dao.ExamStuAnswerDAO;
+import com.talent.exam.domain.*;
+import com.talent.exam.modules.stu_exam.model.ListenModelConfig;
+import com.talent.exam.util.StringUtil;
+import com.talent.forex.bean.model.MarginForwardInfoModel;
+import com.talent.forex.bean.model.StopAndProfitModel;
+import com.talent.forex.util.GetDateTimeUtil;
+import com.talent.hibernate.util.HibernateUtil;
+import com.talent.tools.WebWorkUtil;
+import org.hibernate.criterion.MatchMode;
+
+import java.util.List;
+
+/**
+ * Created by 吴樟 on www.haixiangzhene.xyz
+ * 2017/9/25.
+ */
+public class StuExamBo extends BaseBo {
+
+    private ExamStopLossDAO examStopLossDAO;
+    private ExamStuAnswerDAO examStuAnswerDAO;
+
+    private ExamPaperDAO examPaperDAO;
+    private TClassDao tClassDao;
+
+    private static StringUtil stringUtil=new StringUtil();
+
+    private ExamPaperDistributeDAO examPaperDistributeDAO;
+
+    /**
+     * 开始答题
+     * 1.答题状态是否已经开启
+     */
+    public boolean startExam(Integer paperId) throws IllegalAccessException {
+        if(!setUpPaper(paperId)){
+            return false;
+        }
+        Object obj=WebWorkUtil.sessionGet("ListenExamConfig");
+        if (obj!=null && obj instanceof ListenModelConfig){ //已经设置过
+            ListenModelConfig config= (ListenModelConfig) obj;
+            if (config.isOnAnswer()){ //正在考试状态
+                return false;
+            }else { //已经完成考试,则重新开始考试
+                config.setPaperId(paperId);
+                config.setOnAnswer(true);
+                return true;
+            }
+        }else { //暂未设置过,则直接设置
+            ListenModelConfig config=new ListenModelConfig();
+            config.setOnAnswer(true);
+            config.setPaperId(paperId);
+            WebWorkUtil.sessionPut("ListenExamConfig",config);
+            return true;
+        }
+    }
+
+    /**
+     * 1.判断是否已被分配试卷
+     */
+    public boolean setUpPaper(Integer paperId) throws IllegalAccessException {
+        ExamPaperDistribute examPaperDistribute=new ExamPaperDistribute();
+        TClass tClass=new TClass();
+        UserModel userModel = (UserModel)WebWorkUtil.sessionGet(LoginConst.LOGIN_USER_MODEL);
+        tClass.setClassNo(userModel.getClassNo());
+        tClass=tClassDao.getBeanByBean(tClass, MatchMode.EXACT);
+        if (tClass==null)
+            throw new NullPointerException("the class is not exits");
+        examPaperDistribute.setPaperNo(paperId);
+        examPaperDistribute.settClassByClassId(tClass);
+        examPaperDistribute.setClassPaperStatus(ExamConst.USE);
+        List<ExamPaperDistribute> examPaper=examPaperDistributeDAO.findByExample(examPaperDistribute);
+        if (examPaper!=null && examPaper.size()==1) {
+            logger.info("开始考试，当前试卷正常");
+            return true;
+        }else {
+            String error="开始考试，当前试卷不正常，老师并未分配过该试卷或者已收卷";
+            logger.error(error);
+            throw new RuntimeException(error);
+        }
+    }
+
+    /**
+     * 设置当前答题
+     */
+    public void setUpSubject(Integer subjectId) throws IllegalAccessException {
+        Object obj=WebWorkUtil.sessionGet("ListenExamConfig");
+        if (obj!=null && obj instanceof ListenModelConfig){
+            ListenModelConfig config= (ListenModelConfig) obj;
+            if (config.isOnAnswer() && isLegal(config.getPaperId(),subjectId)){
+                config.setSubjectId(subjectId);
+            }else {
+                throw new IllegalAccessException("设置当前答题出现问题,可能由于暂时不在答题环境或者该试卷并不存在该题");
+            }
+        }
+    }
+
+    /**
+     * 题目编号是否合法
+     */
+    public boolean isLegal(Integer paperId,Integer subjectId){
+        ExamPaper examPaper=examPaperDAO.findById(paperId);
+        String subjectIds=examPaper.getPaperExamContent();
+        if (subjectIds!=null) {
+            String[] subject = subjectIds.split(",");
+            for (String sub:subject){
+                Integer subj=Integer.valueOf(sub);
+                if (subj.equals(subjectId))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 监听远期Forward交易
+     */
+    public void listtenForwardExchange(MarginForwardInfoModel marginForwardInfoModel){
+        ExamForward examForward=new ExamForward();
+        if ("1".equals(marginForwardInfoModel.getDirection())){
+            examForward.setAcc(marginForwardInfoModel.getAnaCcy());
+        }else {
+            examForward.setAcc(marginForwardInfoModel.getWeCcy());
+        }
+    }
+
+
+    /**
+     * 监听stop loss交易
+     */
+    public void listenStopLossExchange(StopAndProfitModel stopAndProfitModel){
+        ExamStopLoss examStopLoss=new ExamStopLoss();
+        examStopLoss.setAcc(stopAndProfitModel.getCcy1());
+        examStopLoss.setUserType(ExamConst.STUDENT);
+        examStopLoss.setExamScore("");
+        ExamContent examContent=new ExamContent();
+        Object obj=WebWorkUtil.sessionGet("ListenExamConfig");
+        if (obj==null || ! (obj instanceof ListenModelConfig))
+            throw new RuntimeException("考试配置throw");
+        ListenModelConfig config= (ListenModelConfig) obj;
+        examContent.setExamNo(config.getSubjectId());   //题号
+        examStopLoss.setExamContentByExamNo(examContent);
+        examStopLoss.setStep(1);
+        if ("CNY".equals(stopAndProfitModel.getCcy2()))
+            examStopLoss.setAccTypeNo("C");
+        if (stopAndProfitModel.getActiveTime().equals("")){
+            examStopLoss.setGoodFrom(GetDateTimeUtil.getCurrentDate());
+        }else {
+            examStopLoss.setGoodFrom(stopAndProfitModel.getActiveTime());
+        }
+        if (stopAndProfitModel.getCancelTime().equals("")){
+            examStopLoss.setGoddTill(ExamConst.TILLTIME);
+        }else {
+            examStopLoss.setGoddTill(stopAndProfitModel.getCancelTime());
+        }
+        examStopLoss.setMonitorPrice(stopAndProfitModel.getMonitorPrice());
+        examStopLoss.setPrice(stopAndProfitModel.getPrice());
+        examStopLoss.setAccAmount(stopAndProfitModel.getAmount());
+        examStopLoss.setDirection(stopAndProfitModel.getTradeDirection());
+        examStopLossDAO.save(examStopLoss);
+        logger.info("监听stop loss...");
+        HibernateUtil.getSession().flush();
+    }
+
+
+    public ExamStopLossDAO getExamStopLossDAO() {
+        return examStopLossDAO;
+    }
+
+    public void setExamStopLossDAO(ExamStopLossDAO examStopLossDAO) {
+        this.examStopLossDAO = examStopLossDAO;
+    }
+
+    public ExamStuAnswerDAO getExamStuAnswerDAO() {
+        return examStuAnswerDAO;
+    }
+
+    public void setExamStuAnswerDAO(ExamStuAnswerDAO examStuAnswerDAO) {
+        this.examStuAnswerDAO = examStuAnswerDAO;
+    }
+
+    public ExamPaperDAO getExamPaperDAO() {
+        return examPaperDAO;
+    }
+
+    public void setExamPaperDAO(ExamPaperDAO examPaperDAO) {
+        this.examPaperDAO = examPaperDAO;
+    }
+
+    public ExamPaperDistributeDAO getExamPaperDistributeDAO() {
+        return examPaperDistributeDAO;
+    }
+
+    public void setExamPaperDistributeDAO(ExamPaperDistributeDAO examPaperDistributeDAO) {
+        this.examPaperDistributeDAO = examPaperDistributeDAO;
+    }
+
+    public TClassDao gettClassDao() {
+        return tClassDao;
+    }
+
+    public void settClassDao(TClassDao tClassDao) {
+        this.tClassDao = tClassDao;
+    }
+}

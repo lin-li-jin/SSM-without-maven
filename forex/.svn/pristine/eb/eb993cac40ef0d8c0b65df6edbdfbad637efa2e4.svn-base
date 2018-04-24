@@ -1,0 +1,25 @@
+package com.talent.exam.dao;
+
+import java.util.Collection;
+
+import com.talent.exam.domain.ExamAccType;
+import com.talent.hibernate.base.AbstractDaoImpl;
+
+/**
+ *create by hs
+ *2017/9/6
+ */
+public class ExamAccTypeDAO extends AbstractDaoImpl {
+	private static final String BEAN_PACKAGE_NAME="com.talent.exam.domain.ExamAccType";
+
+	/*根据主键返回实体类*/
+    public ExamAccType getBeanById(Long id){
+        return (ExamAccType) getBeanById(BEAN_PACKAGE_NAME,id,false);
+    }
+
+    /*获取所有的交易类型*/
+    public Collection getAll(){
+        return getAll(BEAN_PACKAGE_NAME);
+    }
+	
+}

@@ -1,0 +1,32 @@
+package com.hh;
+import java.util.Scanner;
+
+public class JavaTest {
+	
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner sc =new Scanner(System.in);
+        int N=sc.nextInt();
+       int a=0;
+       int sum = 0;
+        for(int i=1;i<=N;i++)
+        {
+        	a=sc.nextInt();
+             sum =+a;
+        
+        	
+        }
+        if((sum+a)%N==0){
+        	
+        }
+        else{
+        	a++;
+        }
+       System.out.print(a);
+        	
+        
+	}
+}

@@ -1,0 +1,698 @@
+//package com.talent.forex.modules.teach_mag.dataInput;
+///**
+// * Amendment No:GJSY130005
+// * Amendment By:duzhichen
+// * Amendment Descr:新增课程时间选择
+// * Amendment Date:2013.7.22
+// */
+///**
+// * Amendment No: GJSY130006
+// * Amendment By: duzhichen
+// * Amendment Descr: 节次、学期信息储存和表述方式改变
+// * Amendment Date: 2013.7.22
+// */
+///**
+// *Amendment No:GJSY130021
+// *Modify By   :SUNYAN
+// *Date        :2013-08-06
+// *Description :将校别信息同步到ees中
+//*/
+//import java.sql.Connection;
+//import java.sql.PreparedStatement;
+//import java.sql.ResultSet;
+//import java.sql.SQLException;
+//import java.util.ArrayList;
+//import java.util.Collection;
+//import java.util.Iterator;
+//import java.util.List;
+//
+//import javax.naming.Context;
+//import javax.naming.InitialContext;
+//import javax.naming.NamingException;
+//import javax.sql.DataSource;
+//
+//import org.apache.log4j.Logger;
+//import org.hibernate.criterion.MatchMode;
+//
+//import com.talent.auth.bean.model.UserModel;
+//import com.talent.auth.dao.PostDao;
+//import com.talent.base.BaseBo;
+//import com.talent.ems.bean.domain.CourseOpen;
+//import com.talent.ems.bean.domain.EduClassStuMapping;
+//import com.talent.ems.bean.domain.Orginfo;
+//import com.talent.ems.bean.domain.Post;
+//import com.talent.ems.bean.domain.PostId;
+//import com.talent.ems.bean.domain.ServerInfo;
+//import com.talent.ems.bean.domain.Student;
+//import com.talent.ems.bean.domain.Teacher;
+//import com.talent.ems.constant.SysParamNameConst;
+//import com.talent.ems.dao.EduClassStuMappingDao;
+//import com.talent.ems.dao.ServerInfoDao;
+//import com.talent.ems.dao.StudentDao;
+//import com.talent.ems.dao.TeacherDao;
+//import com.talent.ems.util.GetCfgMsgUtil;
+//import com.talent.ems.util.GetConntionByDBNameUtil;
+//import com.talent.ems.util.GetDateTimeUtil;
+//import com.talent.ems.util.PwdCryptUtil;
+//
+//public class SynDataBo extends BaseBo{
+//	@SuppressWarnings("unused")
+//	private static Logger logger = Logger.getLogger(DataInputBo.class
+//			.getName());
+//	private ServerInfoDao serverInfoDao;
+//	private EduClassStuMappingDao eduClassStuMappingDao;
+//	private PostDao postDao;
+//	private TeacherDao teacherDao;
+//	private StudentDao studentDao;
+//	public void synStudentInfoDone(Collection stuList,
+//			String schoolNum) throws SQLException {
+//		
+//		Collection srvcoll=new ArrayList();
+//		String sqlStuSelect="select * from student where STUDENT_NUM=? and SCHOOL_NUM=?";
+//		String sqlStuUpdate="update student set CLASS_NO=?,DEPARTMENT=?,GRADE=?,MAJOR=?,PWD=?," +
+//				"STATUS=?,STUDENT_NAME=? where STUDENT_NUM=? and SCHOOL_NUM=?";
+//		String sqlStuInsert="insert into student(STUDENT_NUM,STUDENT_NAME,DEPARTMENT,MAJOR,GRADE,CLASS_NO,PWD,STATUS,SCHOOL_NUM) " +
+//				"values(?,?,?,?,?,?,?,?,?)";
+//		StringBuilder sqleduMapSelect=new StringBuilder("select * from edu_class_stu_mapping where CLASS_NO=? and STUDENT_NUM=? and SCHOOL_NUM=?");
+//		StringBuilder sqlEduMapInsert=new StringBuilder().append("insert into edu_class_stu_mapping(ID,CLASS_NO, STUDENT_NUM, SCHOOL_NUM) ")
+//		.append("values(?,?,?,?)");
+//		StringBuilder sqluserSelect=new StringBuilder().append("select * from user_post where USER_NUM=?");
+//		StringBuilder sqlUserInsert=new StringBuilder().append("insert into user_post(USER_NUM,POST_NUM,STATE,BEGIN_DATE) values(?,?,?,?)");
+////		ServerInfo serverInfo=new ServerInfo();
+////		serverInfo.setUserFor(SysParamNameConst.SRV_1);//只需要同步到 考核专用的数据库服务器中
+////		srvcoll = serverInfoDao.getBeansByBean(serverInfo,
+////			MatchMode.EXACT);
+//		
+//		PreparedStatement para = null;
+//		/* 查询是否存在相同的数据 */
+////		if (srvcoll != null && srvcoll.size() > 0) {
+//			// 同步
+////			Iterator it = srvcoll.iterator();
+////			while (it.hasNext()) {
+////				serverInfo = (ServerInfo) it.next();
+//				Connection conn = null;
+//				// 建立jdbc链接
+//				try {
+//					
+//					String ees = GetCfgMsgUtil.getEesName();
+//					
+//					StringBuilder sqlInsert=new StringBuilder();
+////					conn = GetConntionByDBNameUtil.getConnectionByMysqlIp(serverInfo
+////							.getSrvIp(), ees ,serverInfo.getSrvPort(), 
+////							serverInfo.getDbUser(), serverInfo.getDbPwd());
+//					//ddeason 20131018修改获取ees ip的方式，从配置文件ems.xml中获取
+//					Context env = null; 
+//					DataSource dataSource=null;
+//			        try  
+//			        {  
+//			            env = (Context) new InitialContext().lookup("java:comp/env");  
+//			            dataSource = (DataSource) env.lookup("jdbc/"+"ees");  
+//			            if(dataSource == null)  
+//			                logger.error("ees " +"'DBpool' is an unknown DataSource");  
+//			        }  
+//			        catch (NamingException ne)  
+//			        {  
+//			        	logger.error("获取数据服务器 连接出错："+ne);
+//			        	dataSource=null;
+//			        	ne.printStackTrace();
+//			        }
+//			        conn=dataSource.getConnection();
+//			        //ddeason end
+//					conn.setAutoCommit(false);
+//					for(Object obj:stuList){
+//						Student student=(Student)obj;
+//					//student表
+//					para = conn.prepareStatement(sqlStuSelect);
+//					para.setString(1,student.getStudentNum());
+//					para.setString(2,schoolNum);
+//					ResultSet result = para.executeQuery();
+//					if (result.next()) {
+//						para = conn.prepareStatement(sqlStuUpdate);
+//						para.setString(1,student.getClassNo());
+//						para.setString(2,student.getDepartment());
+//						para.setString(3,student.getGrade());
+//						para.setString(4,student.getMajor());
+//						para.setString(5,PwdCryptUtil.encrypt("888888"));//ems这边是密文，ees明文，暂时直接用888888
+//						para.setString(6,SysParamNameConst.STU_STATUS_1);
+//						para.setString(7,student.getStudentName());
+//						para.setString(8,student.getStudentNum());
+//						para.setString(9,schoolNum);
+//						para.execute();
+//					} else {
+//						para = conn.prepareStatement(sqlStuInsert);
+//						para.setString(1,student.getStudentNum());
+//						para.setString(2,student.getStudentName());
+//						para.setString(3,student.getDepartment());
+//						para.setString(4,student.getMajor());
+//						para.setString(5,student.getGrade());
+//						para.setString(6,student.getClassNo());
+//						para.setString(7,PwdCryptUtil.encrypt("888888") );
+//						para.setString(8,SysParamNameConst.STU_STATUS_1);
+//						para.setString(9,schoolNum);
+//						para.execute();
+//					}
+//					ResultSet result2 = null;
+//					ResultSet result3 = null;
+//					EduClassStuMapping eduClassMap=new EduClassStuMapping();
+//					EduClassStuMapping eduClassMap2=new EduClassStuMapping();
+//					//EduClassStuMapping表
+//					if(null!=student.getEduClassNo()&&!("").equals(student.getEduClassNo())){//教学班
+//						para = conn.prepareStatement(sqleduMapSelect.toString());
+//						para.setString(1,student.getEduClassNo());
+//						para.setString(2,student.getStudentNum());
+//						para.setString(3,schoolNum);
+//						result2=para.executeQuery();
+//					}
+//						para = conn.prepareStatement(sqleduMapSelect.toString());
+//						para.setString(1,student.getClassNo());
+//						para.setString(2,student.getStudentNum());
+//						para.setString(3,schoolNum);
+//						result3=para.executeQuery();
+//					if(null==result3||!result3.next()) {//如果为空，则增加相应值--行政班
+//						eduClassMap.setClassNo(student.getClassNo());
+//						eduClassMap.setStudentNum(student.getStudentNum());
+//						eduClassMap.setSchoolNum(schoolNum);
+//						eduClassMap2=eduClassStuMappingDao.getBeanByBean(eduClassMap,MatchMode.EXACT);
+//						if(null!=eduClassMap2){
+//							para = conn.prepareStatement(sqlEduMapInsert.toString());
+//							para.setLong(1,eduClassMap2.getId());
+//							para.setString(2,eduClassMap.getClassNo());
+//							para.setString(3,eduClassMap2.getStudentNum());
+//							para.setString(4,schoolNum);
+//							para.execute();
+//						}
+//					}
+//					if(null!=student.getEduClassNo()&&!("").equals(student.getEduClassNo())&&null==result2){//教学班
+//						eduClassMap.setClassNo(student.getEduClassNo());
+//						eduClassMap.setStudentNum(student.getStudentNum());
+//						eduClassMap.setSchoolNum(schoolNum);
+//						eduClassMap2=eduClassStuMappingDao.getBeanByBean(eduClassMap,MatchMode.EXACT);
+//						if(null!=eduClassMap2){
+//							para = conn.prepareStatement(sqlEduMapInsert.toString());
+//							para.setLong(1,eduClassMap2.getId());
+//							para.setString(2,eduClassMap.getClassNo());
+//							para.setString(3,eduClassMap2.getStudentNum());
+//							para.setString(4,schoolNum);
+//							para.execute();
+//						}
+//					}
+//					
+//					//岗位表EES_POST_ID_3
+//					//查找学生的岗位
+//					Post post=new Post();
+//					post.setUserType(SysParamNameConst.STUDENT);
+//					PostId postId=new PostId();
+//					postId.setSchoolNum(student.getSchoolNum());
+//					postId.setSysNum(SysParamNameConst.SYS_EES);
+//					post.setId(postId);
+//					List list=(List)postDao.getBeansByBean(post,MatchMode.EXACT);
+//					Post beanPost=(Post)list.get(0);
+//					ResultSet result5=null;
+//					para = conn.prepareStatement(sqluserSelect.toString());
+//					para.setString(1,student.getStudentNum());
+//					result5 = para.executeQuery();
+//					if (null==result5||!result5.next()) {
+//						para = conn.prepareStatement(sqlUserInsert.toString());
+//						para.setString(1,student.getStudentNum());
+//						para.setString(2,beanPost.getPermission());
+//						para.setString(3,SysParamNameConst.STU_STATUS_1);
+//						String date=GetDateTimeUtil.getCurrentDate();
+//						para.setString(4,date);
+//						para.execute();
+//					}
+//					conn.commit();
+//				}
+//				} catch (Exception e) {
+//					logger.error("同步学生信息到ees系统中失败。");
+//					logger.error(e);
+//					e.printStackTrace();
+//					if (conn != null)
+//						conn.rollback();
+//				} finally {
+//					if (para != null) {
+//						para.close();
+//					}
+//					if (conn != null) {
+//						conn.close();
+//					}
+//				}//finally
+////			}//while
+////		}//if
+//	}
+//
+//	public void synTeacherInfoDone(Teacher teacher,String userType) throws SQLException {
+//		Collection srvcoll=new ArrayList();
+//		StringBuilder sqlTeaSelect=new StringBuilder().append("select * from teacher where TEACHER_NUM=?");
+//		StringBuilder sqlTeaUpdate=new StringBuilder().append("update teacher set TEACHER_NAME=?,ORGCODE=?,STATUS=?," +
+//				"PWD=?,EXPIRE=?,SCHOOL_NUM=? where TEACHER_NUM=?");
+//		StringBuilder sqlTeaInsert=new StringBuilder().append("insert into teacher(TEACHER_NUM,TEACHER_NAME,ORGCODE,STATUS,PWD,EXPIRE,SCHOOL_NUM) values(?,?,?,?,?,?,?)");
+//		StringBuilder sqlUserSelect=new StringBuilder().append("select * from user_post where USER_NUM=? and POST_NUM=? and STATE=? ");
+//		StringBuilder sqlUserInsert=new StringBuilder().append("insert into user_post(USER_NUM,POST_NUM,STATE,BEGIN_DATE) values(?,?,?,?)");
+//		
+////		ServerInfo serverInfo=new ServerInfo();
+////		serverInfo.setUserFor(SysParamNameConst.SRV_1);//只需要同步到 考核专用的数据库服务器中
+////		srvcoll = serverInfoDao.getBeansByBean(serverInfo,
+////			MatchMode.EXACT);
+//		PreparedStatement para = null;
+//		/* 查询是否存在相同的数据 */
+////		if (srvcoll != null && srvcoll.size() > 0) {
+////			// 同步
+////			Iterator it = srvcoll.iterator();
+////			while (it.hasNext()) {
+////				serverInfo = (ServerInfo) it.next();
+//				Connection conn = null;
+//				// 建立jdbc链接
+//				try {
+//					ResultSet result=null;
+//					StringBuilder sqlInsert=new StringBuilder();
+////					conn = GetConntionByDBNameUtil.getConnectionByMysqlIp(serverInfo
+////							.getSrvIp(), GetCfgMsgUtil.getEesName(),serverInfo.getSrvPort(), 
+////							serverInfo.getDbUser(), serverInfo.getDbPwd());
+////					para=conn.prepareStatement(sqlTeaSelect.toString());
+//					//ddeason 20131018修改获取ees ip的方式，从配置文件ems.xml中获取
+//					Context env = null; 
+//					DataSource dataSource=null;
+//			        try  
+//			        {  
+//			            env = (Context) new InitialContext().lookup("java:comp/env");  
+//			            dataSource = (DataSource) env.lookup("jdbc/"+"ees");  
+//			            if(dataSource == null)  
+//			                logger.error("ees " +"'DBpool' is an unknown DataSource");  
+//			        }  
+//			        catch (NamingException ne)  
+//			        {  
+//			        	logger.error("获取数据服务器 连接出错："+ne);
+//			        	dataSource=null;
+//			        	ne.printStackTrace();
+//			        }
+//			        conn=dataSource.getConnection();
+//			        para=conn.prepareStatement(sqlTeaSelect.toString());
+//			        //ddeason end
+//					conn.setAutoCommit(false);
+//					para.setString(1,teacher.getTeacherNum());
+//					result=para.executeQuery();
+//					if(result.next()){//更新ees中的该教师的信息
+//						para=conn.prepareStatement(sqlTeaUpdate.toString());
+//						para.setString(1,teacher.getTeacherName());
+//						para.setString(2, teacher.getDepartment()==null?"":teacher.getDepartment());
+//						para.setString(3,SysParamNameConst.TEA_STATUS_1);
+//						para.setString(4,PwdCryptUtil.encrypt(SysParamNameConst.TEACHER_PWD));
+//						para.setString(5,SysParamNameConst.TEA_EXPIRE_0);
+//						para.setString(6,teacher.getSchoolNum());
+//						para.setString(7,teacher.getTeacherNum());
+//						para.execute();
+//					}else{//若为空，则新增
+//						para=conn.prepareStatement(sqlTeaInsert.toString());
+//						para.setString(1,teacher.getTeacherNum());
+//						para.setString(2,teacher.getTeacherName());
+//						para.setString(3, teacher.getDepartment()==null?"":teacher.getDepartment());
+//						para.setString(4,SysParamNameConst.TEA_STATUS_1);
+//						para.setString(5,PwdCryptUtil.encrypt(SysParamNameConst.TEACHER_PWD));
+//						para.setString(6,SysParamNameConst.TEA_EXPIRE_0);
+//						para.setString(7,teacher.getSchoolNum());
+//						para.execute();
+//					}
+//					//暂时不清楚ees的岗位如何分配的，就与15541老师一样，post_num=1
+//					//查找教师的岗位
+////					Post post=new Post();
+////					post.setUserType(SysParamNameConst.TEACHER);
+////					PostId postId=new PostId();
+////					postId.setSchoolNum(teacher.getSchoolNum());
+////					postId.setSysNum(SysParamNameConst.SYS_EES);
+////					post.setId(postId);
+////					List list=(List)postDao.getBeansByBean(post,MatchMode.EXACT);
+////					Post beanPost=(Post)list.get(0);
+//					
+//					//if(userType.equals(SysParamNameConst.TEACHER)){//新增教师用户-user_post
+//					para=conn.prepareStatement(sqlUserSelect.toString());
+//					para.setString(1,teacher.getTeacherNum());
+//					para.setString(2, "1");
+//					para.setString(3,SysParamNameConst.TEA_STATUS_1);
+//					result=para.executeQuery();
+//					if(null==result||!result.next()){
+//						para=conn.prepareStatement(sqlUserInsert.toString());
+//						para.setString(1,teacher.getTeacherNum());
+//						para.setString(2, "1");
+//						para.setString(3,SysParamNameConst.TEA_STATUS_1);
+//						para.setString(4,GetDateTimeUtil.getCurrentDate());
+//						para.execute();
+//					}
+//					//}
+////					//如果为管理员----目前没有区分管理员和教师
+////					else if(userType.equals(SysParamNameConst.MANAGER)){
+////						
+////					}
+//					conn.commit();		
+//				} catch (Exception e) {
+//					logger.error("同步教师信息到ees系统中失败。");
+//					logger.error(e);
+//					e.printStackTrace();
+//					if (conn != null)
+//						conn.rollback();
+//				} finally {
+//					if (para != null) {
+//						para.close();
+//					}
+//					if (conn != null) {
+//						conn.close();
+//					}
+//				}//finally
+////			}//while
+////		}//if
+//		
+//	}
+//	
+//	/*
+//	 * 修改密码时同步到ees中
+//	 */
+//	public void synPwdDone(UserModel userModel, String newPasswd, String newName) throws SQLException {
+//		
+//		Collection srvcoll=new ArrayList();
+//		StringBuilder sqlTeaSelect=new StringBuilder().append("select * from teacher where TEACHER_NUM=? and SCHOOL_NUM=?");
+//		StringBuilder sqlStuSelect=new StringBuilder().append("select * from student where STUDENT_NUM=? and SCHOOL_NUM=?");
+//		StringBuilder sqlTeaUpdate=new StringBuilder().append("update teacher set PWD=? where TEACHER_NUM=? and SCHOOL_NUM=?");
+//		StringBuilder sqlStuUpdate=new StringBuilder().append("update student set PWD=? where STUDENT_NUM=? and SCHOOL_NUM=?");
+//		//ServerInfo serverInfo=new ServerInfo();
+//		//serverInfo.setUserFor(SysParamNameConst.SRV_1);//只需要同步到 考核专用的数据库服务器中
+//		//srvcoll = serverInfoDao.getBeansByBean(serverInfo,
+//		//	MatchMode.EXACT);
+//		PreparedStatement para = null;
+//		/* 查询是否存在相同的数据 */
+//		//if (srvcoll != null && srvcoll.size() > 0) {
+//			// 同步
+//			//Iterator it = srvcoll.iterator();
+//			//while (it.hasNext()) {
+//			//	serverInfo = (ServerInfo) it.next();
+//				Connection conn = null;
+//				// 建立jdbc链接
+//				try {
+//					ResultSet result=null;
+//					StringBuilder sqlInsert=new StringBuilder();
+////					conn = GetConntionByDBNameUtil.getConnectionByMysqlIp(serverInfo
+////							.getSrvIp(), GetCfgMsgUtil.getEesName(),serverInfo.getSrvPort(), 
+////							serverInfo.getDbUser(), serverInfo.getDbPwd());
+//					
+//					//ddeason 20131018修改获取ees ip的方式，从配置文件ems.xml中获取
+//					Context env = null; 
+//					DataSource dataSource=null;
+//			        try  
+//			        {  
+//			            env = (Context) new InitialContext().lookup("java:comp/env");  
+//			            dataSource = (DataSource) env.lookup("jdbc/"+"ees");  
+//			            if(dataSource == null)  
+//			                logger.error("ees " +"'DBpool' is an unknown DataSource");  
+//			        }  
+//			        catch (NamingException ne)  
+//			        {  
+//			        	logger.error("获取数据服务器 连接出错："+ne);
+//			        	dataSource=null;
+//			        	ne.printStackTrace();
+//			        }
+//			        conn=dataSource.getConnection();
+//			        //ddeason end
+//					
+//					conn.setAutoCommit(false);
+//						//先查询ees中是否存在该老师的信息
+//					if(userModel.getUserType().equals(SysParamNameConst.TEACHER)){
+//						para=conn.prepareStatement(sqlTeaSelect.toString());
+//						para.setString(1,userModel.getUserId());
+//						para.setString(2,userModel.getSchoolNum());
+//						para.execute();
+//						result=para.executeQuery();
+//						if(result.next()){//如果找到该老师，就修改密码
+//							para=conn.prepareStatement(sqlTeaUpdate.toString());
+//							para.setString(1,newPasswd);
+//							para.setString(2,userModel.getUserId());
+//							para.setString(3,userModel.getSchoolNum());
+//							para.execute();
+//						}else{//如果ees中不存在，就新增
+//							Teacher teacher=new Teacher();
+//							teacher.setTeacherNum(userModel.getUserId());
+//							teacher.setSchoolNum(userModel.getSchoolNum());
+//							Teacher bean=teacherDao.getBeanByBean(teacher,MatchMode.EXACT);
+//							synTeacherInfoDone(bean,SysParamNameConst.TEACHER);
+//						}
+//					}else if(userModel.getUserType().equals(SysParamNameConst.STUDENT)){
+//						para=conn.prepareStatement(sqlStuSelect.toString());
+//						para.setString(1,userModel.getUserId());
+//						para.setString(2,userModel.getSchoolNum());
+//						para.execute();
+//						result=para.executeQuery();
+//						if(result.next()){//如果找到该学生，就修改密码
+//							para=conn.prepareStatement(sqlStuUpdate.toString());
+//							para.setString(1,newPasswd);
+//							para.setString(2,userModel.getUserId());
+//							para.setString(3,userModel.getSchoolNum());
+//							para.execute();
+//						}else{//如果ees中不存在，就新增
+//							Student student=new Student();
+//							student.setStudentNum(userModel.getUserId());
+//							student.setSchoolNum(userModel.getSchoolNum());
+//							Student bean=studentDao.getBeanByBean(student,MatchMode.EXACT);
+//							Collection coll=new ArrayList();
+//							coll.add(bean);
+//							synStudentInfoDone(coll,userModel.getSchoolNum());
+//						}
+//					}
+//					conn.commit();
+//				} catch (Exception e) {
+//					logger.error("同步密码到ees系统中失败。");
+//					logger.error(e);
+//					e.printStackTrace();
+//					if (conn != null)
+//						conn.rollback();
+//				} finally {
+//					if (para != null) {
+//						para.close();
+//					}
+//					if (conn != null) {
+//						conn.close();
+//					}
+//				}//finally
+//			//}//while
+//		//}//if
+//		
+//		
+//	}
+//	
+//	//重置学生密码
+//	public void restatPwdDone(String stuNo, String schoolNum) {
+//		Student stu=new Student();
+//		stu.setStudentNum(stuNo);
+//		stu.setSchoolNum(schoolNum);
+//		Student bean=studentDao.getBeanByBean(stu,MatchMode.EXACT);
+//		if(null!=bean){
+//			UserModel userModel=new UserModel();
+//			userModel.setUserId(bean.getStudentNum());
+//			userModel.setUserType(SysParamNameConst.STUDENT);
+//			userModel.setSchoolNum(bean.getSchoolNum());
+//			String newPwd=PwdCryptUtil.encrypt(SysParamNameConst.PWD);
+//			try {
+//				synPwdDone(userModel,newPwd,bean.getStudentName());
+//			} catch (SQLException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//		
+//	}
+//	/*
+//	 * 同步课程信息到ees
+//	 */
+//	public void synCourseInfoDone(List<CourseOpen> courseOpenList) throws SQLException {
+//		Collection srvcoll=new ArrayList();
+//		StringBuilder sqlCourseInsert=new StringBuilder().append("insert into course_open(TEACHER_NUM,PERIOD,OPEN_TERM,STATUS,COURSE_NUM,TEACHER_NAME,COURSE_NAME,CLASS_NUM,CLASS_NO" +
+//				",SCHOOL_NUM,OPEN_TIME) values(?,?,?,?,?,?,?,?,?,?,?)");
+////		ServerInfo serverInfo=new ServerInfo();
+////		serverInfo.setUserFor(SysParamNameConst.SRV_1);//只需要同步到 考核专用的数据库服务器中
+////		srvcoll = serverInfoDao.getBeansByBean(serverInfo,
+////			MatchMode.EXACT);
+//		PreparedStatement para = null;
+//		/* 查询是否存在相同的数据 */
+////		if (srvcoll != null && srvcoll.size() > 0) {
+////			// 同步
+////			Iterator it = srvcoll.iterator();
+////			while (it.hasNext()) {
+////				serverInfo = (ServerInfo) it.next();
+//				Connection conn = null;
+//				// 建立jdbc链接
+//				try {
+////					ResultSet result=null;
+////					StringBuilder sqlInsert=new StringBuilder();
+////					conn = GetConntionByDBNameUtil.getConnectionByMysqlIp(serverInfo
+////							.getSrvIp(), GetCfgMsgUtil.getEesName(),serverInfo.getSrvPort(), 
+////							serverInfo.getDbUser(), serverInfo.getDbPwd());
+//					//ddeason 20131018修改获取ees ip的方式，从配置文件ems.xml中获取
+//					Context env = null; 
+//					DataSource dataSource=null;
+//			        try  
+//			        {  
+//			            env = (Context) new InitialContext().lookup("java:comp/env");  
+//			            dataSource = (DataSource) env.lookup("jdbc/"+"ees");  
+//			            if(dataSource == null)  
+//			                logger.error("ees " +"'DBpool' is an unknown DataSource");  
+//			        }  
+//			        catch (NamingException ne)  
+//			        {  
+//			        	logger.error("获取数据服务器 连接出错："+ne);
+//			        	dataSource=null;
+//			        	ne.printStackTrace();
+//			        }
+//			        conn=dataSource.getConnection();
+//			        //ddeason end
+//					conn.setAutoCommit(false);
+//					for(Object ob:courseOpenList){
+//						//ems没有进行查询然后新增，ees就不查询是否存在相同的了
+//						CourseOpen courseOpen=(CourseOpen)ob;
+//						para=conn.prepareStatement(sqlCourseInsert.toString());
+//						para.setString(1, courseOpen.getTeacherNum());
+//						para.setString(2,courseOpen.getPeriod());
+//						
+//						//para.setString(3,courseOpen.getOpenTerm());//GJSY130006
+//						para.setString(3,courseOpen.getOpenTerm().substring(courseOpen.getOpenTerm().length()-1,courseOpen.getOpenTerm().length()));//GJSY130006 学期201301只传最后一位过去就行了
+//						
+//						para.setString(4,courseOpen.getStatus());
+//						para.setString(5,courseOpen.getCourseNum());
+//						//GJSY130006 BEGIN
+//						//para.setString(6,courseOpen.getTeacherNum());
+//						para.setString(6,courseOpen.getTeacherName());
+//						//GJSY130006 END
+//						para.setString(7,courseOpen.getCourseName());
+//						
+//						//para.setString(8, courseOpen.getClassNum());//GJSY130005
+//						para.setString(8, ""); //GJSY130005  节次信息字段过长，ees中就不储存了，用不到。
+//						
+//						para.setString(9,courseOpen.getClassNo());
+//						para.setString(10,courseOpen.getSchoolNum());
+//						para.setString(11,courseOpen.getOpenTime());
+//						para.execute();
+//					}	
+//					conn.commit();
+//				} catch (Exception e) {
+//					logger.error("同步教师信息到ees系统中失败。");
+//					logger.error(e);
+//					e.printStackTrace();
+//					if (conn != null)
+//						conn.rollback();
+//				} finally {
+//					if (para != null) {
+//						para.close();
+//					}
+//					if (conn != null) {
+//						conn.close();
+//					}
+//				}//finally
+////			}//while
+////		}//if
+//		
+//		
+//	}
+//	
+//	//GJSY130021 BEGIN
+//	/**
+//	 * 同步校别代码信息到ees
+//	 * 
+//	 */
+//	public void synOrginfoDone(List<Orginfo> orginfoList) throws SQLException {
+//		Collection srvcoll=new ArrayList();
+//		StringBuilder sqlCourseInsert=new StringBuilder().append("insert into orginfo(TYPE,CODE,NAME,SUP_CODE)" +
+//				"values(?,?,?,?)");
+//		ServerInfo serverInfo=new ServerInfo();
+//		serverInfo.setUserFor(SysParamNameConst.SRV_1);//只需要同步到 考核专用的数据库服务器中
+//		srvcoll = serverInfoDao.getBeansByBean(serverInfo,
+//			MatchMode.EXACT);
+//		PreparedStatement para = null;
+//		/* 查询是否存在相同的数据 */
+//		if (srvcoll != null && srvcoll.size() > 0) {
+//			// 同步
+//			Iterator it = srvcoll.iterator();
+//			while (it.hasNext()) {
+//				serverInfo = (ServerInfo) it.next();
+//				Connection conn = null;
+//				// 建立jdbc链接
+//				try {
+//					ResultSet result=null;
+//					StringBuilder sqlInsert=new StringBuilder();
+//					conn = GetConntionByDBNameUtil.getConnectionByMysqlIp(serverInfo
+//							.getSrvIp(), GetCfgMsgUtil.getEesName(),serverInfo.getSrvPort(), 
+//							serverInfo.getDbUser(), serverInfo.getDbPwd());
+//					conn.setAutoCommit(false);
+//					for(Object ob:orginfoList){
+//						//ems没有进行查询然后新增，ees就不查询是否存在相同的了
+//						Orginfo orginfo=(Orginfo)ob;
+//						para=conn.prepareStatement(sqlCourseInsert.toString());
+//						para.setString(1, orginfo.getType());
+//						para.setString(2,orginfo.getCode());
+//						para.setString(3,orginfo.getName());
+//						para.setString(4,orginfo.getSupCode());
+//						
+//						para.execute();
+//					}	
+//					conn.commit();
+//					logger.info("同步校别代码信息到ees系统中成功！");
+//				} catch (Exception e) {
+//					logger.error("同步校别代码信息到ees系统中失败。");
+//					logger.error(e);
+//					e.printStackTrace();
+//					if (conn != null)
+//						conn.rollback();
+//				} finally {
+//					if (para != null) {
+//						para.close();
+//					}
+//					if (conn != null) {
+//						conn.close();
+//					}
+//				}//finally
+//			}//while
+//		}//if
+//		
+//		
+//	}
+//	//GJSY130021 END
+//	
+//	public ServerInfoDao getServerInfoDao() {
+//		return serverInfoDao;
+//	}
+//
+//	public void setServerInfoDao(ServerInfoDao serverInfoDao) {
+//		this.serverInfoDao = serverInfoDao;
+//	}
+//
+//	public EduClassStuMappingDao getEduClassStuMappingDao() {
+//		return eduClassStuMappingDao;
+//	}
+//
+//	public void setEduClassStuMappingDao(EduClassStuMappingDao eduClassStuMappingDao) {
+//		this.eduClassStuMappingDao = eduClassStuMappingDao;
+//	}
+//
+//	public PostDao getPostDao() {
+//		return postDao;
+//	}
+//
+//	public void setPostDao(PostDao postDao) {
+//		this.postDao = postDao;
+//	}
+//
+//	public TeacherDao getTeacherDao() {
+//		return teacherDao;
+//	}
+//
+//	public void setTeacherDao(TeacherDao teacherDao) {
+//		this.teacherDao = teacherDao;
+//	}
+//
+//	public StudentDao getStudentDao() {
+//		return studentDao;
+//	}
+//
+//	public void setStudentDao(StudentDao studentDao) {
+//		this.studentDao = studentDao;
+//	}
+//
+//	
+//	
+//	
+//	
+//}

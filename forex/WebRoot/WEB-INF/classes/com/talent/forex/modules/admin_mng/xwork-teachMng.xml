@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
+<!-- 
+ Amendment No.: FOEXAS009
+ Create By    : lzc
+ Description  : 教师管理
+ Modify Date  : 2014-07-21
+  -->
+<xwork>
+	<package name="admin_mng" extends="default">
+		<action name="queryteacher" method="queryTeacher"
+				class="com.talent.forex.modules.admin_mng.TeachMngAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="insertTeacher" method="insertTeacher"
+			class="com.talent.forex.modules.admin_mng.TeachMngAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="pageQueryTeacher" method="pageQueryTeacher"
+			class="com.talent.forex.modules.admin_mng.TeachMngAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="pageQueryTeacher" method="pageQueryTeacher"
+			class="com.talent.forex.modules.admin_mng.TeachMngAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="pageQueryTeacher" method="pageQueryTeacher"
+			class="com.talent.forex.modules.admin_mng.TeachMngAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="pageQueryTeacher" method="pageQueryTeacher"
+			class="com.talent.forex.modules.admin_mng.TeachMngAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="teach" method="teachInit"
+				class="com.talent.forex.modules.admin_mng.TeachMngAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/teachMngModule/addTeacher.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+	</package>
+</xwork>

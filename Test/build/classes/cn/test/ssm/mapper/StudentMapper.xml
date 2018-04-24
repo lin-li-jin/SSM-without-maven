@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.test.ssm.mapper.StudentMapper">
+	<resultMap id="BaseResultMap" type="cn.test.ssm.pojo.Student">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="SEX" property="sex" jdbcType="VARCHAR" />
+		<result column="AGE" property="age" jdbcType="VARCHAR" />
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+		<result column="CLASS_NO" property="classNo" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="findAllStudent" resultMap="BaseResultMap">
+		select * from STUDENT
+	</select>
+	<select id="queryStudent" parameterType="Integer" resultMap="BaseResultMap">
+		select * from STUDENT where id = #{id}
+	</select>
+	<delete id="removeStudent" parameterType="Integer">
+		delete from STUDENT where id = #{id}
+	</delete>
+	<insert id="saveStudent" parameterType="cn.test.ssm.pojo.Student">
+		insert into STUDENT(ID, NAME, SEX, AGE, ADDRESS, CLASS_NO)
+		values(#{id},#{name},#{sex},#{age},#{address},#{classNo})
+	</insert>
+	<update id="modifyStudent" parameterType="cn.test.ssm.pojo.Student">
+		update STUDENT
+		set NAME = #{name},
+		SEX = #{sex},
+		AGE = #{age},
+		ADDRESS = #{address},
+		CLASS_NO = #{classNo}
+		where ID = #{id}
+	</update>
+</mapper>

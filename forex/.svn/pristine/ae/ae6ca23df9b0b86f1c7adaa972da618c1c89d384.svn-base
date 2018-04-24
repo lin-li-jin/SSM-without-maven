@@ -1,0 +1,29 @@
+package com.talent.exam.domain;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.junit.Test;
+
+import com.mockrunner.ejb.Configuration;
+
+import junit.framework.TestCase;
+
+public class test extends TestCase {
+	
+	@Test
+	public void test(){
+//		SessionFactory sf = new Configuration().configure().buildSessionFactory();
+//		Session session = sf.openSession();
+//		Transaction tx = session.beginTransaction();
+		
+		ExamAccType examAccType = new ExamAccType();
+		examAccType.setAccTypeNo("B");
+		ExamContent examContent = new ExamContent();
+		examContent.setExamAccType(examAccType);
+		examContent.setExamContent("深刻的卡死啦大力实施，想，撒；的消息看电视卡了独立思想，是，数量，想，爱上了封口费独守空房乱说乱动，按时打算，，贤良淑德，小说里的快乐撒下，善良的扩大开放流程，大连开发了调查,电话撒但是可能喜欢放假啊上来的可是你形成的翻江倒海付款才能的非常困难的开始疯狂的山坡额非法所得吃亏上当才能得到你吃的你吃。");
+//		String hql = "insert into ExamContent(examAccType,examContent) values('深刻的卡死啦大力实施，想，撒；的消息看电视卡了独立思想，是，数量，想，爱上了封口费独守空房乱说乱动，按时打算，，贤良淑德，小说里的快乐撒下，善良的扩大开放流程，大连开发了调查。','B')";
+//		Session session = HibernateUtil.getSession();
+		session.save(examContent);
+	}
+
+}

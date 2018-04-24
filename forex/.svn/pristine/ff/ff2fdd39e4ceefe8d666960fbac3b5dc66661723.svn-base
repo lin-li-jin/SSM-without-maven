@@ -1,0 +1,65 @@
+*{
+	margin:0px;
+}
+#container {
+	text-align:center;
+	width: 850px;
+	background-color: #ffffff;
+	padding:5px;
+}
+
+#container #title {
+	float:left;
+	padding:8px 0px 7px 8px;
+	background-color:#FF9FFF;
+	color:#ffffff;
+	font-size:13px;
+}
+
+#container #menu {
+	height: 28px;
+	float:right;
+}
+#container #menu li {
+	float: left;
+	list-style-type: none;
+	height: 28px;
+	line-height: 28px;
+	text-align: center;
+	margin-right: 1px;
+	padding:0px 0px 3px 0px;
+	font-size:13px;
+	
+}
+#container #menu ul {
+	background-color: #ffffff;
+	height: 28px;
+	
+
+}
+#container #menu a {
+	text-decoration: none;
+	color: #ffffff;
+	display: block;
+	width: auto;
+	background: url( "secondMenuOne.gif") no-repeat left -261px;
+}
+#container #menu a span{
+	display: block;
+	background: url( "secondMenuTwo.gif") no-repeat right -261px;
+	padding: 0 15px 0 15px;
+}
+
+#container #menu .selectli {
+	text-decoration: none;
+	color: #ffffff;
+	display: block;
+	width: auto;
+	background: url( "secondMenuOne.gif") no-repeat left -174px;
+}
+#container #menu a .selectspan {
+	display: block;
+	background: url( "secondMenuTwo.gif") no-repeat right -174px;
+	padding: 0 15px 0 15px;
+}
+

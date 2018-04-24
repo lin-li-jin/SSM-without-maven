@@ -1,0 +1,145 @@
+INDEX VERSION 1.126
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3936970188.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1995736571.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2254596385.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3936970188.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3359197190.index
+\WuWeb\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1901950701.index
+\Test\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3100454347.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\572711960.index
+\Test\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\153069156.index
+\test\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3122380493.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2647035045.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1125861413.index
+\Declaration\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3100454347.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2647035045.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2926312857.index
+\Test\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3122380493.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2448858384.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1016784153.index
+\Test\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2448858384.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\767588699.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1309970421.index
+\WuWeb\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1369839854.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\637796924.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3630910236.index
+\Test\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\767588699.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\443462264.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2831570811.index
+\SSM\src\main\java
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\637796924.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1369839854.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\443462264.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2831570811.index
+\SSM\src\main\java
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\662834723.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3032752700.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\964747314.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\379623940.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\662834723.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3032752700.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\964747314.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1441446655.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2852892199.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3545637036.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\522524942.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3545637036.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1441446655.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\379623940.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2273801067.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2852892199.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\990734511.index
+\Test\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\987533899.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\522524942.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2273801067.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3094024960.index
+\Test\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2296981801.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\987533899.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2296981801.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\4082545979.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\557920875.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2886654424.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2409397987.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\4082545979.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\557920875.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\4198055246.index
+\Test\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2886654424.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\458537249.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3792234166.index
+\test\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2409397987.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1161159172.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\458537249.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1161159172.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3286646362.index
+\Test\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\1995736571.index
+\forex\src
+E:\Users\Administrator\Workspaces\MyEclipse 10\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2254596385.index
+\forex\src

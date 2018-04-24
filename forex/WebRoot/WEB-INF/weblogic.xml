@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weblogic-web-app>
+  <context-root>forex</context-root>
+  <container-descriptor> 
+    <prefer-web-inf-classes>true</prefer-web-inf-classes> 
+  </container-descriptor> 
+  <charset-params> 
+		<input-charset> 
+		<resource-path>/*</resource-path> 
+		<java-charset-name>GBK</java-charset-name> 
+		</input-charset> 
+	</charset-params>
+	
+	<jsp-descriptor>
+		<jsp-param>
+			<param-name>precompile</param-name>
+			<param-value>false</param-value>
+		</jsp-param>
+	</jsp-descriptor>
+	
+</weblogic-web-app>

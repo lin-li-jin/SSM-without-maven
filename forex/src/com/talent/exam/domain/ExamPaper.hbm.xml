@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.talent.exam.domain.ExamPaper" table="exam_paper" schema="forex">
+        <id name="paperNo">
+            <column name="paper_NO" sql-type="int(11)"/>
+        </id>
+        <property name="paperTitle">
+            <column name="paper_title" sql-type="blob"/>
+        </property>
+        <property name="paperExamContent">
+            <column name="paper_exam_content" sql-type="varchar(250)" length="250" not-null="true"/>
+        </property>
+        <property name="tId">
+            <column name="t_id" sql-type="int(12)"/>
+        </property>
+        <set name="examStuAnswersByPaperNo" inverse="true">
+            <key>
+                <column name="paper_NO"/>
+            </key>
+            <one-to-many not-found="ignore" class="com.talent.exam.domain.ExamStuAnswer"/>
+        </set>
+    </class>
+</hibernate-mapping>

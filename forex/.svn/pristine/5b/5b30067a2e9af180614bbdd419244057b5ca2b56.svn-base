@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<!-- 
+ Amendment No.: FOEXAS009
+ Create By    : wz
+ Description  : 管理教师
+ Modify Date  : 2017-08-16
+  -->
+<beans default-autowire="byName">
+	<bean id="teachMngBO" class="com.talent.forex.modules.admin_mng.TeachMngBO" />
+</beans>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
+
+<xwork>
+	<package name="router" extends="default">
+
+		<action name="jump" method="doRoute" class="com.talent.auth.router.IndexAction">		
+			<result name="student" type="redirect">
+				<param name="location">/jsp/global/login/LoginPwdModify.jsp</param>
+			</result>		
+			<result name="success" type="dispatcher">
+				<param name="location">/jsp/global/public/main.jsp</param>
+			</result>			
+			<interceptor-ref name="paramsLoginStack" />
+		</action>
+		
+	</package>
+</xwork>

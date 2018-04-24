@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.talent.exam.domain.ExamContent" table="exam_content" schema="forex">
+        <id name="examNo">
+            <column name="exam_NO" sql-type="int(11)"/>
+        </id>
+        <property name="examContent">
+            <column name="exam_content" sql-type="blob"/>
+        </property>
+
+        <many-to-one name="examAccTypeByAccTypeNo" class="com.talent.exam.domain.ExamAccType">
+            <column name="acc_type_NO"/>
+        </many-to-one>
+        <set name="examForwardsByExamNo" inverse="true" cascade="all">
+            <key>
+                <column name="exam_NO"/>
+            </key>
+            <one-to-many not-found="ignore" class="com.talent.exam.domain.ExamForward"/>
+        </set>
+        <set name="examMarketBreakoutsByExamNo" inverse="true" cascade="all">
+            <key>
+                <column name="exam_NO"/>
+            </key>
+            <one-to-many not-found="ignore" class="com.talent.exam.domain.ExamMarketBreakout"/>
+        </set>
+        <set name="examOcosByExamNo" inverse="true" cascade="all">
+            <key>
+                <column name="exam_NO"/>
+            </key>
+            <one-to-many not-found="ignore" class="com.talent.exam.domain.ExamOco"/>
+        </set>
+        <set name="examOneClicksByExamNo" inverse="true" cascade="all">
+            <key>
+                <column name="exam_NO"/>
+            </key>
+            <one-to-many not-found="ignore" class="com.talent.exam.domain.ExamOneClick"/>
+        </set>
+        <set name="examSpotsByExamNo" inverse="true" cascade="all">
+            <key>
+                <column name="exam_NO"/>
+            </key>
+            <one-to-many not-found="ignore" class="com.talent.exam.domain.ExamSpot"/>
+        </set>
+        <set name="examStopLossesByExamNo" inverse="true" cascade="all">
+            <key>
+                <column name="exam_NO"/>
+            </key>
+            <one-to-many not-found="ignore" class="com.talent.exam.domain.ExamStopLoss"/>
+        </set>
+        <set name="examTakeProfitsByExamNo" inverse="true" cascade="all">
+            <key>
+                <column name="exam_NO"/>
+            </key>
+            <one-to-many not-found="ignore" class="com.talent.exam.domain.ExamTakeProfit"/>
+        </set>
+        <set name="examSwapsByExamNo" inverse="true" cascade="all">
+            <key>
+                <column name="exam_NO"/>
+            </key>
+            <one-to-many not-found="ignore" class="com.talent.exam.domain.ExamSwap"/>
+        </set>
+
+    </class>
+</hibernate-mapping>

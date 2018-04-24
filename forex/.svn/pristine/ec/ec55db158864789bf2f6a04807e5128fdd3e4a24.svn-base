@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
+<xwork>
+
+	<include file="webwork-default.xml" />
+	
+    <package  name="default" extends="webwork-default">
+        <interceptors>
+            <interceptor name="isLogin" class="com.talent.auth.interceptor.IsLoginInterceptor"/>
+            <interceptor name="permCtrl" class="com.talent.auth.interceptor.PermCtrlInterceptor"/>
+            
+            <interceptor-stack name="paramsLoginStack">
+            	<!--  <interceptor-ref name="charset" />-->
+            	<interceptor-ref name="isLogin" />
+				<interceptor-ref name="params" />
+			</interceptor-stack>
+			
+			<interceptor-stack name="fileLoginStack">
+				<!--<interceptor-ref name="charset" />
+				<interceptor-ref name="isLogin" />-->
+            	<interceptor-ref name="fileUpload"/> 
+				<interceptor-ref name="params"/>       	
+            </interceptor-stack>
+            
+            <interceptor-stack name="modelParamsStack">
+				<interceptor-ref name="params" />
+				<interceptor-ref name="model-driven" />
+				<interceptor-ref name="isLogin" />
+			</interceptor-stack>
+        </interceptors>
+        
+        <global-results>  
+			<result name="error" type="redirect">/error.html</result>  
+		</global-results>
+    </package>
+	
+	<!-- global -->
+	<include file="com/talent/auth/xwork-auth.xml" />	
+	<!-- local 	-->
+	<include file="/com/talent/exam/modules/admin_mng/action/xwork-adminMng.xml"/>
+	<include file="com/talent/forex/modules/teach_mng/tClassMng/xwork-tClassMng.xml"/>
+	<include file="com/talent/forex/modules/admin_mng/xwork-teachMng.xml"/>
+	<include file="com/talent/forex/modules/code/xwork-code.xml"/>	
+	<include file="com/talent/forex/modules/trade/cash/xwork-cash.xml"/>	
+	<include file="com/talent/forex/modules/home/xwork-home.xml"/>	
+	<include file="com/talent/forex/modules/trade/ask/xwork-askTrade.xml"/>	
+	<include file="com/talent/forex/modules/trade/xwork-trade.xml"/>	
+	<include file="com/talent/forex/modules/trade/bid/xwork-bidTrade.xml"/>	
+	<include file="com/talent/forex/modules/teach_mng/dataInput/xwork-dataInput.xml"/>
+	<include file="com/talent/forex/modules/teach_mng/paramMng/xwork-paramMng.xml"/>
+	<include file="com/talent/forex/modules/trade_mng/xwork-tradeMng.xml"/>
+	<include file="com/talent/forex/modules/teach_mng/tClassMng/xwork-tClassMng.xml"/>
+</xwork>

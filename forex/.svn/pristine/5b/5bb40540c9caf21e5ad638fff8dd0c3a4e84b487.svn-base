@@ -1,0 +1,331 @@
+package com.talent.forex.modules.trade.cash;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import com.talent.forex.bean.domain.MarginSpotInfo;
+import net.sf.json.JSONObject;
+
+import com.talent.auth.bean.model.UserModel;
+import com.talent.forex.bean.domain.MarginForwardInfo;
+import com.talent.forex.bean.domain.MarginOptionInfo;
+import com.talent.forex.bean.model.CcyModel;
+import com.talent.forex.constant.SysParamNameConst;
+import com.talent.forex.core.ForexBaseAction;
+import com.talent.forex.modules.rateFactory.RateReceive;
+import com.talent.forex.modules.trade.CNYManageBo;
+import com.talent.forex.modules.trade_mng.AccountFlowManageBo;
+import com.talent.forex.util.CodeTableUtil;
+import com.talent.forex.util.FormatParamUtil;
+import com.talent.forex.util.RateUtil;
+import com.talent.forex.util.UserModelUtil;
+
+@SuppressWarnings("serial")
+public class cashManageAction extends ForexBaseAction {
+	
+	private cashManageBo cashBo;
+	private String tradeType;
+	private String tradeStatus;
+	private String tradeNo;//在保证金首页点查看详情的在action后面加?传回来的参数
+	private ForwardCashBo forwardCashBo;
+	private OptionCashBo optionCashBo;
+	private SpotCashBo spotCashBo;//增加即期保证金的支持
+	private AccountFlowManageBo accountFlowManageBo;//这是志诚写的BO,里面有方法去根据交易类型查询所有的交易记录
+	private CNYManageBo CNYBo;//这是志诚写的BO,里面有方法去根据交易类型交易状态查询所有的交易记录
+	
+	private String direction; //在点击刷新价格时传回来的参数
+	private String ccy; //在点击刷新价格时传回来的参数
+	
+	
+	/**
+	 * 页面初始化action
+	 * @return
+	 */
+	public String cashPageInit(){
+		UserModel user = (UserModel)UserModelUtil.getUser();
+		requestPut("tradeStatusList",CodeTableUtil.getInstance().getCodeList(SysParamNameConst.CASH_TRADE_STATUS_LIST));
+		requestPut("tradeTypeList",CodeTableUtil.getInstance().getCodeList(SysParamNameConst.TRADE_TYPE_CASH_LIST));
+		//start 调用视图显示所有的保证金交易记录
+		Collection<?> collection = cashBo.cashAllTradeRecordListQuery("getAllListByTranType",user.getUserId(),"B");
+		if (collection.size() > 0){
+			requestPut("recordList",collection);
+		}
+		//end 调用视图显示所有的保证金交易记录
+
+		
+		@SuppressWarnings("unchecked")
+		List<CcyModel> cashCollection = (List<CcyModel>) RateReceive.getInstance().getMarginRate();
+		for (int i=0; i<cashCollection.size(); i++){
+			requestPut(cashCollection.get(i).getCcy(),cashCollection.get(i));
+		}
+
+		
+		return SUCCESS;
+	}
+	
+	public void cashPageRefresh(){
+		List<CcyModel> cashCollection = (List<CcyModel>) RateReceive.getInstance().getMarginRate();
+		Map map=new HashMap();
+		for (int i=0; i<cashCollection.size(); i++){
+			map.put(cashCollection.get(i).getCcy(),cashCollection.get(i));
+		}
+		JSONObject jo=JSONObject.fromObject(map);
+		String data=jo.toString();
+		processText(data,"text/plain;charset=GBK");
+	}
+	
+	/**
+	 * 根据前台传回来的tradeType和tradeStatus查询对应的表数据，就是保证金首页对ectable的查询操作
+	 * @return
+	 */
+	public String recordToEctableByParams(){
+		UserModel user = (UserModel)UserModelUtil.getUser();
+		if(tradeType.equals("0")){
+			if(tradeStatus.equals("0")){
+				//查询远期和期权的所有状态的交易记录
+				//start 调用视图显示所有的保证金交易记录
+				Collection<?> collection = cashBo.cashAllTradeRecordListQuery("getAllListByTranType",user.getUserId(),"B");
+				if (collection.size() > 0){
+					requestPut("recordList",collection);
+				}
+				//end 调用视图显示所有的保证金交易记录
+			}else{
+				//查询远期和期权的选中状态的交易记录
+				//start 调用视图显示对应状态的保证金交易记录
+				Collection<?> collection = CNYBo.tradeRecordListQuery("getAllListByStatus", user.getUserId(), tradeStatus,"B");
+				if (collection.size() > 0){
+					requestPut("recordList",collection);
+				}
+				//end 调用视图显示对应状态的保证金交易记录
+			}
+		}else if(tradeType.equals("FORWARDCASH")){
+			//查询远期的记录
+			requestPut("recordList",forwardCashBo.allForwardCashQuery("getMarginForwardByUserNum", tradeStatus));
+		}else {
+			//查询期权的记录	
+			requestPut("recordList",optionCashBo.allOptionCashQuery("getMarginOptionByUserNum", tradeStatus));
+		}
+		
+		requestPut("tradeStatus",tradeStatus);//为了查询后下拉框仍被选中之前的状态
+		requestPut("tradeType",tradeType);//为了查询后下拉框仍被选中之前的状态
+		requestPut("tradeStatusList",CodeTableUtil.getInstance().getCodeList(SysParamNameConst.CASH_TRADE_STATUS_LIST));
+		requestPut("tradeTypeList",CodeTableUtil.getInstance().getCodeList(SysParamNameConst.TRADE_TYPE_CASH_LIST));
+		
+		//把不同币种的买卖价格传到前台
+		@SuppressWarnings("unchecked")
+		List<CcyModel> cashCollection = (List<CcyModel>) RateReceive.getInstance().getMarginRate();
+		for (int i=0; i<cashCollection.size(); i++){
+			requestPut(cashCollection.get(i).getCcy(),cashCollection.get(i));
+		}
+		return SUCCESS;
+	}
+	
+	
+	/**
+	 * 在保证金首页下面的ectable点查看时跳到detail页面的action
+	 * @return
+	 */
+	public String queryDetail(){
+		UserModel user = (UserModel)UserModelUtil.getUser();
+		if(tradeNo.startsWith("FC")){
+			//查看远期交易的详情
+			MarginForwardInfo bean = forwardCashBo.queryForwardCashByTranNo(tradeNo);
+			requestPut("forwardDetail", bean);
+			requestPut("realStatus", getRealStatus(bean.getStatue()));
+			String createDatetime = bean.getCreateDatetime();
+			requestPut("createDatetime", createDatetime.substring(0, 4) + "-" + createDatetime.substring(4, 6) + "-" + createDatetime.substring(6, 8));
+			String valueDate = bean.getValueDate();
+			requestPut("valueDate", valueDate.substring(0, 4) + "-" + valueDate.substring(4, 6) + "-" + valueDate.substring(6, 8));
+			double rate = getCurrentRate(bean.getWeCcy(), bean.getAnaCcy(), bean.getDirection());
+			requestPut("currentPrice", FormatParamUtil.getAmountAndPriceFmt(String.valueOf(rate)));
+			double price = Double.parseDouble(bean.getPrice());
+			double profitAndLoss = (price - rate) * Double.parseDouble(bean.getAccAmount());
+			double profitAndLossRate = (price - rate) / price * 100;
+			requestPut("profitAndLoss", FormatParamUtil.getAmountAndPriceFmt(String.valueOf(profitAndLoss)));
+			requestPut("profitAndLossRate", FormatParamUtil.getAmountAndPriceFmt(String.valueOf(profitAndLossRate)));
+			return "forward";
+		}
+		else if (tradeNo.startsWith("MO")){
+			//查看期权交易的详情
+			MarginOptionInfo bean = optionCashBo.queryForwardCashByTranNo(tradeNo);
+			requestPut("optionDetail", bean);
+			requestPut("realStatus", getRealStatus(bean.getStatue()));
+			requestPut("enlarge",optionCashBo.EnlargementFactorQuery(user.getGroupOneId()));
+			String createDatetime = bean.getCreateDatetime();
+			requestPut("createDatetime", createDatetime.substring(0, 4) + "-" + createDatetime.substring(4, 6) + "-" + createDatetime.substring(6, 8));
+			String maturity = bean.getMaturity();
+			requestPut("maturity", maturity.substring(0, 4) + "-" + maturity.substring(4, 6) + "-" + maturity.substring(6, 8));
+			double rate = getCurrentRate(bean.getWeCcy(), bean.getAnaCcy(), bean.getDirection());
+			requestPut("currentPrice", FormatParamUtil.getAmountAndPriceFmt(String.valueOf(rate)));
+			double price = Double.parseDouble(bean.getPrice());
+			double profitAndLoss = (price - rate) * Double.parseDouble(bean.getAccAmount());
+			double profitAndLossRate = (price - rate) / price * 100;
+			requestPut("profitAndLoss", FormatParamUtil.getAmountAndPriceFmt(String.valueOf(profitAndLoss)));
+			requestPut("profitAndLossRate", FormatParamUtil.getAmountAndPriceFmt(String.valueOf(profitAndLossRate)));
+			return "option";
+		}else {
+			//查看即期交易的详情
+			MarginSpotInfo bean=spotCashBo.querySpotByTranNo(tradeNo);
+			requestPut("optionDetail",bean);
+			double rate = getCurrentRate(bean.getWeCcy(), bean.getAnaCcy(), bean.getDirection());
+			requestPut("currentPrice", FormatParamUtil.getAmountAndPriceFmt(String.valueOf(rate)));
+			return "spot";
+		}
+	}
+	
+	public String getRealStatus(String status){
+		if (status.equals("D"))
+			return "完成";
+		else if (status.equals("A"))
+			return "有效";
+		else if (status.equals("I"))
+			return "无效";
+		else if (status.equals("C"))
+			return "取消";
+		else if (status.equals("P"))
+			return "处理中";
+		else if (status.equals("E"))
+			return "平仓";
+		else
+			return "协商中";
+	}
+	
+	/**
+	 * 刷新价格
+	 */
+	public void freshPrice(){
+		String dat = "";
+		if(direction.equals("1")){
+			Collection<?> origin = RateReceive.getInstance().getMarginRate();
+			Iterator<?> iterator = origin.iterator();
+			while(iterator.hasNext()){
+				CcyModel ccyModel = (CcyModel) iterator.next();
+				if(ccyModel.getCcy().equals(ccy)){
+					dat = ccyModel.getAskValue();
+					break;
+				}
+			}
+		}else{
+			Collection<?> origin = RateReceive.getInstance().getMarginRate();
+			Iterator<?> iterator = origin.iterator();
+			while(iterator.hasNext()){
+				CcyModel ccyModel = (CcyModel) iterator.next();
+				if(ccyModel.getCcy().equals(ccy)){
+					dat = ccyModel.getBidValue();
+					break;
+				}
+			}
+		}
+		
+		processText(dat, "text/plain;charset=GBK");
+	}
+	
+	public double getCurrentRate(String weCcy, String anaCcy, String direction){
+		String ccy = "";
+		if(direction.equals("1")){
+			ccy = anaCcy + weCcy;
+		}
+		else{
+			ccy = weCcy + anaCcy;
+		}
+		double rate = RateUtil.getMarginRateByCcy(ccy, direction);
+		return rate;
+	}
+	
+	public cashManageBo getCashBo() {
+		return cashBo;
+	}
+
+	public void setCashBo(cashManageBo cashBo) {
+		this.cashBo = cashBo;
+	}
+
+	public SpotCashBo getSpotCashBo() {
+		return spotCashBo;
+	}
+
+	public void setSpotCashBo(SpotCashBo spotCashBo) {
+		this.spotCashBo = spotCashBo;
+	}
+
+	public String getTradeType() {
+		return tradeType;
+	}
+
+
+
+	public void setTradeType(String tradeType) {
+		this.tradeType = tradeType;
+	}
+
+
+
+	public String getTradeStatus() {
+		return tradeStatus;
+	}
+
+
+
+	public void setTradeStatus(String tradeStatus) {
+		this.tradeStatus = tradeStatus;
+	}
+
+	public ForwardCashBo getForwardCashBo() {
+		return forwardCashBo;
+	}
+
+	public void setForwardCashBo(ForwardCashBo forwardCashBo) {
+		this.forwardCashBo = forwardCashBo;
+	}
+
+	public OptionCashBo getOptionCashBo() {
+		return optionCashBo;
+	}
+
+	public void setOptionCashBo(OptionCashBo optionCashBo) {
+		this.optionCashBo = optionCashBo;
+	}
+
+	public String getTradeNo() {
+		return tradeNo;
+	}
+
+	public void setTradeNo(String tradeNo) {
+		this.tradeNo = tradeNo;
+	}
+
+	public AccountFlowManageBo getAccountFlowManageBo() {
+		return accountFlowManageBo;
+	}
+
+	public void setAccountFlowManageBo(AccountFlowManageBo accountFlowManageBo) {
+		this.accountFlowManageBo = accountFlowManageBo;
+	}
+
+	public CNYManageBo getCNYBo() {
+		return CNYBo;
+	}
+
+	public void setCNYBo(CNYManageBo cNYBo) {
+		CNYBo = cNYBo;
+	}
+
+	public String getDirection() {
+		return direction;
+	}
+
+	public void setDirection(String direction) {
+		this.direction = direction;
+	}
+
+	public String getCcy() {
+		return ccy;
+	}
+
+	public void setCcy(String ccy) {
+		this.ccy = ccy;
+	}
+
+}	

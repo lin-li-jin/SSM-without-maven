@@ -1,0 +1,246 @@
+<%@ page contentType="text/html;charset=GBK" %>
+<%@ taglib prefix="ww" uri="webwork" %>
+<html>
+<%
+	String subjectPath=request.getContextPath();
+%>
+<head>
+	<title>oco交易</title>
+	<link rel="stylesheet" type="text/css" href="<%=subjectPath%>/resources/calendar/js/My97DatePicker/skin/WdatePicker.css"/>
+
+	<script src="<%=subjectPath%>/resources/js/jquery-1.8.3.js" type="text/javascript"></script>
+	<script src="<%=subjectPath%>/resources/js/jquery.validate.js" type="text/javascript"></script>
+	<script src="<%=subjectPath%>/resources/js/additional-methods.js"/>
+	<script src="<%=subjectPath%>/resources/ponycss/jquery_validate.css" type="text/javascript"></script>
+	<script src="<%=subjectPath%>/resources/js/jquery.easyui.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="<%=subjectPath%>/resources/css/easyui.css">
+	<link rel="stylesheet" type="text/css" href="<%=subjectPath%>/resources/css/exam/stop_loss.css">
+	<script type="text/javascript" src="<%=subjectPath%>/resources/calendar/js/My97DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="<%=subjectPath%>/resources/js/exam/oco.js" charset="GBK"></script>
+	<script type="text/javascript">
+		$(function(){
+			$("#add").click(function(){
+				var examContent = $("#examContent").val();
+				var accTypeNo = "<ww:property value='#request.accType'/>";
+				var type = "<ww:property value='#request.accDetail'/>";
+				var Direction = $("#item2_direction").val();
+				if(Direction == "买"){
+					Direction = 0;
+				}else if(Direction == "卖"){
+					Direction = 1;
+				}else{
+					Direction = "";
+				}
+				var Acc = $("#item1_Acc").val();
+				var ocoStopLossAccMount = $("#item5_ocosAccMount").val();
+				var ocoStopLossPrice = $("#item6_sPrice").val();
+				var ocoTakeProfitAccMount = $("#item3_ocotAccMount").val();
+				var ocoTakeProfitPrice = $("#item4_tPrice").val();
+				var ocoStopLossAccmonitorPrice = $("#item7_accmonitorprice").val();
+				var ocoGoodFrom1 = $("#item8_goodfrom").val();
+				var ocoGoodFrom = parseInt(ocoGoodFrom1.replace(/[^0-9]/ig,""));
+				var ocoGoodTill1 = $("#item9_goodtill").val();
+				var ocoGoodTill = parseInt(ocoGoodTill1.replace(/[^0-9]/ig,""));
+				var DirectionScore = $("#item2_directionscore").val();
+				var AccScore = $("#item1_AccScore").val();
+				var ocoStopLossAccMountScore = $("#item5_ocosAccMountScore").val();
+				var ocoStopLossPriceScore = $("#item6_sPricescore").val();
+				var ocoTakeProfitAccMountScore = $("#item3_ocotAccMountScore").val();
+				var ocoTakeProfitPriceScore = $("#item4_tPricescore").val();
+				var ocoStopLossAccmonitorPriceScore = $("#item7_accmonitorpricescore").val();
+				var ocoGoodFromScore = $("#item8_goodfromscore").val();
+				var ocoGoodTillScore = $("#item9_goodtillscore").val();
+				
+				var item={
+				    "item.examContent":examContent,
+				    "item.accTypeNo":accTypeNo,
+				    "item.examNo":"",
+				    "item.type":type,
+				    "item.Direction":Direction,
+	                "item.Acc":Acc,
+					"item.ocoStopLossAccMount":ocoStopLossAccMount,
+	                "item.ocoStopLossPrice":ocoStopLossPrice,
+	                "item.ocoTakeProfitAccMount":ocoTakeProfitAccMount,
+	                "item.ocoTakeProfitPrice":ocoTakeProfitPrice,
+		            "item.ocoStopLossAccmonitorPrice":ocoStopLossAccmonitorPrice,
+	                "item.ocoGoodFrom":ocoGoodFrom,
+			        "item.ocoGoodTill":ocoGoodTill,
+				    "item.ocoScore.DirectionScore":DirectionScore,
+				    "item.ocoScore.AccScore":AccScore,
+				    "item.ocoScore.stopLossAmountScore":ocoStopLossAccMountScore,
+				    "item.ocoScore.stopLossPriceScore":ocoStopLossPriceScore,
+				    "item.ocoScore.takeProfitAmountScore":ocoTakeProfitAccMountScore,
+				    "item.ocoScore.takeProfitPriceScore":ocoTakeProfitPriceScore,
+				    "item.ocoScore.monitorPriceScore":ocoStopLossAccmonitorPriceScore,
+				    "item.ocoScore.goodFromScore":ocoGoodFromScore,
+				    "item.ocoScore.goodTillScore":ocoGoodTillScore};
+				$.ajax({
+					type:"GET",
+					data:item,
+					url:"/forex/addnewExchange.action",
+					dataType:"json",
+					success:function(result){
+						alert("添加成功");
+					},
+					error:function(){
+						alert("添加失败！")
+					}
+				});
+			});
+		});
+	</script>
+</head>
+<body>
+
+<div>
+	<div>交易类型：oco交易</div>
+	题干：
+	<div style="border: solid 4px #148213;width: 400px;">
+		<!--
+			1.题目内容
+		 -->
+		<div style="margin: 3px 4px;" class="stop_loss">
+			<textarea style="width: 280px;height: 180px;" id="examContent">
+
+			</textarea>
+		</div>
+	</div>
+	算分交易要素:
+	<div style="border: solid 4px #148213;width:600px;">
+		<form id="form1">
+		<div style="margin-top: 3px;margin-left: 2px;margin-right: 2px;height: 40px;line-height: 40px;">
+			<input type="checkbox" name="accmonitorPrice_checkbox" value="checkbox" onchange="haha(this,1)"> 交易币种 &nbsp;&nbsp;&nbsp;
+			<div style="display: inline">
+				<label for="item1_AccScore"> 分数 : </label>
+				<input type="input" name="item1_AccScore" id="item1_AccScore" style="width: 60px;" readonly> &nbsp;&nbsp;&nbsp;
+			</div>
+			<div style="display: inline">
+				<label for="item1_Acc">正确答案 : </label>
+			<input type="input" name="item1_Acc" id="item1_Acc" style="width: 60px;" readonly> &nbsp;&nbsp;&nbsp;
+			</div>
+		</div>
+		</form>
+		<form id="form2">
+			<div style="margin-top: 3px;margin-left: 2px;margin-right: 2px;height: 40px;line-height: 40px;">
+				<input type="checkbox" name="checkbox1" value="checkbox" onchange="haha(this,2)"> 交易方向 &nbsp;&nbsp;&nbsp;
+				<div style="display: inline">
+					<label for="item2_directionscore"> 分数 : </label>
+					<input type="input" id="item2_directionscore" name="item2_directionscore" style="width: 60px;" readonly> &nbsp;&nbsp;&nbsp;
+				</div>
+				<div style="display: inline">
+					<label for="item2_direction"> 正确答案 :</label>
+					<input type="input" id="item2_direction" name="item2_direction" style="width: 60px;" readonly> &nbsp;&nbsp;&nbsp;
+				</div>
+			</div>
+		</form>
+		<form id="form3">
+			<div  style="margin-top: 3px;margin-left: 2px;margin-right: 2px;height: 40px;line-height: 40px;">
+				<input type="checkbox" name="tAccMountcheckbox" value="checkbox" onchange="haha(this,3)"> take profit交易金额 &nbsp;&nbsp;&nbsp;
+
+				<div style="display: inline">
+					<label for="item3_ocotAccMountScore">分数 : </label>
+				<input type="input" readonly="readonly" name="item3_ocotAccMountScore" id="item3_ocotAccMountScore" style="width: 60px;"> &nbsp;&nbsp;&nbsp;
+				</div>
+
+				<div style="display: inline">
+					<label for="item3_ocotAccMount">正确答案 :</label>
+				 <input id="item3_ocotAccMount" readonly name="item3_ocotAccMount" type="input"  style="width: 60px;"> &nbsp;&nbsp;&nbsp;
+				</div>
+			</div>
+		</form>
+		<form id="form4">
+			<div style="margin-top: 3px;margin-left: 2px;margin-right: 2px;height: 40px;line-height: 40px;">
+				<input type="checkbox" name="checkbox1" value="checkbox" onchange="haha(this,4)"> take profit交易价格 &nbsp;&nbsp;&nbsp;
+				<div style="display: inline">
+					<label for="item4_tPricescore" >分数 : </label>
+					<input type="input" name="item4_tPricescore" id="item4_tPricescore" style="width: 60px;" readonly> &nbsp;&nbsp;&nbsp;
+				</div>
+				<div style="display: inline">
+					<label for="item4_tPrice">正确答案 : </label>
+					<input type="input" name="item4_tPrice" id="item4_tPrice" style="width: 60px;" readonly> &nbsp;&nbsp;&nbsp;
+				</div>
+			</div>
+		</form>
+		<form id="form5">
+			<div  style="margin-top: 3px;margin-left: 2px;margin-right: 2px;height: 40px;line-height: 40px;">
+				<input type="checkbox" name="ocosAccMountcheckbox" value="checkbox" onchange="haha(this,5)"> stop loss交易金额 &nbsp;&nbsp;&nbsp;
+
+				<div style="display: inline">
+					<label for="item5_ocosAccMountScore">分数 : </label>
+				<input type="input" readonly="readonly" name="item5_ocosAccMountScore" id="item5_ocosAccMountScore" style="width: 60px;"> &nbsp;&nbsp;&nbsp;
+				</div>
+
+				<div style="display: inline">
+					<label for="item5_ocosAccMount">正确答案 :</label>
+				 <input id="item5_ocosAccMount" readonly name="item5_ocosAccMount" type="input"  style="width: 60px;"> &nbsp;&nbsp;&nbsp;
+				</div>
+			</div>
+		</form>
+		<form id="form6">
+			<div style="margin-top: 3px;margin-left: 2px;margin-right: 2px;height: 40px;line-height: 40px;">
+				<input type="checkbox" name="checkbox1" value="checkbox" onchange="haha(this,6)"> stop loss交易价格 &nbsp;&nbsp;&nbsp;
+				<div style="display: inline">
+					<label for="item6_sPricescore" >分数 : </label>
+					<input type="input" name="item6_sPricescore" id="item6_sPricescore" style="width: 60px;" readonly> &nbsp;&nbsp;&nbsp;
+				</div>
+				<div style="display: inline">
+					<label for="item6_sPrice">正确答案 : </label>
+					<input type="input" name="item6_sPrice" id="item6_sPrice" style="width: 60px;" readonly> &nbsp;&nbsp;&nbsp;
+				</div>
+			</div>
+		</form>
+		<form id="form7">
+			<div style="margin-top: 3px;margin-left: 2px;margin-right: 2px;height: 40px;line-height: 40px;">
+				<input type="checkbox" name="checkbox1" value="checkbox" onchange="enableCheck(this,7)"> 模拟类型 &nbsp;&nbsp;&nbsp;
+				<div style="display: inline">
+					<label for="item7_accmonitorpricescore">分数:</label>
+					<input type="input" name="item7_accmonitorpricescore" id="item7_accmonitorpricescore" style="width: 60px;" readonly> &nbsp;&nbsp;&nbsp;
+				</div>
+				<div style="display: inline">
+					<label for="item7_accmonitorprice" >正确答案 :</label>
+					<select name="item7_accmonitorprice" id="item7_accmonitorprice" disabled="disabled">
+						<option value="ASK">ASK</option>
+						<option value="BID">BID</option>
+					</select> &nbsp;&nbsp;&nbsp;
+				</div>
+			</div>
+		</form>
+		<form id="form8">
+			<div style="margin-top: 3px;margin-left: 2px;margin-right: 2px;height: 40px;line-height: 40px;">
+				<input type="checkbox" name="checkbox1" value="checkbox" onchange="haha(this,8)"> 开始时间 &nbsp;&nbsp;&nbsp;
+				<div style="display: inline">
+					<label for="item8_goodfromscore" >分数 : </label>
+					<input type="input" name="item8_goodfromscore" id="item8_goodfromscore" style="width: 60px;" readonly> &nbsp;&nbsp;&nbsp;
+				</div>
+				<div style="display: inline">
+					<label for="item8_goodfrom" >正确答案 : <img src="<%=subjectPath%>/resources/calendar/image/Button.gif" onclick="WdatePicker({el:'item8_goodfrom'})" > &nbsp;&nbsp;&nbsp;</label>
+					<input type="text" id="item8_goodfrom" datatype="date" name="item8_goodfrom" readonly>
+				</div>
+			</div>
+		</form>
+		<form id="form9">
+			<div style="margin-top: 3px;margin-left: 2px;margin-right: 2px;height: 40px;line-height: 40px;">
+				<input type="checkbox" name="checkbox1" value="checkbox" onchange="haha(this,9)"> 交割时间 &nbsp;&nbsp;&nbsp;
+				<div style="display: inline">
+					<label for="item9_goodtillscore" >分数 :</label>
+					<input type="input" name="item9_goodtillscore" id="item9_goodtillscore" style="width: 60px;" readonly> &nbsp;&nbsp;&nbsp;
+				</div>
+				<div style="display: inline">
+					<label for="item9_goodtill" >正确答案 : <img src="<%=subjectPath%>/resources/calendar/image/Button.gif" onclick="WdatePicker({el:'item9_goodtill'})" > &nbsp;&nbsp;&nbsp;</label>
+					<input type="text" id="item9_goodtill" datatype="date" name="item9_goodtill" readonly>
+				</div>
+			</div>
+		</form>
+		<div style="margin-top: 3px;margin-left: 2px;margin-right: 2px;height: 40px;line-height: 40px;">
+			总分 : <input type="input" name="item." style="width: 60px;"> &nbsp;&nbsp;&nbsp;
+		</div>
+
+	</div>
+	<div>
+		<button id="add">添加</button>
+	</div>
+</div>
+
+</body>
+
+</html>

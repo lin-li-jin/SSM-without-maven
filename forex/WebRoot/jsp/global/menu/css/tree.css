@@ -1,0 +1,96 @@
+/* CSS Document */
+a
+{
+	text-decoration:none;
+}
+
+body
+{
+	margin:0;
+	padding:10px 0 5px 0;
+	font:14px tahoma,宋体,sans-serif;
+}
+*{margin:0;padding:0px}
+p a,p a:visited
+{
+	color:#00f;
+	background:inherit;
+}
+
+.TreeMenu img.s
+{
+	cursor:hand;
+	vertical-align:middle;
+}
+.TreeMenu ul
+{
+	padding:0;
+}
+.TreeMenu li
+{
+	list-style:none;
+	padding:0;
+}
+.Closed ul
+{
+	display:none;
+}
+.Child img.s
+{
+	background:none;
+	cursor:default;
+}
+
+#CategoryTree ul
+{
+	margin:0 0 0px 0px;
+}
+/*
+#CategoryTree img.s
+{
+	width:34px;
+	height:18px;
+}
+
+#CategoryTree .Opened img.s
+{
+	background:url(img/opened.gif) no-repeat 0 1px;
+}
+#CategoryTree .Closed img.s
+{
+	background:url(img/closed.gif) no-repeat 0 1px;
+}
+#CategoryTree .Child img.s
+{
+	background:url(img/child.gif) no-repeat 13px 2px;
+}
+*/
+#CategoryTree
+{
+	float:left;
+	width:210px;
+	margin:0px;
+	padding:0px;
+	margin-top:0px;
+	margin-left:5px;
+	text-align:left;
+}
+
+/*修改菜单样式
+.l0{background:url(img/l0.jpg) no-repeat 0px -1px;width:200px;height:33px;}
+.l1{background:url(img/l1.jpg) no-repeat 0px -1px;width:200px;padding-top:5px;height:33px;color:#125e97;font-weight:bold;}
+.cl20{background:url(img/l2.jpg) no-repeat 0px -1px;width:200px;padding-top:5px;height:33px;color:#125e97}
+.cl2{background:url(img/l3.jpg) no-repeat 0px -1px;width:200px;padding-top:5px;height:33px;color:#125e97}
+.cl3{background:url(img/l5.jpg) no-repeat 0px -1px;width:200px;padding-top:5px;height:24px;font-size:12px;color:#666666}
+*/
+/*修改菜单样式*/
+.l0{background:url(img/l0.jpg) no-repeat 0px -1px;width:200px;height:33px;}
+.l1{background:url(img/l1_closed.jpg) no-repeat 0px -1px;width:200px;;padding-top:9px;height:33px;color:#125e97;font-weight:bold;
+padding-left:40px;}
+#CategoryTree .Closed .l1{background:url(img/l1.jpg) no-repeat 0px -1px;width:200px;padding-top:9px;height:33px;color:#125e97;font-weight:bold;
+padding-left:40px;}
+.cl20{background:url(img/l2.jpg) no-repeat 0px -1px;width:200px;padding-top:8px;height:33px;color:#125e97;
+padding-left:50px;}
+.cl2{background:url(img/l3.jpg) no-repeat 0px -1px;width:200px;padding-top:8px;height:33px;color:#2e6e03}
+.cl3{background:url(img/l5.jpg) no-repeat 0px -1px;width:200px;padding-top:8px;height:24px;font-size:12px;color:#666666;
+padding-left:55px;}

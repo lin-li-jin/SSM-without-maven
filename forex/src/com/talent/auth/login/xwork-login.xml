@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
+
+<xwork>
+	<package name="login" extends="default">
+		<action name="login" method="login" class="com.talent.auth.login.LoginAction">		
+			<result name="input" type="dispatcher">
+				<param name="location">/jsp/global/login/LoginPwdModify.jsp</param>
+			</result>		
+			<result name="success" type="dispatcher">
+				<param name="location">/index.jsp</param>
+			</result>			
+			<result name="error" type="dispatcher">
+				<param name="location">/jsp/global/login/Login.jsp</param>
+			</result>			
+			<interceptor-ref name="paramsLoginStack" />
+		</action>
+		<action name="loginPwdModify" method="loginPwdModify" class="com.talent.auth.login.LoginAction">	
+			<result name="success" type="dispatcher">
+				<param name="location">/index.jsp</param>
+			</result>		
+			<interceptor-ref name="paramsLoginStack" />
+		</action>
+		<action name="logout" method="logout" class="com.talent.auth.login.LoginAction">		
+			<result name="success" type="dispatcher">
+				<param name="location">/jsp/global/login/Login.jsp</param>
+			</result>
+			<!--<interceptor-ref name="paramsLoginStack" />-->
+		</action>
+		
+		<action name="closeAddr" method="closeAddr"
+			class="com.talent.auth.login.LoginAction">
+			<interceptor-ref name="paramsLoginStack" />
+		</action>
+		<action name="changeChallenge" method="changeChallenge" class="com.talent.auth.login.LoginAction" />
+		
+		<action name="userPwdModifyInit" method="userPwdModifyInit"
+			class="com.talent.auth.login.LoginAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/global/login/pwdModify_2.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack" />
+		</action>
+		<action name="notYetInit" method="notYetInit"
+			class="com.talent.auth.login.LoginAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/global/login/notYetInit.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack" />
+		</action>
+		<action name="userPwdModifyInit2" method="userPwdModifyInit2"
+			class="com.talent.auth.login.LoginAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/global/login/pwdModifyStu_2.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack" />
+		</action>
+		<action name="passwordModify" method="passwordModify"
+			class="com.talent.auth.login.LoginAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/global/login/pwdModifyResult.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack" />
+		</action>
+	</package>
+</xwork>

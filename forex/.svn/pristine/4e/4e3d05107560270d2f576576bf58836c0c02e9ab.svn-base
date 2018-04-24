@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.talent.exam.domain.ExamAccType" table="exam_acc_type" catalog="forex">
+        <id name="accTypeNo" type="java.lang.String">
+            <column name="acc_type_NO" length="1" />
+            <generator class="identity" />
+        </id>
+        <property name="accType" type="java.lang.String">
+            <column name="acc_type" length="15" not-null="true">
+                <comment>交易类型名称</comment>
+            </column>
+        </property>
+        <set name="examContents" inverse="true">
+            <key>
+                <column name="acc_type_NO" length="1" not-null="true">
+                    <comment>考试类型</comment>
+                </column>
+            </key>
+            <one-to-many class="com.talent.exam.domain.ExamContent" />
+        </set>
+    </class>
+</hibernate-mapping>

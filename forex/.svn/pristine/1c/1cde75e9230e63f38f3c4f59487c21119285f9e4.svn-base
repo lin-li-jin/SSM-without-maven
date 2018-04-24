@@ -1,0 +1,67 @@
+package com.talent.forex.advice;
+
+import com.talent.exam.modules.stu_exam.service.StuExamBo;
+import com.talent.exam.modules.teach_mng.service.ExamBo;
+import com.talent.forex.bean.model.ForwardTradeModel;
+import com.talent.forex.bean.model.StopAndProfitModel;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
+import org.apache.log4j.Logger;
+
+/**
+ * Created by 吴樟 on www.haixiangzhene.xyz
+ * 2017/9/25.
+ *
+ */
+public class ListenExchangeAdvice implements MethodInterceptor {
+
+    private final static Logger logger=Logger.getLogger(ListenExchangeAdvice.class);
+
+    private StuExamBo stuExamBo;
+
+    @Override
+    public Object invoke(MethodInvocation methodInvocation) throws Throwable {
+        logger.info("invoke the method "+methodInvocation.getMethod().getName());
+        Object result=methodInvocation.proceed();
+        processStopAndProfitModel(methodInvocation);
+        return result;
+    }
+
+    private void processOtcForwardTrade(MethodInvocation methodInvocation){
+        Object[] arguments=methodInvocation.getArguments();
+        ForwardTradeModel forwardTradeModel=new ForwardTradeModel();
+        String tranNo= (String) arguments[0];   forwardTradeModel.setTranNo1(tranNo);
+        String opponent= (String) arguments[1]; forwardTradeModel.setOpponentOne(opponent);
+        String ccy1= (String) arguments[2];
+        String ccy2= (String) arguments[3];
+        String direct= (String) arguments[5];   forwardTradeModel.setDirection(direct);
+        if (direct.equals("0")) {
+            forwardTradeModel.setWeCcy(ccy1);
+            forwardTradeModel.setAnaCcy(ccy2);
+        }
+        else {
+            forwardTradeModel.setAnaCcy(ccy1);
+            forwardTradeModel.setWeCcy(ccy2);
+        }
+        String oldPrice= (String) arguments[4];
+        String amount= (String) arguments[6];
+        String valueDate= (String) arguments[7];
+        String point= (String) arguments[8];
+    }
+
+    private void processStopAndProfitModel(MethodInvocation methodInvocation) {
+        Object[] arguments=methodInvocation.getArguments();
+        if (arguments!=null && arguments[0]!=null && arguments[0] instanceof StopAndProfitModel){
+            StopAndProfitModel stopAndProfitModel= (StopAndProfitModel) arguments[0];
+            stuExamBo.listenStopLossExchange(stopAndProfitModel);
+        }
+    }
+
+    public StuExamBo getStuExamBo() {
+        return stuExamBo;
+    }
+
+    public void setStuExamBo(StuExamBo stuExamBo) {
+        this.stuExamBo = stuExamBo;
+    }
+}

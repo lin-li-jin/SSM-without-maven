@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	
+	<!-- global -->
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="lang/label"></property>
+	</bean>
+	<import resource="classpath:com/talent/forex/modules/admin_mng/spring-adminMng.xml"/>
+	<import resource="classpath:com/talent/auth/spring-auth.xml" />
+	<import resource="classpath:com/talent/auth/dao/spring-dao.xml" />
+	<import resource="classpath:com/talent/exam/dao/spring-dao.xml"/>
+	<import resource="classpath:com/talent/exam/modules/admin_mng/spring-adminMng.xml"/>
+	<import resource="classpath:com/talent/exam/modules/teach_mng/spring-teachMng.xml"/>
+	<import resource="classpath:com/talent/exam/modules/stu_exam/spring-stuExam.xml"/>
+	<import resource="classpath:com/talent/forex/dao/spring-dao.xml" />
+	<import resource="classpath:com/talent/forex/advice/spring-aop.xml" />
+	<import resource="classpath:com/talent/forex/modules/code/spring-codeManage.xml" />
+	<import resource="classpath:com/talent/forex/modules/home/spring-homeManage.xml" />
+	<import resource="classpath:com/talent/forex/modules/trade/cash/spring-cashManage.xml" />
+	<import resource="classpath:com/talent/forex/modules/trade/spring-tradeManage.xml" />
+	<import resource="classpath:com/talent/forex/modules/trade/ask/spring-askManage.xml" />
+	<import resource="classpath:com/talent/forex/modules/trade/bid/spring-bidManage.xml" />
+	<import resource="classpath:com/talent/forex/modules/teach_mng/dataInput/spring-dataInput.xml" />
+	<import resource="classpath:com/talent/forex/modules/teach_mng/paramMng/spring-paramMng.xml" />
+	<import resource="classpath:com/talent/forex/modules/trade_mng/spring-tradeMng.xml" />
+	<import resource="classpath:com/talent/forex/modules/teach_mng/tClassMng/spring-tClassMng.xml"/>
+	
+	<import resource="classpath:/com/talent/exam/dao/spring-dao.xml"/>
+	<import resource="classpath:/com/talent/exam/modules/admin_mng/spring-adminMng.xml"/>
+	<import resource="classpath:/com/talent/exam/modules/stu_exam/spring-stuExam.xml"/>
+	<import resource="classpath:/com/talent/exam/modules/teach_mng/spring-teachMng.xml"/>
+	
+</beans>
+

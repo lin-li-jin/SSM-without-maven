@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename package &apos;config&apos; to &apos;resource&apos;&#x0D;&#x0A;- Original project: &apos;JYan&apos;&#x0D;&#x0A;- Original element: &apos;JYan/src/config&apos;&#x0D;&#x0A;- Renamed element: &apos;JYan/src/resource&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename package &apos;config&apos;" flags="589830" hierarchical="false" id="org.eclipse.jdt.ui.rename.package" input="/src&lt;config" name="resource" qualified="false" references="true" stamp="1524491554607" textual="false" version="1.0"/>
+</session>

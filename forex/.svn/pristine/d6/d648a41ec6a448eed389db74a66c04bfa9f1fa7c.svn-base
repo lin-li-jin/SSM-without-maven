@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="byName">
+	<bean id="usersDao" class="com.talent.auth.dao.UsersDao" />	
+	<bean id="tClassDao" class="com.talent.auth.dao.TClassDao"/>
+	<bean id="stuClassDao" class="com.talent.auth.dao.StuClassDao"/>
+	<bean id="teachClassDao" class="com.talent.auth.dao.TeachClassDao"/>
+</beans>

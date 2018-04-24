@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
+<!-- 
+ Amendment No.: FOEXAS009
+ Create By    : lzc
+ Description  : 交易首页
+ Modify Date  : 2014-07-21
+  -->
+<xwork>
+	<package name="trade" extends="default">
+		<action name="CNYPageInit" method="pageInit"
+			class="com.talent.forex.modules.trade.CNYTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/home/CNYHomePage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="CNYOneClickPageInit" method="oneClickPageInit"
+			class="com.talent.forex.modules.trade.CNYTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/home/oneClickHomePage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="CNYtradeQuery" method="tradeQuery"
+			class="com.talent.forex.modules.trade.CNYTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/home/CNYHomePage.jsp
+				</param>
+			</result>
+			<result name="oneclick" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/home/oneClickHomePage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="CNYtradeDetail" method="tradeDetail"
+			class="com.talent.forex.modules.trade.CNYTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/doneTradeDetail.jsp
+				</param>
+			</result>
+			<result name="OMActive" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/activeOMtradeDetail.jsp
+				</param>
+			</result>
+			<result name="STActive" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/activeSTtradeDetail.jsp
+				</param>
+			</result>
+			<result name="AskDone" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/doneAskTradeDetail.jsp
+				</param>
+			</result>
+			<result name="Spot" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/SpotTradeDetail.jsp
+				</param>
+			</result>
+			<result name="Forward" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/ForwardTradeDetail.jsp
+				</param>
+			</result>
+			<result name="Swap" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/swapTradeDetail.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="foreignPageInit" method="pageInit"
+			class="com.talent.forex.modules.trade.ForeignTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/home/foreignHomePage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="foreignTradeQuery" method="tradeQuery"
+			class="com.talent.forex.modules.trade.ForeignTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/home/foreignHomePage.jsp
+				</param>
+			</result>
+			<result name="oneclick" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/home/foreignOneClickHomePage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="foreignOneClickPageInit" method="oneClickPageInit"
+			class="com.talent.forex.modules.trade.ForeignTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/home/foreignOneClickHomePage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="foreignTradeDetail" method="tradeDetail"
+			class="com.talent.forex.modules.trade.ForeignTradeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/doneTradeDetail.jsp
+				</param>
+			</result>
+			<result name="OCO" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/activeOMtradeDetail.jsp
+				</param>
+			</result>
+			<result name="MarketBreakout" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/activeOMtradeDetail.jsp
+				</param>
+			</result>
+			<result name="STActive" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/activeSTtradeDetail.jsp
+				</param>
+			</result>
+			<result name="Spot" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/SpotTradeDetail.jsp
+				</param>
+			</result>
+			<result name="Forward" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/ForwardTradeDetail.jsp
+				</param>
+			</result>
+			<result name="Swap" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/swapTradeDetail.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="CNYPageRefresh" method="CNYPageRefresh" class="com.talent.forex.modules.trade.CNYTradeAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<action name="foreignPageRefresh" method="foreignPageRefresh" class="com.talent.forex.modules.trade.ForeignTradeAction">
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+	</package>
+</xwork>

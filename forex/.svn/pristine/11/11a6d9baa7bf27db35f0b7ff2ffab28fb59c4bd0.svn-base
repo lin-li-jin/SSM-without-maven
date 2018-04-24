@@ -1,0 +1,101 @@
+package com.talent.forex.bean.model;
+
+/**
+ * Title:
+ * Description:这个model用来查询保证金远期交易和期权交易数据表，解决字段名字不一样，共用同一个ectable的问题
+ * 后来改成统一用志诚那个TradeRecordModel了，这个model暂时用不了，但是调用这个model的hql语句还注释在数据库表的映射文件中
+ * Copyright: Copyright (c) 2008
+
+ * Company: Talent Information Solutions Ltd. 
+ * @author atggdsaiDONG
+ *
+ */
+public class ForwardAndOptionQueryModel {
+	// Fields
+	private String tranType;
+	private String tranNo;
+	private String valueDate;
+	private String weCcy;
+	private String anaCcy;
+	private String accAmount;
+	private String price;
+	private String statue;
+	private String tranDescr;
+	
+	public ForwardAndOptionQueryModel(){}
+	
+	public ForwardAndOptionQueryModel(String tranType, String tranNo,
+			String valueDate, String weCcy, String anaCcy, String accAmount,
+			String price, String statue) {
+		super();
+		this.tranType = tranType;
+		this.tranNo = tranNo;
+		this.valueDate = valueDate;
+		this.weCcy = weCcy;
+		this.anaCcy = anaCcy;
+		this.accAmount = accAmount;
+		this.price = price;
+		this.statue = statue;
+	}
+	public String getTranType() {
+		return tranType;
+	}
+	public void setTranType(String tranType) {
+		this.tranType = tranType;
+	}
+	public String getTranNo() {
+		return tranNo;
+	}
+	public void setTranNo(String tranNo) {
+		this.tranNo = tranNo;
+	}
+	public String getValueDate() {
+		return valueDate;
+	}
+	public void setValueDate(String valueDate) {
+		this.valueDate = valueDate;
+	}
+	public String getWeCcy() {
+		return weCcy;
+	}
+	public void setWeCcy(String weCcy) {
+		this.weCcy = weCcy;
+	}
+	public String getAnaCcy() {
+		return anaCcy;
+	}
+	public void setAnaCcy(String anaCcy) {
+		this.anaCcy = anaCcy;
+	}
+	public String getAccAmount() {
+		return accAmount;
+	}
+	public void setAccAmount(String accAmount) {
+		this.accAmount = accAmount;
+	}
+	public String getPrice() {
+		return price;
+	}
+	public void setPrice(String price) {
+		this.price = price;
+	}
+	public String getStatue() {
+		return statue;
+	}
+
+
+	public void setStatue(String statue) {
+		this.statue = statue;
+	}
+	
+	public String getTranDescr() {
+		if(tranNo.startsWith("FC")){
+			return "远期交易";
+		}else if(tranNo.startsWith("MO")){
+			return "期权交易";
+		}else{
+			return "";
+		}
+	}
+
+}

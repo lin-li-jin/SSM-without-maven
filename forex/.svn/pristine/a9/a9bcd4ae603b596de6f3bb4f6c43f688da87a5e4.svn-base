@@ -1,0 +1,57 @@
+package com.talent.exam.domain;
+
+import java.util.Collection;
+
+/**
+ * Created by 吴樟 on www.haixiangzhene.xyz
+ * 2017/9/7.
+ */
+public class ExamAccType {
+    private String accTypeNo;
+    private String accType;
+    private Collection<ExamContent> examContentsByAccTypeNo;
+
+    public String getAccTypeNo() {
+        return accTypeNo;
+    }
+
+    public void setAccTypeNo(String accTypeNo) {
+        this.accTypeNo = accTypeNo;
+    }
+
+    public String getAccType() {
+        return accType;
+    }
+
+    public void setAccType(String accType) {
+        this.accType = accType;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ExamAccType that = (ExamAccType) o;
+
+        if (accTypeNo != null ? !accTypeNo.equals(that.accTypeNo) : that.accTypeNo != null) return false;
+        if (accType != null ? !accType.equals(that.accType) : that.accType != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = accTypeNo != null ? accTypeNo.hashCode() : 0;
+        result = 31 * result + (accType != null ? accType.hashCode() : 0);
+        return result;
+    }
+
+    public Collection<ExamContent> getExamContentsByAccTypeNo() {
+        return examContentsByAccTypeNo;
+    }
+
+    public void setExamContentsByAccTypeNo(Collection<ExamContent> examContentsByAccTypeNo) {
+        this.examContentsByAccTypeNo = examContentsByAccTypeNo;
+    }
+}

@@ -1,0 +1,180 @@
+package com.talent.exam.domain;
+
+/**
+ * ExamForward entity. @author MyEclipse Persistence Tools
+ */
+public class ExamForward{
+
+	private Integer examForwardNo;
+	private String accTypeNo;
+	private String direction;
+	private String acc;
+	private String accAmount;
+	private String valueDate;
+	private String price;
+	private Integer providerNo;
+	private Integer step;
+	
+	private ExamContent examContentByExamNo;
+
+	public Integer getExamForwardNo() {
+		return examForwardNo;
+	}
+
+	public void setExamForwardNo(Integer examForwardNo) {
+		this.examForwardNo = examForwardNo;
+	}
+
+	public String getAccTypeNo() {
+		return accTypeNo;
+	}
+
+	public void setAccTypeNo(String accTypeNo) {
+		this.accTypeNo = accTypeNo;
+	}
+
+	public String getDirection() {
+		return direction;
+	}
+
+	public void setDirection(String direction) {
+		this.direction = direction;
+	}
+
+	public String getAcc() {
+		return acc;
+	}
+
+	public void setAcc(String acc) {
+		this.acc = acc;
+	}
+
+	public String getAccAmount() {
+		return accAmount;
+	}
+
+	public void setAccAmount(String accAmount) {
+		this.accAmount = accAmount;
+	}
+
+	public String getValueDate() {
+		return valueDate;
+	}
+
+	public void setValueDate(String valueDate) {
+		this.valueDate = valueDate;
+	}
+
+	public String getPrice() {
+		return price;
+	}
+
+	public void setPrice(String price) {
+		this.price = price;
+	}
+
+	public Integer getProviderNo() {
+		return providerNo;
+	}
+
+	public void setProviderNo(Integer providerNo) {
+		this.providerNo = providerNo;
+	}
+
+	public Integer getStep() {
+		return step;
+	}
+
+	public void setStep(Integer step) {
+		this.step = step;
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((acc == null) ? 0 : acc.hashCode());
+		result = prime * result
+				+ ((accAmount == null) ? 0 : accAmount.hashCode());
+		result = prime * result
+				+ ((accTypeNo == null) ? 0 : accTypeNo.hashCode());
+		result = prime * result
+				+ ((direction == null) ? 0 : direction.hashCode());
+		result = prime * result
+				+ ((examForwardNo == null) ? 0 : examForwardNo.hashCode());
+		result = prime * result + ((price == null) ? 0 : price.hashCode());
+		result = prime * result
+				+ ((providerNo == null) ? 0 : providerNo.hashCode());
+		result = prime * result + ((step == null) ? 0 : step.hashCode());
+		result = prime * result
+				+ ((valueDate == null) ? 0 : valueDate.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ExamForward other = (ExamForward) obj;
+		if (acc == null) {
+			if (other.acc != null)
+				return false;
+		} else if (!acc.equals(other.acc))
+			return false;
+		if (accAmount == null) {
+			if (other.accAmount != null)
+				return false;
+		} else if (!accAmount.equals(other.accAmount))
+			return false;
+		if (accTypeNo == null) {
+			if (other.accTypeNo != null)
+				return false;
+		} else if (!accTypeNo.equals(other.accTypeNo))
+			return false;
+		if (direction == null) {
+			if (other.direction != null)
+				return false;
+		} else if (!direction.equals(other.direction))
+			return false;
+		if (examForwardNo == null) {
+			if (other.examForwardNo != null)
+				return false;
+		} else if (!examForwardNo.equals(other.examForwardNo))
+			return false;
+		if (price == null) {
+			if (other.price != null)
+				return false;
+		} else if (!price.equals(other.price))
+			return false;
+		if (providerNo == null) {
+			if (other.providerNo != null)
+				return false;
+		} else if (!providerNo.equals(other.providerNo))
+			return false;
+		if (step == null) {
+			if (other.step != null)
+				return false;
+		} else if (!step.equals(other.step))
+			return false;
+		if (valueDate == null) {
+			if (other.valueDate != null)
+				return false;
+		} else if (!valueDate.equals(other.valueDate))
+			return false;
+		return true;
+	}
+
+	public ExamContent getExamContentByExamNo() {
+		return examContentByExamNo;
+	}
+
+	public void setExamContentByExamNo(ExamContent examContentByExamNo) {
+		this.examContentByExamNo = examContentByExamNo;
+	}
+	
+	
+
+}

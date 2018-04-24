@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
+<!-- 
+/*
+ * Amendment No.: ISAS130008
+ * Modify By    : sunyan
+ * Description  : 报文部分
+ * Modify Date  : 2013-7-3
+ * 
+ */
+  -->
+<xwork>
+	<package name="code" extends="default">
+		<action name="codeQueryInit" method="codeQueryInit"
+			class="com.talent.forex.modules.code.CodeAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/code/codeQuery.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+	</package>
+</xwork>

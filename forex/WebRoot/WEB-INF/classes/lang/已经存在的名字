@@ -1,0 +1,6 @@
+催收业务编号：OC_collecTranNo
+来证通知号：OC_lcAdvisingNo
+受益人（客户号）：OC_beneficiary
+转通知行号	OC_advisbankNo
+最迟装船日期  OC_latestDateShipment
+是否为循环信用证   OC_revolLc Revolving L/C

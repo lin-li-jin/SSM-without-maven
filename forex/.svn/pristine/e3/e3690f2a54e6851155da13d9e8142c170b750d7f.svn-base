@@ -1,0 +1,23 @@
+
+    create table `forex`.`exam_acc_type`(
+        `acc_type_NO` CHAR(2) not null comment '交易类型表',
+       `acc_type` VARCHAR(15) not null ,
+        primary key (`acc_type_NO`)
+    );
+
+    create unique index `PRIMARY` on `forex`.`exam_acc_type`(`acc_type_NO`);
+    
+    create table `forex`.`exam_content`(
+        `exam_NO` INT not null auto_increment comment '考试题目表',
+       `exam_content` VARCHAR(255) not null,
+       `acc_type_NO` CHAR(5) not null,
+        primary key (`exam_NO`)
+    );
+
+    alter table `forex`.`exam_content`  
+        add index `fore_acc`(`acc_type_NO`), 
+        add constraint `fore_acc` 
+        foreign key (`acc_type_NO`) 
+        references `forex`.`exam_acc_type`(`acc_type_NO`);
+    create unique index `PRIMARY` on `forex`.`exam_content`(`exam_NO`);
+    create index `fore_acc` on `forex`.`exam_content`(`acc_type_NO`);

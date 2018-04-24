@@ -1,0 +1,57 @@
+package com.hh;
+import java.util.Scanner;
+
+public class JavaTest {
+	
+	///////
+	static boolean aa(int a[]){
+		int e;
+		for(e=0;e<a.length;e++){
+			if(a[0]!=a[e]){
+				break;
+			}
+		}
+		if(e==a.length){
+			return true;
+		}else{
+			return false;
+		}
+			
+	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner c = new Scanner(System.in);
+		int ge = c.nextInt();
+		int[] a = new int[ge];
+		for(int i=0;i<ge;i++){
+			a[i]=c.nextInt();
+		}
+		int jia =0;
+		while(true){
+			if(aa(a)){
+				break;
+			}
+			int de= a[0];
+			for(int i=0;i<ge-1;i++){
+				a[i]=a[i+1]/2+a[i]/2;
+			}
+			a[ge-1]=de/2+a[ge-1]/2;
+			if(aa(a)){
+				break;
+			}
+			for(int i=0;i<ge;i++){
+				if(a[i]%2==1){
+					a[i]=+1;
+					jia++;
+				}
+			}
+			if(aa(a)){
+				break;
+			}
+		}
+		System.out.println(jia);
+	}
+
+	////
+		
+}

@@ -1,0 +1,109 @@
+package com.talent.exam.model;
+
+import com.talent.exam.domain.ExamContent;
+
+public class SwapScore {
+	private String direction;
+	private String acc;
+	private String accAmount;
+	private String spot;
+	private String startDate;
+	private String maturityDate;
+	private String fixedType;
+	private Integer fixedRate;
+	private Integer cbasis;
+	private Integer fbasis;
+	private Integer frequency;
+	private Integer libor;
+	private Integer providerNo;
+	private Integer point;
+	
+	public String getDirection() {
+		return direction;
+	}
+	public void setDirection(String direction) {
+		this.direction = direction;
+	}
+	public String getAcc() {
+		return acc;
+	}
+	public void setAcc(String acc) {
+		this.acc = acc;
+	}
+	public String getAccAmount() {
+		return accAmount;
+	}
+	public void setAccAmount(String accAmount) {
+		this.accAmount = accAmount;
+	}
+	public String getSpot() {
+		return spot;
+	}
+	public void setSpot(String spot) {
+		this.spot = spot;
+	}
+	public String getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+	public String getMaturityDate() {
+		return maturityDate;
+	}
+	public void setMaturityDate(String maturityDate) {
+		this.maturityDate = maturityDate;
+	}
+	public String getFixedType() {
+		return fixedType;
+	}
+	public void setFixedType(String fixedType) {
+		this.fixedType = fixedType;
+	}
+	public Integer getFixedRate() {
+		return fixedRate;
+	}
+	public void setFixedRate(Integer fixedRate) {
+		this.fixedRate = fixedRate;
+	}
+	public Integer getCbasis() {
+		return cbasis;
+	}
+	public void setCbasis(Integer cbasis) {
+		this.cbasis = cbasis;
+	}
+	public Integer getFbasis() {
+		return fbasis;
+	}
+	public void setFbasis(Integer fbasis) {
+		this.fbasis = fbasis;
+	}
+	public Integer getFrequency() {
+		return frequency;
+	}
+	public void setFrequency(Integer frequency) {
+		this.frequency = frequency;
+	}
+	public Integer getLibor() {
+		return libor;
+	}
+	public void setLibor(Integer libor) {
+		this.libor = libor;
+	}
+	public Integer getProviderNo() {
+		return providerNo;
+	}
+	public void setProviderNo(Integer providerNo) {
+		this.providerNo = providerNo;
+	}
+	public Integer getPoint() {
+		return point;
+	}
+	public void setPoint(Integer point) {
+		this.point = point;
+	}
+	
+	
+
+
+}

@@ -1,0 +1,80 @@
+package com.talent.forex.modules.trade.cash;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
+import org.hibernate.criterion.MatchMode;
+
+import com.talent.base.BaseBo;
+import com.talent.forex.bean.domain.AccInfo;
+import com.talent.forex.bean.model.CcyModel;
+import com.talent.forex.dao.AccInfoDao;
+import com.talent.forex.dao.CashDao;
+import com.talent.forex.modules.rateFactory.RateReceive;
+import com.talent.forex.modules.trade_mng.AccountFlowManageBo;
+import com.talent.forex.util.GetFixWordUtil;
+import com.talent.forex.util.GetRateUtil;
+ 
+
+
+public class cashManageBo extends BaseBo {
+	private AccInfoDao accInfoDao;
+	AccountFlowManageBo accountFlowManageBo;
+	private CashDao cashDao;
+	
+	public cashManageBo(){
+	}
+	
+	/**
+	 * 根据货币对前面的币种把保证金里的价格分类
+	 * @param weCcy
+	 * @return
+	 */
+	public Collection<CcyModel> getCashRateByWeCCy(String weCcy){
+		Collection<CcyModel> c = new ArrayList<CcyModel>(); 
+		
+		Collection<?> origin = GetRateUtil.getInstance().getMarginRate();
+		Iterator<?> iterator = origin.iterator();
+		while(iterator.hasNext()){
+			CcyModel ccyModel = (CcyModel) iterator.next();
+			if(ccyModel.getCcy().startsWith(weCcy)){
+				c.add(ccyModel);
+			}
+		}
+		return c;
+	}
+	
+	public Collection<?> cashAllTradeRecordListQuery(String hql, String userNum, String tranType){
+		ArrayList<String> paraList = new ArrayList<String>();
+		if (tranType.equals(""))
+			tranType = GetFixWordUtil.getLikeWords(tranType);
+		paraList.add(userNum);
+		paraList.add(tranType);
+		return cashDao.getBeansByParams(hql, paraList);
+	}
+
+	public AccInfoDao getAccInfoDao() {
+		return accInfoDao;
+	}
+
+	public void setAccInfoDao(AccInfoDao accInfoDao) {
+		this.accInfoDao = accInfoDao;
+	}
+
+	public AccountFlowManageBo getAccountFlowManageBo() {
+		return accountFlowManageBo;
+	}
+
+	public void setAccountFlowManageBo(AccountFlowManageBo accountFlowManageBo) {
+		this.accountFlowManageBo = accountFlowManageBo;
+	}
+
+	public CashDao getCashDao() {
+		return cashDao;
+	}
+
+	public void setCashDao(CashDao cashDao) {
+		this.cashDao = cashDao;
+	}
+}

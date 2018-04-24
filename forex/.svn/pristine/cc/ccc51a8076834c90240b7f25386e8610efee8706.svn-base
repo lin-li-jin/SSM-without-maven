@@ -1,0 +1,133 @@
+package com.talent.exam.domain;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+/**
+ * Created by Œ‚’¡ on www.haixiangzhene.xyz
+ * 2017/9/13.
+ */
+public class ExamContent {
+    private int examNo;
+    private byte[] examContent;
+    private ExamAccType examAccTypeByAccTypeNo;
+    private Collection<ExamForward> examForwardsByExamNo;
+    private Collection<ExamMarketBreakout> examMarketBreakoutsByExamNo;
+    private Collection<ExamOco> examOcosByExamNo;
+    private Collection<ExamOneClick> examOneClicksByExamNo;
+    private Collection<ExamSpot> examSpotsByExamNo;
+    private Collection<ExamStopLoss> examStopLossesByExamNo;
+    private Collection<ExamTakeProfit> examTakeProfitsByExamNo;
+    private Collection<ExamSwap> examSwapsByExamNo;
+
+
+    public int getExamNo() {
+        return examNo;
+    }
+
+    public void setExamNo(int examNo) {
+        this.examNo = examNo;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ExamContent content = (ExamContent) o;
+
+        if (examNo != content.examNo) return false;
+        if (!Arrays.equals(examContent, content.examContent)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = examNo;
+        result = 31 * result + Arrays.hashCode(examContent);
+        return result;
+    }
+
+    public ExamAccType getExamAccTypeByAccTypeNo() {
+        return examAccTypeByAccTypeNo;
+    }
+
+    public void setExamAccTypeByAccTypeNo(ExamAccType examAccTypeByAccTypeNo) {
+        this.examAccTypeByAccTypeNo = examAccTypeByAccTypeNo;
+    }
+
+    public Collection<ExamForward> getExamForwardsByExamNo() {
+        return examForwardsByExamNo;
+    }
+
+    public void setExamForwardsByExamNo(Collection<ExamForward> examForwardsByExamNo) {
+        this.examForwardsByExamNo = examForwardsByExamNo;
+    }
+
+    public Collection<ExamMarketBreakout> getExamMarketBreakoutsByExamNo() {
+        return examMarketBreakoutsByExamNo;
+    }
+
+    public void setExamMarketBreakoutsByExamNo(Collection<ExamMarketBreakout> examMarketBreakoutsByExamNo) {
+        this.examMarketBreakoutsByExamNo = examMarketBreakoutsByExamNo;
+    }
+
+    public Collection<ExamOco> getExamOcosByExamNo() {
+        return examOcosByExamNo;
+    }
+
+    public void setExamOcosByExamNo(Collection<ExamOco> examOcosByExamNo) {
+        this.examOcosByExamNo = examOcosByExamNo;
+    }
+
+    public Collection<ExamOneClick> getExamOneClicksByExamNo() {
+        return examOneClicksByExamNo;
+    }
+
+    public void setExamOneClicksByExamNo(Collection<ExamOneClick> examOneClicksByExamNo) {
+        this.examOneClicksByExamNo = examOneClicksByExamNo;
+    }
+
+    public Collection<ExamSpot> getExamSpotsByExamNo() {
+        return examSpotsByExamNo;
+    }
+
+    public void setExamSpotsByExamNo(Collection<ExamSpot> examSpotsByExamNo) {
+        this.examSpotsByExamNo = examSpotsByExamNo;
+    }
+
+    public Collection<ExamStopLoss> getExamStopLossesByExamNo() {
+        return examStopLossesByExamNo;
+    }
+
+    public void setExamStopLossesByExamNo(Collection<ExamStopLoss> examStopLossesByExamNo) {
+        this.examStopLossesByExamNo = examStopLossesByExamNo;
+    }
+
+    public Collection<ExamTakeProfit> getExamTakeProfitsByExamNo() {
+        return examTakeProfitsByExamNo;
+    }
+
+    public void setExamTakeProfitsByExamNo(Collection<ExamTakeProfit> examTakeProfitsByExamNo) {
+        this.examTakeProfitsByExamNo = examTakeProfitsByExamNo;
+    }
+
+	public Collection<ExamSwap> getExamSwapsByExamNo() {
+		return examSwapsByExamNo;
+	}
+
+	public void setExamSwapsByExamNo(Collection<ExamSwap> examSwapsByExamNo) {
+		this.examSwapsByExamNo = examSwapsByExamNo;
+	}
+
+    public byte[] getExamContent() {
+        return examContent;
+    }
+
+    public void setExamContent(byte[] examContent) {
+        this.examContent = examContent;
+    }
+
+
+}

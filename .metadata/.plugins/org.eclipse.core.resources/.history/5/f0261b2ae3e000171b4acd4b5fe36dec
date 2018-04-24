@@ -1,0 +1,87 @@
+package com.hh;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class JavaTest {
+	
+	///////
+	static int kinds=0;
+	static int a[]=new int[10];
+	private static boolean[] Vis;
+
+	public static void main(String[] args) {
+		Scanner s=new Scanner(System.in);
+		int num=s.nextInt();
+		dfs(1, 10, num);
+		System.out.println(kinds);
+		
+	}
+	
+	
+	public static int sum(int start,int end)
+	{
+		int sum=0;
+		for(int i=start;i<end;i++)
+		{
+			sum=sum*10+a[i+1];
+		}
+		return sum;
+	}
+	
+	
+	public static void check(int a[],int n,int num)
+	{
+		int begin=1;
+		int temp=num;
+		while((temp=temp/10)!=0)
+		{
+			begin++;
+		}
+		for(int k=1;k<begin+1;k++)
+		{
+			int num1=sum(0, k);
+			if(num1>num)
+			{
+				return;
+			}
+			for(int j=k+(n-k)-2;j<n-1;j++)
+			{
+				int num2=sum(k, j);
+				int num3=sum(j, n-1);
+				if(num2>num3&&num2%num3==0&&num==num1+num2/num3)
+				{
+					kinds++;
+				}
+			}
+		}
+	}
+	
+	
+	
+	private static void dfs(int start,int end,int num)
+	{
+		if(start==end)
+		{
+			check(a, end, num);
+		}
+		else
+		{
+			for(int i=1;i<end;i++)
+			{
+				if(Vis[i])
+				{
+					continue;
+				}
+				a[start]=i;
+				Vis[i]=true;
+				dfs(start+1, end, num);
+				Vis[i]=false;
+			}
+		}
+	}
+	
+	
+
+	//////////
+		
+}

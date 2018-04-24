@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<!-- 
+ Create By    : 陈整队
+ Description  : 询价交易
+  Modify Date  : 2014-07-24
+  -->
+<beans default-autowire="byName">
+	<bean id="spotManageBo" class="com.talent.forex.modules.trade.ask.SpotManageBo" />
+	<bean id="swapManageBo" class="com.talent.forex.modules.trade.ask.SwapManageBo" />
+	<bean id="forwardManageBo" class="com.talent.forex.modules.trade.ask.ForwardManageBo" />
+	<bean id="tradeMessageBo" class="com.talent.forex.modules.trade.ask.TradeMessageBo" />
+</beans>

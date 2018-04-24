@@ -1,0 +1,61 @@
+package com.hh;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class JavaTest {
+	
+	///////
+	public static void main(String[] args) {
+		int[] num= new int[100];
+		int[] f= new int[100];
+		int count = 0;
+		int i;
+		
+		//输入人数
+		Scanner sc = new Scanner(System.in);
+	   	 i = sc.nextInt();
+	    //第一次的数
+	    for(int j=1; j<=i; j++){
+	    	num[j] = sc.nextInt();
+	    }
+	    
+	    while(true){
+	    	//是否相同
+	    	for(int j=1; j<=i; j++){
+		    	if(num[1]==num[i]){
+		    		System.out.println(cound);
+		    		return;
+		    	}
+		    }
+	    	
+		    //对半
+		    for(int j=1; j<=i; j++){
+		    	if(j==1){
+		    		f[i]=num[j]/2;
+		    		num[j]=num[j]/2;
+		    	}else{
+		    		f[j-1]=num[j]/2;
+		    		num[j]=num[j]/2;
+		    	}
+		    }
+		    
+		    //相加
+		    for(int j=1; j<=i; j++){
+		    	num[j] += f[j];
+		    	f[j]=0;
+		    }
+		    
+		    //补齐
+		    for(int j=1; j<=i; j++){
+		    	if(num[j]%2!=0){
+		    		num[j]+=1;
+		    		count++;
+		    	}
+		    }
+		}
+	}
+
+
+	//////////
+		
+}

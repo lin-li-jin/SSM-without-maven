@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.talent.exam.test.ExamOneClick" table="exam_one_click" schema="forex">
+        <id name="examOneClickNo">
+            <column name="exam_one_click_no" sql-type="int(12)"/>
+            <generator class="identity"></generator>
+        </id>
+        <property name="accTypeNo">
+            <column name="acc_type_no" sql-type="char(1)" length="1"/>
+        </property>
+        <property name="direction">
+            <column name="DIRECTION" sql-type="char(1)" length="1"/>
+        </property>
+        <property name="acc">
+            <column name="ACC" sql-type="char(3)" length="3"/>
+        </property>
+        <property name="accAmount">
+            <column name="ACC_AMOUNT" sql-type="varchar(30)" length="30"/>
+        </property>
+        <property name="step">
+            <column name="STEP" sql-type="int(5)"/>
+        </property>
+        <many-to-one name="examContentByExamNo" class="com.talent.exam.test.ExamContent">
+            <column name="exam_NO"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

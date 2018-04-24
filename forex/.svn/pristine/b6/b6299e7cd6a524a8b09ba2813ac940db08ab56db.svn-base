@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
+
+<xwork>
+	<package name="dataInputBo" extends="default">
+		<action name="fileImport" method="fileImport"
+			class="com.talent.forex.modules.teach_mng.dataInput.DataInputAction">
+			<interceptor-ref name="fileLoginStack"/> 
+			<result name="success" type="dispatcher">
+				<param name="location">/jsp/local/userMng/userInfoMng/stuAddResult.jsp</param>
+			</result>
+			<result name="error" type="dispatcher">
+				<param name="location">/jsp/local/userMng/userInfoMng/stuAddError.jsp</param>
+			</result>			 		     		    	     
+		</action>
+		<action name="stuDataInputInit" method="dataInputInit"
+			class="com.talent.forex.modules.teach_mng.dataInput.DataInputAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/userMng/userInfoMng/stuInfoAdd.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		<action name="fileDownLoad" method="fileDownLoad"
+			class="com.talent.forex.modules.teach_mng.dataInput.DataInputAction">
+			<interceptor-ref name="paramsLoginStack" />
+		</action>
+	</package>
+</xwork>

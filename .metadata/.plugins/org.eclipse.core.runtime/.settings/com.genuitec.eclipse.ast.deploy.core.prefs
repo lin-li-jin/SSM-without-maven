@@ -1,0 +1,14 @@
+#Mon Apr 23 22:51:18 CST 2018
+tomcat7Server.Declaration.isDeployed=true
+tomcat7Server.Declaration.shouldBackup=false
+tomcat7Server.Declaration.deploymentPath=F\:\\apache-tomcat-8.5.24\\webapps\\Declaration
+tomcat7Server.Declaration.type=WebDeployment
+tomcat7Server.Declaration.altContextRoot=
+tomcat7Server.Declaration.contextRoot=/Declaration
+tomcat7Server.Declaration.noFileCopy=false
+tomcat7Server.Declaration.deployIsOverProject=false
+tomcat7Server.Declaration.shouldOverwrite=false
+eclipse.preferences.version=1
+tomcat7Server.Declaration.isExploded=true
+tomcat7Server.Declaration.IEARProjectName=
+tomcat7Server.Declaration.isUptoDate=true

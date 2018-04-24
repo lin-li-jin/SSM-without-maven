@@ -1,0 +1,39 @@
+package com.hh;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class JavaTest {
+	
+	///////
+	public static void main(String[] args) {
+		// TODO Auto-generated method st
+	
+		
+		
+		Scanner sc = new Scanner(System.in);
+		int x = sc.nextInt();
+		
+		Scanner scx = new Scanner(System.in);
+		int n = scx.nextInt();
+		
+		//REN
+		if( x>2 && x<100){
+			//SUGAR
+			if ( n>2 && n<1000) {
+				
+				int num = x /2;
+				
+				if(num % 2!=0){
+					n++;
+					System.out.println(num);
+				}
+			}
+			
+		}
+		
+		
+	}
+
+	//////////
+		
+}

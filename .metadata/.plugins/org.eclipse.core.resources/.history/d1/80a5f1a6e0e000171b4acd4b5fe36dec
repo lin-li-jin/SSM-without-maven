@@ -1,0 +1,48 @@
+package com.hh;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class JavaTest {
+	
+	///////
+	private static ArrayList arrayList;
+    public static void main(String[] args) {
+        arrayList=new ArrayList();
+        Scanner scanner=new Scanner(System.in);
+        String s= scanner.nextLine();
+        String[] a=s.split(" ");
+        int aa=Integer.valueOf(a[0]);
+        int bb=Integer.valueOf(a[1]);
+        a(aa,bb);
+    }
+
+    static void  a(int a, int b) {
+        int num = 0;
+        int sum = 0;
+        boolean c=true;
+        if (a < b && b < 10000000) {
+            for (int i = a; i < b; i++) {
+                double k = Math.sqrt(i);
+
+                if(i>10) {
+                    if (k % 1 == 0) {
+                        String ss = String.valueOf(i);
+//                    String ss="169";
+                        String a1, b1;
+                        b1 = ss.substring(0, ss.length() - 1);
+                        a1 = ss.substring(ss.length() - 1, ss.length());
+                        double aa1 = Math.sqrt(Double.parseDouble(a1));
+                        double bb1 = Math.sqrt(Double.parseDouble(b1));
+                        if (aa1 % 1 == 0 && bb1 % 1 == 0) {
+                            System.out.println(i);
+                        }
+                    }
+
+                }
+            }
+          ;
+        }
+    }
+	//////////
+		
+}

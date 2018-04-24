@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<!-- 
+ Amendment No.: FOEXAS009
+ Create By    : lzc
+ Description  : 交易首页
+ Modify Date  : 2014-07-21
+  -->
+<beans default-autowire="byName">
+	<bean id="CNYBo" class="com.talent.forex.modules.trade.CNYManageBo" />
+	<bean id="foreignManageBo" class="com.talent.forex.modules.trade.ForeignManageBo" />
+</beans>

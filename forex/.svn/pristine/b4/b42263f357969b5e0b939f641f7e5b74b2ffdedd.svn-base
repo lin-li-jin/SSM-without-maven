@@ -1,0 +1,124 @@
+package com.talent.exam.dao;
+
+import java.lang.reflect.Field;
+import java.util.List;
+
+import com.talent.exam.domain.ExamAccType;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.Criteria;
+import org.hibernate.LockMode;
+import org.hibernate.Query;
+import org.hibernate.criterion.Example;
+
+import com.talent.exam.domain.ExamContent;
+import org.hibernate.criterion.Restrictions;
+
+
+public class ExamContentDAO extends BaseHibernateDAO {
+	private static final Log log = LogFactory.getLog(ExamContentDAO.class);
+	// property constants
+	public static final String EXAM_CONTENT = "examContent";
+
+	public void save(ExamContent transientInstance) {
+		log.debug("saving ExamContent instance");
+		try {
+			getSession().save(transientInstance);
+			log.debug("save successful");
+		} catch (RuntimeException re) {
+			log.error("save failed", re);
+			throw re;
+		}
+	}
+
+	public void delete(ExamContent persistentInstance) {
+		log.debug("deleting ExamContent instance");
+		try {
+			getSession().delete(persistentInstance);
+			log.debug("delete successful");
+		} catch (RuntimeException re) {
+			log.error("delete failed", re);
+			throw re;
+		}
+	}
+
+	public ExamContent findById(java.lang.Integer id) {
+		log.debug("getting ExamContent instance with id: " + id);
+		try {
+			ExamContent instance = (ExamContent) getSession().get(
+					"com.talent.exam.domain.ExamContent", id);
+			return instance;
+		} catch (RuntimeException re) {
+			log.error("get failed", re);
+			throw re;
+		}
+	}
+
+
+
+	public List findByProperty(String propertyName, Object value) {
+		log.debug("finding ExamContent instance with property: " + propertyName
+				+ ", value: " + value);
+		try {
+			String queryString = "from ExamContent as model where model."
+					+ propertyName + "= ?";
+			Query queryObject = getSession().createQuery(queryString);
+			queryObject.setParameter(0, value);
+			return queryObject.list();
+		} catch (RuntimeException re) {
+			log.error("find by property name failed", re);
+			throw re;
+		}
+	}
+
+	public List findByExamContent(Object examContent) {
+		return findByProperty(EXAM_CONTENT, examContent);
+	}
+
+	public List findAll() {
+		log.debug("finding all ExamContent instances");
+		try {
+			String queryString = "from ExamContent";
+			Query queryObject = getSession().createQuery(queryString);
+			return queryObject.list();
+		} catch (RuntimeException re) {
+			log.error("find all failed", re);
+			throw re;
+		}
+	}
+
+	public ExamContent merge(ExamContent detachedInstance) {
+		log.debug("merging ExamContent instance");
+		try {
+			ExamContent result = (ExamContent) getSession().merge(
+					detachedInstance);
+			log.debug("merge successful");
+			return result;
+		} catch (RuntimeException re) {
+			log.error("merge failed", re);
+			throw re;
+		}
+	}
+
+	public void attachDirty(ExamContent instance) {
+		log.debug("attaching dirty ExamContent instance");
+		try {
+			getSession().saveOrUpdate(instance);
+			log.debug("attach successful");
+		} catch (RuntimeException re) {
+			log.error("attach failed", re);
+			throw re;
+		}
+	}
+
+	public void attachClean(ExamContent instance) {
+		log.debug("attaching clean ExamContent instance");
+		try {
+			getSession().lock(instance, LockMode.NONE);
+			log.debug("attach successful");
+		} catch (RuntimeException re) {
+			log.error("attach failed", re);
+			throw re;
+		}
+	}
+}

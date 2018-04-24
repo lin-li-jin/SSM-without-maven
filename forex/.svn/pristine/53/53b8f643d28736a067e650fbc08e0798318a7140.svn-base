@@ -1,0 +1,32 @@
+<%@ page language="java" import="java.util.*" pageEncoding="gbk"%>
+<%@ page contentType="text/html;charset=gbk" %> 
+<%@ taglib prefix="ww" uri="webwork" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title> ‘æÌ∑÷≈‰</title>
+	<script src="/forex/resources/js/jquery-1.8.3.js" type="text/javascript"></script>
+	<script src="/forex/resources/js/jquery.validate.js" type="text/javascript"></script>
+	<script src="/forex/resources/ponycss/jquery_validate.css" type="text/javascript"></script>
+	<script src="/forex/resources/js/jquery.easyui.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="/forex/resources/css/easyui.css">
+</head>
+<body class="easyui-layout">
+	<div data-options="region:'north'" style="width:1140px;height:300px;">
+		<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		 ‘æÌ∑÷≈‰</h4>
+		<div data-options="region:'north'" style="width:1024px;height:40px;">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			 ‘æÌ√˚≥∆£∫<select name="testNo"></select>
+		</div>
+		<div data-options="region:'north'" style="width:1024px;height:40px;">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			∑÷≈‰∞‡º∂£∫<select name="classNo"></select>
+		</div>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type="button" value="∑÷≈‰" id="allot"/>
+	</div>
+</body>
+</html>

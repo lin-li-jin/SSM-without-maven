@@ -1,0 +1,34 @@
+.curved {
+  background:transparent; 
+  }
+
+.curved .b1, .curved .b2, .curved .b3, .curved .b4 {
+  display:block; 
+  overflow:hidden; 
+  height:1px;
+  font-size:1px;
+  }
+.curved .b2, .curved .b3, .curved .b4 {
+  background:#9BD1FA; 
+  border-left:1px solid #fff; 
+  border-right:1px solid #fff;
+  }
+.curved .b1 {
+  margin:0 6px; 
+  background:#fff;
+  }
+.curved .b2 {
+  margin:1 5px; 
+  height:1px;
+  }
+
+.curved .boxcontent {
+  display:block; 
+  background:#9BD1FA; 
+  border:0 solid #fff; 
+  border-width:0 1px;
+  }
+  
+td.query {
+	background-color:#F7F7F7;
+}

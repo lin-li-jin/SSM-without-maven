@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
+<!-- 
+ Amendment No.: FOEXAS011
+ Create By    : 董天栋
+ Description  : 保证金交易首页
+ Modify Date  : 2014-07-23
+  -->
+<xwork>
+	<package name="cash" extends="default">
+		<!-- 这是点菜单的保证金交易跳到的保证金首页 -->
+		<action name="cashQueryInit" method="cashPageInit"
+			class="com.talent.forex.modules.trade.cash.cashManageAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/cash/cashHomePage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<!-- 这是跳到远期交易的action -->
+		<action name="forwardCashPageInit" method="forwardCashPageInit"
+			class="com.talent.forex.modules.trade.cash.ForwardCashAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/cash/forwardCash.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<!-- 这是跳到期权交易的action -->
+		<action name="optionCashPageInit" method="optionCashPageInit"
+			class="com.talent.forex.modules.trade.cash.OptionCashAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/cash/optionCash.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<!-- 这是远期交易的提交执行完成后的返回action -->
+		<action name="forwardCashPageAdd" method="forwardCashPageAdd"
+			class="com.talent.forex.modules.trade.cash.ForwardCashAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/cashResult.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<!-- 这是期权交易的提交执行完成后的返回action -->
+		<action name="optionCashPageAdd" method="optionCashPageAdd"
+			class="com.talent.forex.modules.trade.cash.OptionCashAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/resultPage/cashResult.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<!-- 保证金首页的查询功能 -->
+		<action name="recordToEctableByParams" method="recordToEctableByParams"
+			class="com.talent.forex.modules.trade.cash.cashManageAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/cash/cashHomePage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		
+		<!-- 保证金详细查询 -->
+		<action name="queryDetail" method="queryDetail"
+			class="com.talent.forex.modules.trade.cash.cashManageAction">
+			<result name="forward" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/forwardDetail.jsp
+				</param>
+			</result>
+			
+			<result name="option" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/detail/optionDetail.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+
+		
+		<!-- 执行一条期权交易  -->
+		<action name="executeOption" method="executeOption"
+			class="com.talent.forex.modules.trade.cash.OptionCashAction">
+			<result name="success" type="dispatcher">
+				<param name="location">
+					/jsp/local/tradeModule/cash/cashHomePage.jsp
+				</param>
+			</result>
+			<interceptor-ref name="paramsLoginStack"></interceptor-ref>
+		</action>
+		
+		<!-- ajax刷新价格 -->
+		<action name="freshPrice" method="freshPrice"
+			class="com.talent.forex.modules.trade.cash.cashManageAction">
+			<interceptor-ref name="paramsLoginStack"/>
+		</action>
+		
+		<!-- ajax刷新cashHomePage -->
+		<action name="cashPageRefresh" method="cashPageRefresh"
+			class="com.talent.forex.modules.trade.cash.cashManageAction">
+			<interceptor-ref name="paramsLoginStack"/>
+		</action>
+	</package>
+</xwork>

@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.talent.exam.domain.ExamSwap" table="exam_swap" schema="forex">
+        <id name="examSwapNo">
+            <column name="exam_swap_no" sql-type="int(12)"/>
+        </id>
+        <property name="accTypeNo">
+            <column name="acc_type_no" sql-type="char(1)" length="1"/>
+        </property>
+        <property name="examNo" insert="false" update="false">
+            <column name="exam_NO" sql-type="int(11)"/>
+        </property>
+        <property name="direction">
+            <column name="DIRECTION" sql-type="char(1)" length="1"/>
+        </property>
+        <property name="acc">
+            <column name="ACC" sql-type="char(3)" length="3"/>
+        </property>
+        <property name="accAmount">
+            <column name="ACC_AMOUNT" sql-type="varchar(30)" length="30"/>
+        </property>
+        <property name="spot">
+            <column name="spot" sql-type="char(1)" length="1"/>
+        </property>
+        <property name="startDate">
+            <column name="Start_Date" sql-type="varchar(8)" length="8"/>
+        </property>
+        <property name="maturityDate">
+            <column name="Maturity_Date" sql-type="varchar(8)" length="8"/>
+        </property>
+        <property name="fixedType">
+            <column name="fixedType" sql-type="varchar(30)" length="30"/>
+        </property>
+        <property name="fixedRate">
+            <column name="fixedRate" sql-type="int(8)"/>
+        </property>
+        <property name="cBasis">
+            <column name="CBasis" sql-type="int(5)"/>
+        </property>
+        <property name="fBasis">
+            <column name="FBasis" sql-type="int(5)"/>
+        </property>
+        <property name="frequency">
+            <column name="Frequency" sql-type="int(3)"/>
+        </property>
+        <property name="libor">
+            <column name="Libor" sql-type="int(3)"/>
+        </property>
+        <property name="providerNo">
+            <column name="provider_no" sql-type="int(12)"/>
+        </property>
+        <property name="point">
+            <column name="point" sql-type="int(3)"/>
+        </property>
+        <property name="step">
+            <column name="STEP" sql-type="int(5)"/>
+        </property>
+        <property name="examScore">
+            <column name="exam_score" sql-type="varchar(100)" length="100"/>
+        </property>
+        <property name="userType">
+            <column name="user_type" sql-type="char(1)" length="1"/>
+        </property>
+        <many-to-one name="examContentByExamNo" class="com.talent.exam.domain.ExamContent">
+            <column name="exam_NO"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

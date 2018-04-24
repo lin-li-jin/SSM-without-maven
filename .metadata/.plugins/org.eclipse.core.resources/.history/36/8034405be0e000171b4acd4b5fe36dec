@@ -1,0 +1,65 @@
+package com.hh;
+import java.util.Scanner;
+
+public class JavaTest {
+	
+	///////
+	public static int count=0;
+
+
+
+    public static void main(String[] args) {
+        Scanner scanner=new Scanner(System.in);
+        int N=scanner.nextInt();
+        int[] person=new int[N];
+        for(int i=0;i<N;i++){
+            person[i]=scanner.nextInt();
+        }
+
+
+        do{
+            person=k(N,person);
+        }while (!kk(person));
+
+        System.out.println(count);
+    }
+
+    public static int[] k(int n,int[] person){
+        int[] s=new int[n];
+
+        for(int i=0;i<n;i++){
+            s[i]=person[i];
+            s[i]=s[i]/2;
+        }
+
+        for(int i=0;i<n;i++){
+            if(i==n-1){
+                person[i]+=s[0];
+                person[0]-=s[0];
+            }else{
+                person[i]+=s[i+1];
+                person[i+1]-=s[i+1];
+            }
+        }
+
+        for(int i=0;i<n;i++){
+            if(person[i]%2==1){
+                person[i]++;
+                count++;
+            }
+        }
+
+        return person;
+    }
+
+    public static  boolean kk(int[] person){
+        for(int i=1;i<person.length;i++){
+            if(person[i]!=person[i-1]){
+                return false;
+            }
+        }
+        return true;
+    }
+	//////////
+		
+}

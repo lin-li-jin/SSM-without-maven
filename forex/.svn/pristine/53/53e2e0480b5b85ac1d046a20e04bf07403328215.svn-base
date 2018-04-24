@@ -1,0 +1,24 @@
+package com.talent.exam.domain;
+
+import java.util.Set;
+
+public class ExamAccType extends AbstractExamAccType implements
+		java.io.Serializable {
+
+	// Constructors
+
+	/** default constructor */
+	public ExamAccType() {
+	}
+
+	/** minimal constructor */
+	public ExamAccType(String accType) {
+		super(accType);
+	}
+
+	/** full constructor */
+	public ExamAccType(String accType, Set examContents) {
+		super(accType, examContents);
+	}
+
+}

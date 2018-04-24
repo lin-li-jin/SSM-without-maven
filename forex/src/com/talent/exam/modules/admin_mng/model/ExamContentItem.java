@@ -1,0 +1,36 @@
+package com.talent.exam.modules.admin_mng.model;
+
+/**
+ * Created by 吴樟 on www.haixiangzhene.xyz
+ * 2017/9/13.
+ */
+public class ExamContentItem {
+
+    private int examNo;
+    private String examContent;
+    private String accType;
+
+    public int getExamNo() {
+        return examNo;
+    }
+
+    public void setExamNo(int examNo) {
+        this.examNo = examNo;
+    }
+
+    public String getExamContent() {
+        return examContent;
+    }
+
+    public void setExamContent(String examContent) {
+        this.examContent = examContent;
+    }
+
+	public String getAccType() {
+		return accType;
+	}
+
+	public void setAccType(String accType) {
+		this.accType = accType;
+	}
+}

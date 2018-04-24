@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.talent.exam.domain.ExamContent" table="exam_content" catalog="forex">
+        <id name="examNo" type="java.lang.Integer">
+            <column name="exam_NO" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="examAccType" class="com.talent.exam.domain.ExamAccType" fetch="select">
+            <column name="acc_type_NO" length="1" not-null="true">
+                <comment>考试类型</comment>
+            </column>
+        </many-to-one>
+        <property name="examContent" type="java.lang.String">
+            <column name="exam_content" not-null="true">
+                <comment>考试题目不能超过250个字符</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

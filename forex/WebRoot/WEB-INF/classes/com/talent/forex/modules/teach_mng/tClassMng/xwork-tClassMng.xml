@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
+
+<xwork>
+	<package name="tClassMng" extends="default">
+		<action name="initClass" method="InitClass"
+			class="com.talent.forex.modules.teach_mng.tClassMng.ClassMngAction">
+			<interceptor-ref name="fileLoginStack"/> 
+			<result name="success" type="dispatcher">
+				<param name="location">/jsp/local/classMngModule/classModule.jsp</param>
+			</result>
+		</action>
+		<action name="insertClass" class="com.talent.forex.modules.teach_mng.tClassMng.ClassMngAction"
+				method="insertClass">
+			<interceptor-ref name="fileLoginStack"/>
+		</action>
+		<action name="queryClass" class="com.talent.forex.modules.teach_mng.tClassMng.ClassMngAction"
+				method="queryClass">
+			<interceptor-ref name="fileLoginStack"/>
+		</action>
+		<action name="queryClassDetail" class="com.talent.forex.modules.teach_mng.tClassMng.ClassMngAction"
+				method="queryClassDetail">
+			<interceptor-ref name="fileLoginStack"/>
+		</action>
+	</package>
+</xwork>

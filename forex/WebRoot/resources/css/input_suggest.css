@@ -1,0 +1,18 @@
+.suggestDiv{/*显示提示框div的css类*/
+background:#FFFFFF;
+border-color:#CCCCCC;
+border-style:outset;
+border-width:thin;
+}
+
+.suggestion{/*显示提示框span的css类*/
+color:#0000FF;
+margin: 2pt,2pt,2pt,2pt;
+}
+
+.match{/*显示匹配文本的css类*/
+}
+
+.valueShow{/*显示值的css类*/
+color: #0000ff;
+}

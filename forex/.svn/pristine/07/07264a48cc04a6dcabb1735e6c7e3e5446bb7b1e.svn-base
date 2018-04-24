@@ -1,0 +1,80 @@
+package com.talent.exam.modules.teach_mng.service;
+
+import com.talent.auth.bean.domain.TClass;
+import com.talent.auth.dao.TClassDao;
+import com.talent.base.BaseBo;
+import com.talent.exam.constant.ExamConst;
+import com.talent.exam.dao.ExamPaperDAO;
+import com.talent.exam.dao.ExamPaperDistributeDAO;
+import com.talent.exam.domain.ExamPaper;
+import com.talent.exam.domain.ExamPaperDistribute;
+import com.talent.exam.modules.teach_mng.model.ExamPaperMessage;
+import com.talent.forex.util.GetDateTimeUtil;
+import org.apache.log4j.Logger;
+
+
+/**
+ * Created by 吴樟 on www.haixiangzhene.xyz
+ * 2017/9/24.
+ */
+public class ExamBo extends BaseBo{
+
+    private static Logger logger= Logger.getLogger(ExamBo.class);
+
+    private ExamPaperDistributeDAO examPaperDistributeDAO;
+    private TClassDao tClassDao;
+    private ExamPaperDAO examPaperDAO;
+
+    /**
+     * 分配试卷
+     * 班级号  试卷号
+     */
+    public void distributePaper(ExamPaperMessage examPaperMessage){
+        TClass tClass=null;
+        Integer id=examPaperMessage.getClassId();
+        tClass=tClassDao.getBeanById(id);
+        if (tClass==null){
+            logger.info("the class id is not exits");
+            return;
+        }
+        ExamPaper examPaper=null;
+        if((examPaper=examPaperDAO.findById(examPaperMessage.getClassId()))==null){
+            logger.info("the exam paper is not exits");
+            return;
+        }
+        ExamPaperDistribute examPaperDistribute=new ExamPaperDistribute();
+        examPaperDistribute.settClassByClassId(tClass);
+        examPaperDistribute.setCreateDate(GetDateTimeUtil.getCurrentDate());
+        //分发试卷时默认是use状态
+        examPaperDistribute.setClassPaperStatus(ExamConst.USE);
+        examPaperDistribute.setPaperNo(examPaperMessage.getPaperId());
+        examPaperDistribute.setTillDate(ExamConst.TILLTIME);
+        examPaperDistributeDAO.save(examPaperDistribute);
+    }
+
+    public ExamPaperDistributeDAO getExamPaperDistributeDAO() {
+        return examPaperDistributeDAO;
+    }
+
+    public void setExamPaperDistributeDAO(ExamPaperDistributeDAO examPaperDistributeDAO) {
+        this.examPaperDistributeDAO = examPaperDistributeDAO;
+    }
+
+    public TClassDao gettClassDao() {
+        return tClassDao;
+    }
+
+    public void settClassDao(TClassDao tClassDao) {
+        this.tClassDao = tClassDao;
+    }
+
+    public ExamPaperDAO getExamPaperDAO() {
+        return examPaperDAO;
+    }
+
+    public void setExamPaperDAO(ExamPaperDAO examPaperDAO) {
+        this.examPaperDAO = examPaperDAO;
+    }
+
+
+}
